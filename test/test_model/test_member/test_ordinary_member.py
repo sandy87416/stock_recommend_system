@@ -28,7 +28,7 @@ class TestOrdinaryMember(TestCase):
         # teardown
         member_df.iloc[
             member_df[member_df['account'] == self.ordinary_member.get_account()].index, member_df.columns.get_loc(
-                "password")] = "islab87"
+                "password")] = "islab1221"
         member_df.to_csv('D:/stock_recommend_system/database/member/member.csv', index=False)
 
     def test_create_application_information(self):
