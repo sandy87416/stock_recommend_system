@@ -6,17 +6,16 @@ from model.member.ordinary_member import OrdinaryMember
 
 
 class TestOrdinaryMember(TestCase):
+
     @classmethod
     def setUpClass(self):
-        member_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
-        password = member_df[member_df['account'] == "t109598087@ntut.org.tw"]['password'].to_numpy()[0]
-        self.ordinary_member = OrdinaryMember("t109598087@ntut.org.tw", password)
+        self.ordinary_member = OrdinaryMember("t109598087@ntut.org.tw", 'islab1221')
 
     def test_get_account(self):
         self.assertEqual(self.ordinary_member.get_account(), 't109598087@ntut.org.tw')
 
     def test_get_password(self):
-        self.assertEqual(self.ordinary_member.get_password(), 'islab87')
+        self.assertEqual(self.ordinary_member.get_password(), 'islab1221')
 
     def test_set_password(self):
         self.ordinary_member.set_password('802138')
@@ -35,7 +34,8 @@ class TestOrdinaryMember(TestCase):
     def test_create_application_information(self):
         application_information = self.ordinary_member.create_application_information()
         self.assertEqual(application_information.get_content(), '')
-        application_information_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
+        application_information_df = pd.read_csv(
+            'D:/stock_recommend_system/database/member/application_information.csv')
         account = application_information_df.tail(1)['account'].to_numpy()[0]
         self.assertEqual(account, "t109598087@ntut.org.tw")
 
@@ -62,3 +62,9 @@ class TestOrdinaryMember(TestCase):
                                                                              'account'] == self.ordinary_member.get_account()].index)
         application_information_df.to_csv('D:/stock_recommend_system/database/member/application_information.csv',
                                           index=False)
+
+    @classmethod
+    def tearDownClass(self) -> None:
+        member_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
+        member_df = member_df.drop(member_df[member_df['account'] == "t109598087@ntut.org.tw"].index)
+        member_df.to_csv('D:/stock_recommend_system/database/member/member.csv', index=False)
