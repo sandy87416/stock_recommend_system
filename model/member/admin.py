@@ -1,3 +1,6 @@
+import pandas as pd
+
+
 class Admin:
     __account = ''
     __password = ''
@@ -5,6 +8,7 @@ class Admin:
     def __init__(self, account, password):
         self.__account = account
         self.__password = password
+
 
     def get_account(self):
         return self.__account
@@ -14,3 +18,14 @@ class Admin:
 
     def set_password(self, password):
         self.__password = password
+        member_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
+        member_df.iloc[member_df[member_df['account'] == self.get_account()].index, member_df.columns.get_loc("password")] = password
+        member_df.to_csv('D:/stock_recommend_system/database/member/member.csv', index=False)
+
+
+    def upgrade_member_level(self, account):
+        member_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
+        level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
+        if level == 2:
+            member_df.iloc[member_df[member_df['account'] == account].index, member_df.columns.get_loc("level")] = 1
+        member_df.to_csv('D:/stock_recommend_system/database/member/member.csv', index=False)
