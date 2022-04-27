@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 
 from config import database_path
+
+from model.stock.after_hours_information import AfterHoursInformation
 from model.stock.intra_day_information import IntraDayInformation
 
 
@@ -77,7 +79,8 @@ class Stock:
         self_buy = '0' if is_nan(df['self_buy'].to_numpy()[0]) else df['self_buy'].to_numpy()[0]
         news = news_list[0] if len(news_list) >= 1 else ''
         monthly_revenue = monthly_revenue_df['month_revenue'].to_numpy()[0]
-        return date, k_value, ma20_value, rsi_value, foreign_buy, investment_trust_buy, self_buy, news, monthly_revenue
+        after_hours_information = AfterHoursInformation(date, k_value, ma20_value, rsi_value, foreign_buy, investment_trust_buy, self_buy, news, monthly_revenue)
+        return after_hours_information
 
     def get_stock_intraday_information(self, stock_id):
         df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
@@ -86,7 +89,8 @@ class Stock:
         min_price = round(df['Low'].to_numpy()[0], 2)
         max_price = round(df['High'].to_numpy()[0], 2)
         start_price = round(df['Open'].to_numpy()[0], 2)
-        return end_price, min_price, max_price, start_price
+        intraday_information = IntraDayInformation(end_price, min_price, max_price, start_price)
+        return intraday_information
 
     def create_stock_intraday_information(self, stock_id):
         df = pd.read_csv(database_path + str(stock_id) + '.csv')
