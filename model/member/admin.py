@@ -1,6 +1,7 @@
 import pandas as pd
 
 from config import database_path
+from model.utils import update_database
 
 
 class Admin:
@@ -20,9 +21,10 @@ class Admin:
 
     def set_password(self, password):
         self.__password = password
-        member_df = pd.read_csv(database_path + 'member/member.csv')
-        member_df.iloc[member_df[member_df['account'] == self.get_account()].index, member_df.columns.get_loc("password")] = password
-        member_df.to_csv(database_path + 'member/member.csv', index=False)
+        update_database('member/member.csv', 'account', self.get_account(), "password", self.__password)
+        # member_df = pd.read_csv(database_path + 'member/member.csv')
+        # member_df.iloc[member_df[member_df['account'] == self.get_account()].index, member_df.columns.get_loc("password")] = password
+        # member_df.to_csv(database_path + 'member/member.csv', index=False)
 
 
     def upgrade_member_level(self, account):
