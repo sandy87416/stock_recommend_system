@@ -9,13 +9,6 @@ class PremiumMember(Member):
         super().__init__(account, password)
         self.__account = account
         self.__password = password
-        member_df = pd.read_csv(database_path + 'member/member.csv')
-        member_df = pd.concat([member_df, pd.DataFrame({
-            'account': [account],
-            'password': [password],
-            'level': [1],
-        })])
-        member_df.to_csv(database_path + 'member/member.csv', index=False)
 
     def read_recommended_stock(self, days, odds):
         days = int(days)
