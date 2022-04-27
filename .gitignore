@@ -8,3 +8,4 @@ venv
 .db
 /every_day/__pycache__/*.pyc
 *.joblib
+config.py
