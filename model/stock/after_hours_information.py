@@ -1,7 +1,7 @@
 class AfterHoursInformation:
     __date = ''
     __k_value = ''
-    __ma20_value = ''
+    __ma20_value = 0
     __rsi_value = 0
     __foreign_buy = 0
     __investment_trust_buy = 0
