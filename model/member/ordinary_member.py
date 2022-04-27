@@ -3,7 +3,6 @@ import pandas as pd
 from config import database_path
 from model.member.application_information import ApplicationInformation
 from model.member.member import Member
-from model.utils import update_database
 
 
 class OrdinaryMember(Member):

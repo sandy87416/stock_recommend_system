@@ -18,8 +18,6 @@ class PremiumMember(Member):
         # send_to_line
         very_good_df = very_good_df[(very_good_df['odds'] > odds)]  # 可修改
 
-        # print(very_good_df['stock_name'])
-        # print(very_good_df)
         very_good_df = very_good_df.sort_values('odds', ascending=False)
 
         # print
@@ -30,9 +28,6 @@ class PremiumMember(Member):
         very_good_stock_win_rate_np = very_good_df['odds'].to_numpy()
         for i in range(len(very_good_df)):
             print_str = ''
-            # print(very_good_stock_is_up_stop_np[i])
-            # if very_good_stock_is_up_stop_np[i] == 1:
-            #     print_str += '[漲停]'
             print_str += str(very_good_stock_id_np[i])
             print_str += very_good_stock_stock_name_np[i] + ' '
             print_str += 'rsi_6:' + str(very_good_stock_rsi_np[i]) + ' '
@@ -43,9 +38,7 @@ class PremiumMember(Member):
     def read_stock_odds(self, stock_id):
         now_df = pd.concat(
             [pd.read_csv(database_path + '' + str(days) + 'now.csv') for days in range(2, 10)])
-
         stock_df = now_df[now_df['stock_id'] == int(stock_id)]
-
         stock_name = stock_df['stock_name'].to_numpy()[0]
 
         # print
