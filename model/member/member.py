@@ -1,5 +1,7 @@
 import pandas as pd
 
+from config import database_path
+
 
 class Member:
     __account = ''
@@ -17,7 +19,7 @@ class Member:
 
     def set_password(self, password):
         self.__password = password
-        member_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
+        member_df = pd.read_csv(database_path + 'member/member.csv')
         member_df.iloc[member_df[member_df['account'] == self.get_account()].index, member_df.columns.get_loc(
             "password")] = password
-        member_df.to_csv('D:/stock_recommend_system/database/member/member.csv', index=False)
+        member_df.to_csv(database_path + 'member/member.csv', index=False)

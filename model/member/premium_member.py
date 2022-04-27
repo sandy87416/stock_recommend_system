@@ -1,5 +1,6 @@
 import pandas as pd
 
+from config import database_path
 from model.member.member import Member
 
 
@@ -8,19 +9,19 @@ class PremiumMember(Member):
         super().__init__(account, password)
         self.__account = account
         self.__password = password
-        member_df = pd.read_csv('D:/stock_recommend_system/database/member/member.csv')
+        member_df = pd.read_csv(database_path + 'member/member.csv')
         member_df = pd.concat([member_df, pd.DataFrame({
             'account': [account],
             'password': [password],
             'level': [1],
         })])
-        member_df.to_csv('D:/stock_recommend_system/database/member/member.csv', index=False)
+        member_df.to_csv(database_path + 'member/member.csv', index=False)
 
     def read_recommended_stock(self, days, odds):
         days = int(days)
         odds = float(odds) / 10
 
-        very_good_df = pd.read_csv('D:/stock_recommend_system/database/' + str(days) + 'now.csv')
+        very_good_df = pd.read_csv(database_path + '' + str(days) + 'now.csv')
         # send_to_line
         very_good_df = very_good_df[(very_good_df['odds'] > odds)]  # 可修改
 
@@ -48,7 +49,7 @@ class PremiumMember(Member):
 
     def read_stock_odds(self, stock_id):
         now_df = pd.concat(
-            [pd.read_csv('D:/stock_recommend_system/database/' + str(days) + 'now.csv') for days in range(2, 10)])
+            [pd.read_csv(database_path + '' + str(days) + 'now.csv') for days in range(2, 10)])
 
         stock_df = now_df[now_df['stock_id'] == int(stock_id)]
 

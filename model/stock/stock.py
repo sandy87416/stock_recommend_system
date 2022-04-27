@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+from config import database_path
 from model.stock.intra_day_information import IntraDayInformation
 
 
@@ -59,12 +60,12 @@ class Stock:
         self.__stock_classification = stock_classification
 
     def get_stock_after_hours_information(self, stock_id):
-        df = pd.read_csv('D:/ooad/stock_recommend_system/database/' + str(stock_id) + '.csv')
+        df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
         df = df.sort_values(['Date'], ascending=[False])
-        news_df = pd.read_csv('D:/ooad/stock_recommend_system/database/news.csv')
+        news_df = pd.read_csv(database_path + 'news.csv')
         news_df = news_df.sort_values(['date', 'time'], ascending=[False, False])
         news_list = news_df[news_df['stock_id'] == stock_id].to_numpy()
-        monthly_revenue_df = pd.read_csv('D:/ooad/stock_recommend_system/database/month_revenue.csv')
+        monthly_revenue_df = pd.read_csv(database_path + 'month_revenue.csv')
         monthly_revenue_df = monthly_revenue_df[monthly_revenue_df['stock_id'] == stock_id]
 
         date = df['Date'].to_numpy()[0]
@@ -79,7 +80,7 @@ class Stock:
         return date, k_value, ma20_value, rsi_value, foreign_buy, investment_trust_buy, self_buy, news, monthly_revenue
 
     def get_stock_intraday_information(self, stock_id):
-        df = pd.read_csv('D:/ooad/stock_recommend_system/database/' + str(stock_id) + '.csv')
+        df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
         min_price = round(df['Low'].to_numpy()[0], 2)
@@ -88,7 +89,7 @@ class Stock:
         return end_price, min_price, max_price, start_price
 
     def create_stock_intraday_information(self, stock_id):
-        df = pd.read_csv('D:/ooad/stock_recommend_system/database/' + str(stock_id) + '.csv')
+        df = pd.read_csv(database_path + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
         min_price = round(df['Low'].to_numpy()[0], 2)
@@ -97,7 +98,7 @@ class Stock:
         return IntraDayInformation(end_price, min_price, max_price, start_price)
 
     def get_end_price(self, stock_id):
-        df = pd.read_csv('D:/ooad/stock_recommend_system/database/' + str(stock_id) + '.csv')
+        df = pd.read_csv(database_path + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
         return end_price
