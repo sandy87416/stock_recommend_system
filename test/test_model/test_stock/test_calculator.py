@@ -22,7 +22,8 @@ class TestCalculator(TestCase):
     def test_read_recommended_stock(self):
         to_front_end_message_list = self.calculator.read_recommended_stock(2, 0.8)
         self.assertEqual(to_front_end_message_list[0], '8080永利聯合 rsi_6:100.0 win_rate:0.93')
-        self.assertEqual(to_front_end_message_list[1], '3434哲固 rsi_6:95.0 win_rate:0.93')
+        self.assertEqual(to_front_end_message_list[1], '8477創業家 rsi_6:75.61 win_rate:0.89')
+        self.assertEqual(len(to_front_end_message_list), 1423)
 
         # to_front_end_message_list = self.calculator.read_recommended_stock(5, 0.8)
         # self.assertEqual(to_front_end_message_list[0], '3712永崴投控 rsi_6:100.0 win_rate:0.92')
