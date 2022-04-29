@@ -3,6 +3,7 @@ from unittest import TestCase
 import numpy as np
 
 np.seterr(invalid='ignore')
+
 from model.stock.calculator import Calculator
 
 

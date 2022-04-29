@@ -46,7 +46,7 @@ class Calculator:
         fee_and_tax = (buy_price * fee + sell_price * tax + sell_price * fee)
         return round((sell_price - buy_price - fee_and_tax) * trading_volume)
 
-    def read_recommended_stock(self, days, odds):
+    def read_recommended_stock(self, days=5, odds=0.7):
         now_df = pd.read_csv(database_path + 'now.csv')
         stock_id_name_df = pd.read_csv(database_path + 'stock_id_table.csv')
         all_stock_id_np = stock_id_name_df['stock_id'].to_numpy()
@@ -95,7 +95,6 @@ class Calculator:
         now_df['Close'] = now_df['Close'].astype('float32')
 
         ################################
-        odds = float(odds) / 10
 
         now_df = now_df[(now_df['odds'] > odds)]  # 可修改
 
