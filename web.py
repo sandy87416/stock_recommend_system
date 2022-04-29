@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 
+from controller.member_controller import MemberController
 from model.stock.calculator import Calculator
 
 app = Flask(__name__)
@@ -27,13 +28,9 @@ def read_recommend_stock_odds():
     days = request.form.get('days_dropdown')
     odds = request.form.get('odds_dropdown')
     odds = float(odds) / 10
-    calculator = create_calculator()
-    recommended_stock_list = calculator.read_recommended_stock(days, odds)
+    member_controller = MemberController()
+    recommended_stock_list = member_controller.read_recommend_stock(days, odds)
     return render_template('query_recommended_stock_page.html', recommended_stock_list=recommended_stock_list)
-
-
-def create_calculator():
-    return Calculator()
 
 
 if __name__ == '__main__':
