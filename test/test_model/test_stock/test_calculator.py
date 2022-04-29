@@ -1,6 +1,8 @@
 from unittest import TestCase
 
-from model.stock.stock import Stock
+import numpy as np
+
+np.seterr(invalid='ignore')
 from model.stock.calculator import Calculator
 
 
@@ -25,6 +27,12 @@ class TestCalculator(TestCase):
         self.assertEqual(to_front_end_message_list[1], '8477創業家 rsi_6:75.61 win_rate:0.89')
         self.assertEqual(len(to_front_end_message_list), 1423)
 
-        # to_front_end_message_list = self.calculator.read_recommended_stock(5, 0.8)
-        # self.assertEqual(to_front_end_message_list[0], '3712永崴投控 rsi_6:100.0 win_rate:0.92')
-        # self.assertEqual(to_front_end_message_list[1], '3434哲固 rsi_6:96.61 win_rate:0.91')
+        to_front_end_message_list = self.calculator.read_recommended_stock(5, 0.8)
+        self.assertEqual(to_front_end_message_list[0], '4712南璋 rsi_6:60.71 win_rate:0.93')
+        self.assertEqual(to_front_end_message_list[1], '9802鈺齊-KY rsi_6:92.0 win_rate:0.93')
+        self.assertEqual(len(to_front_end_message_list), 1742)
+
+        to_front_end_message_list = self.calculator.read_recommended_stock(2, 0.7)
+        self.assertEqual(to_front_end_message_list[0], '8080永利聯合 rsi_6:100.0 win_rate:0.93')
+        self.assertEqual(to_front_end_message_list[1], '8477創業家 rsi_6:75.61 win_rate:0.89')
+        self.assertEqual(len(to_front_end_message_list), 1524)

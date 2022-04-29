@@ -6,7 +6,6 @@ from joblib import load
 
 
 class Calculator:
-
     def __init__(self):
         pass
 
@@ -65,7 +64,7 @@ class Calculator:
 
         for stock_id in all_stock_id_np:
             stock_id_df = all_company_df_dict[stock_id]
-            stock_id_df = stock_id_df.append(areal_now_df[areal_now_df['stock_id'] == str(stock_id)])
+            stock_id_df = pd.concat([stock_id_df, areal_now_df[areal_now_df['stock_id'] == str(stock_id)]])
             all_company_df_dict[stock_id] = stock_id_df
 
         for stock_id in all_stock_id_np:
@@ -73,16 +72,9 @@ class Calculator:
             stock_id_df['corr_20'] = self.__get_corr_list(stock_id_df['Close'].to_numpy(), 20)
             stock_id_df['rsi_6'] = self.__get_rsi_list(stock_id_df['Close'].to_numpy(), 6)
             stock_id_df['stock_id'] = [stock_id] * len(stock_id_df)
-            # stock_id_df['is_up_stop'] = get_is_up_stop_list(stock_id_df['Close'].to_list())
-            # print(stock_id, stock_id_df['is_up_stop'].tail(1))
             all_company_df_dict[stock_id] = stock_id_df
 
-        # print(all_company_df_dict[1217])
-
-        all_stock_last_day_df = pd.DataFrame()
-        for stock_id in all_stock_id_np:
-            all_stock_last_day_df = all_stock_last_day_df.append(all_company_df_dict[stock_id].tail(1))
-        # print(all_stock_last_day_df)
+        all_stock_last_day_df = pd.concat([all_company_df_dict[stock_id].tail(1) for stock_id in all_stock_id_np])
         now_df = all_stock_last_day_df
 
         now_df = now_df.sort_values('corr_20', ascending=False)
@@ -95,7 +87,6 @@ class Calculator:
         X_test = now_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
         clf = load(database_path + str(days) + 'RandomForest.joblib')
         a_list = clf.predict_proba(X_test)
-        print(days, a_list)
         now_df['odds'] = [a[1] for a in a_list]
 
         now_df['Open'] = now_df['Open'].astype('float32')
@@ -104,10 +95,8 @@ class Calculator:
         now_df['Close'] = now_df['Close'].astype('float32')
 
         ################################
-        days = int(days)
         odds = float(odds) / 10
 
-        # send_to_line
         now_df = now_df[(now_df['odds'] > odds)]  # 可修改
 
         now_df = now_df.sort_values('odds', ascending=False)
