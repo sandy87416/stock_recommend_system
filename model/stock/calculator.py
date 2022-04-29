@@ -47,7 +47,7 @@ class Calculator:
         return round((sell_price - buy_price - fee_and_tax) * trading_volume)
 
     def read_recommended_stock(self, days=5, odds=0.7):
-        now_df = pd.read_csv(database_path + 'now.csv')
+        stock_df = pd.read_csv(database_path + 'now.csv')
         stock_id_name_df = pd.read_csv(database_path + 'stock_id_table.csv')
         all_stock_id_np = stock_id_name_df['stock_id'].to_numpy()
 
@@ -55,12 +55,12 @@ class Calculator:
                                all_stock_id_np}
 
         areal_now_df = pd.DataFrame()
-        areal_now_df['stock_id'] = now_df['代號▼']
-        areal_now_df['Open'] = now_df['昨收▼']
-        areal_now_df['High'] = now_df['最高▼']
-        areal_now_df['Low'] = now_df['最低▼']
-        areal_now_df['Close'] = now_df['價格▼']
-        areal_now_df['stock_name'] = now_df['名稱▼']
+        areal_now_df['stock_id'] = stock_df['代號▼']
+        areal_now_df['Open'] = stock_df['昨收▼']
+        areal_now_df['High'] = stock_df['最高▼']
+        areal_now_df['Low'] = stock_df['最低▼']
+        areal_now_df['Close'] = stock_df['價格▼']
+        areal_now_df['stock_name'] = stock_df['名稱▼']
 
         for stock_id in all_stock_id_np:
             stock_id_df = all_company_df_dict[stock_id]
@@ -75,14 +75,19 @@ class Calculator:
             all_company_df_dict[stock_id] = stock_id_df
 
         all_stock_last_day_df = pd.concat([all_company_df_dict[stock_id].tail(1) for stock_id in all_stock_id_np])
-        now_df = all_stock_last_day_df
+        stock_df = all_stock_last_day_df
 
-        now_df = now_df.sort_values('corr_20', ascending=False)
-        now_df['corr_20_rank'] = [i for i in range(len(now_df['stock_id']))]
+        stock_df = stock_df.sort_values('corr_20', ascending=False)
+        stock_df['corr_20_rank'] = [i for i in range(len(stock_df['stock_id']))]
 
-        now_df = now_df[['stock_id', 'stock_name'] + ['Open', 'High', 'Low', 'Close', 'rsi_6']]
-        now_df = now_df.dropna()
+        stock_df = stock_df[['stock_id', 'stock_name'] + ['Open', 'High', 'Low', 'Close', 'rsi_6']]
+        stock_df = stock_df.dropna()
+        to_front_end_message_list = self.__calculate_recommended_stock(days, odds, stock_df)
 
+        return to_front_end_message_list
+
+    @staticmethod
+    def __calculate_recommended_stock(days, odds, now_df):
         # get_odds from train
         X_test = now_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
         clf = load(database_path + str(days) + 'RandomForest.joblib')

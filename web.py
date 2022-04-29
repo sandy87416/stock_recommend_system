@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 
 from controller.member_controller import MemberController
-from model.stock.calculator import Calculator
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
