@@ -82,33 +82,32 @@ class Calculator:
 
         stock_df = stock_df[['stock_id', 'stock_name'] + ['Open', 'High', 'Low', 'Close', 'rsi_6']]
         stock_df = stock_df.dropna()
-        to_front_end_message_list = self.__calculate_recommended_stock(days, odds, stock_df)
-        return to_front_end_message_list
+        recommended_stock_lis = self.__calculate_recommended_stock(days, odds, stock_df)
+        return recommended_stock_lis
 
     @staticmethod
-    def __calculate_recommended_stock(days, odds, now_df):
-        # get_odds from train
-        X_test = now_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
+    def __calculate_recommended_stock(days, odds, stock_df):
+        X_test = stock_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
         clf = load(database_path + str(days) + 'RandomForest.joblib')
         a_list = clf.predict_proba(X_test)
-        now_df['odds'] = [a[1] for a in a_list]
+        stock_df['odds'] = [a[1] for a in a_list]
 
-        now_df['Open'] = now_df['Open'].astype('float32')
-        now_df['High'] = now_df['High'].astype('float32')
-        now_df['Low'] = now_df['Low'].astype('float32')
-        now_df['Close'] = now_df['Close'].astype('float32')
+        stock_df['Open'] = stock_df['Open'].astype('float32')
+        stock_df['High'] = stock_df['High'].astype('float32')
+        stock_df['Low'] = stock_df['Low'].astype('float32')
+        stock_df['Close'] = stock_df['Close'].astype('float32')
 
-        now_df = now_df[(now_df['odds'] > odds)]  # 可修改
+        stock_df = stock_df[(stock_df['odds'] > odds)]  # 可修改
 
-        now_df = now_df.sort_values('odds', ascending=False)
+        stock_df = stock_df.sort_values('odds', ascending=False)
 
         # print
         to_front_end_message_list = list()
-        very_good_stock_id_np = now_df['stock_id'].to_numpy()
-        very_good_stock_stock_name_np = now_df['stock_name'].to_numpy()
-        very_good_stock_rsi_np = now_df['rsi_6'].to_numpy()
-        very_good_stock_win_rate_np = now_df['odds'].to_numpy()
-        for i in range(len(now_df)):
+        very_good_stock_id_np = stock_df['stock_id'].to_numpy()
+        very_good_stock_stock_name_np = stock_df['stock_name'].to_numpy()
+        very_good_stock_rsi_np = stock_df['rsi_6'].to_numpy()
+        very_good_stock_win_rate_np = stock_df['odds'].to_numpy()
+        for i in range(len(stock_df)):
             print_str = ''
             print_str += str(very_good_stock_id_np[i])
             print_str += very_good_stock_stock_name_np[i] + ' '
@@ -116,3 +115,63 @@ class Calculator:
             print_str += 'win_rate:' + str(round(very_good_stock_win_rate_np[i], 2))
             to_front_end_message_list.append(print_str)
         return to_front_end_message_list
+
+    def __calculate_stock_odds(self, stock_df):
+        X_test = stock_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
+
+        odds_df = pd.DataFrame()
+        for days in range(2, 10):
+            clf = load(database_path + str(days) + 'RandomForest.joblib')
+            a_list = clf.predict_proba(X_test)
+
+            stock_df['odds'] = [a[1] for a in a_list]
+            stock_df['Open'] = stock_df['Open'].astype('float32')
+            stock_df['High'] = stock_df['High'].astype('float32')
+            stock_df['Low'] = stock_df['Low'].astype('float32')
+            stock_df['Close'] = stock_df['Close'].astype('float32')
+            odds_df = pd.concat([odds_df, stock_df])
+
+        odds_df = odds_df.sort_values('odds', ascending=False)
+        stock_id_name_df = pd.read_csv(database_path + 'stock_id_table.csv')
+        stock_id = odds_df['stock_id'].to_numpy()[0]
+        stock_name = stock_id_name_df[stock_id_name_df['stock_id'] == stock_id]['stock_name'].to_numpy()[0]
+        # print
+        stock_odds_list = list()
+        for i in range(len(odds_df)):
+            message = str(stock_id) + stock_name + str(i + 2) + '天賣出' + '勝率:' + str(odds_df['odds'].to_numpy()[i])
+            stock_odds_list.append(message)
+        return stock_odds_list
+
+    def read_stock_odds(self, stock_id):
+        stock_df = pd.read_csv(database_path + 'now.csv')
+        stock_df = stock_df[stock_df['代號▼'] == str(stock_id)]
+
+        all_company_df_dict = {stock_id: pd.read_csv(database_path + str(stock_id) + '.csv')}
+
+        areal_now_df = pd.DataFrame()
+        areal_now_df['stock_id'] = stock_df['代號▼']
+        areal_now_df['Open'] = stock_df['昨收▼']
+        areal_now_df['High'] = stock_df['最高▼']
+        areal_now_df['Low'] = stock_df['最低▼']
+        areal_now_df['Close'] = stock_df['價格▼']
+        areal_now_df['stock_name'] = stock_df['名稱▼']
+
+        stock_id_df = all_company_df_dict[stock_id]
+        stock_id_df = pd.concat([stock_id_df, areal_now_df[areal_now_df['stock_id'] == str(stock_id)]])
+        all_company_df_dict[stock_id] = stock_id_df
+
+        stock_id_df['corr_20'] = self.__get_corr_list(stock_id_df['Close'].to_numpy(), 20)
+        stock_id_df['rsi_6'] = self.__get_rsi_list(stock_id_df['Close'].to_numpy(), 6)
+        stock_id_df['stock_id'] = [stock_id] * len(stock_id_df)
+        all_company_df_dict[stock_id] = stock_id_df
+
+        all_stock_last_day_df = pd.concat([all_company_df_dict[stock_id].tail(1)])
+        stock_df = all_stock_last_day_df
+
+        stock_df = stock_df.sort_values('corr_20', ascending=False)
+        stock_df['corr_20_rank'] = [i for i in range(len(stock_df['stock_id']))]
+
+        stock_df = stock_df[['stock_id', 'stock_name'] + ['Open', 'High', 'Low', 'Close', 'rsi_6']]
+        stock_df = stock_df.dropna()
+        stock_odds_list = self.__calculate_stock_odds(stock_df)
+        return stock_odds_list

@@ -38,7 +38,8 @@ class TestCalculator(TestCase):
         # self.assertEqual(recommended_stock_list[1], '8477創業家 rsi_6:75')
         self.assertEqual(len(recommended_stock_list), 6)
 
-    # def test_read_stock_odds(self):
-    #     to_front_end_message_list = self.calculator.read_stock_odds(2330)
-    #     self.assertEqual(to_front_end_message_list[0], '2330台積電2天賣出勝率:0.15')
-    #     self.assertEqual(to_front_end_message_list[1], '2330台積電3天賣出勝率:0.55')
+    def test_read_stock_odds(self):
+        stock_odds_list = self.calculator.read_stock_odds(2330)
+        self.assertEqual(stock_odds_list[0], '2330台積電2天賣出勝率:0.69')
+        self.assertEqual(stock_odds_list[1], '2330台積電3天賣出勝率:0.6')
+        self.assertEqual(len(stock_odds_list), 8)
