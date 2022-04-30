@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container row">
+        <h1>查詢特定股票</h1>
+        <div class="col-md-4">
+            <form action="/read_stock_odds" method="post">
+                <label for="stock_id">股票代號</label>
+                <input name="stock_id" type="text">
+                <button type="submit" name="confirm">確認</button>
+            </form>
+        </div>
+    </div>
+
+    <h1>{{ stock_id }}</h1>
+    {% for dtock_odds in stock_odds_list %}
+        <p>{{ dtock_odds }}</p>
+    {% endfor %}
+{% endblock content %}
