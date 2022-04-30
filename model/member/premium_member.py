@@ -13,7 +13,11 @@ class PremiumMember(Member):
         recommended_stock_list = calculator.read_recommended_stock(days, odds)
         return recommended_stock_list
 
-    # def read_stock_odds(self, stock_id):
+    def read_stock_odds(self, stock_id):
+        calculator = Calculator()
+        stock_odds_list = calculator.read_stock_odds(stock_id)
+        return stock_odds_list
+
     #     now_df = pd.concat(
     #         [pd.read_csv(database_path + '' + str(days) + 'now.csv') for days in range(2, 10)])
     #     stock_df = now_df[now_df['stock_id'] == int(stock_id)]
