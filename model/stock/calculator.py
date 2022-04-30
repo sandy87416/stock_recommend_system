@@ -83,7 +83,6 @@ class Calculator:
         stock_df = stock_df[['stock_id', 'stock_name'] + ['Open', 'High', 'Low', 'Close', 'rsi_6']]
         stock_df = stock_df.dropna()
         to_front_end_message_list = self.__calculate_recommended_stock(days, odds, stock_df)
-
         return to_front_end_message_list
 
     @staticmethod
@@ -98,8 +97,6 @@ class Calculator:
         now_df['High'] = now_df['High'].astype('float32')
         now_df['Low'] = now_df['Low'].astype('float32')
         now_df['Close'] = now_df['Close'].astype('float32')
-
-        ################################
 
         now_df = now_df[(now_df['odds'] > odds)]  # 可修改
 

@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 
-from controller.member_controller import MemberController
+from model.member.premium_member import PremiumMember
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+premium_member = PremiumMember('t109598087@ntut.org.tw', 'islab')
 
 
 @app.route('/')
@@ -27,8 +28,7 @@ def read_recommend_stock_odds():
     days = request.form.get('days_dropdown')
     odds = request.form.get('odds_dropdown')
     odds = float(odds) / 10
-    member_controller = MemberController()
-    recommended_stock_list = member_controller.read_recommend_stock(days, odds)
+    recommended_stock_list = premium_member.read_recommended_stock(days, odds)
     return render_template('query_recommended_stock_page.html', recommended_stock_list=recommended_stock_list)
 
 
