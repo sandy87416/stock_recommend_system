@@ -12,6 +12,9 @@ class OrdinaryMember(Member):
         self.__password = password
         self.__application_information = None
 
+    def get_application_information(self):
+        return self.__application_information
+
     def create_application_information(self):
         self.__application_information = ApplicationInformation(self.get_account(), '')
 
@@ -27,6 +30,3 @@ class OrdinaryMember(Member):
         })])
         df.to_csv(database_path + 'member/application_information.csv', index=False)
         return 'Success'
-
-    def get_application_information(self):
-        return self.__application_information
