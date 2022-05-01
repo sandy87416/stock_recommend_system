@@ -8,10 +8,10 @@ from model.member.admin import Admin
 
 class TestAdmin(TestCase):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         member_df = pd.read_csv(database_path + 'member/member.csv')
         password = member_df[member_df['account'] == "t109598092@ntut.org.tw"]['password'].to_numpy()[0]
-        self.admin = Admin("t109598092@ntut.org.tw", password)
+        cls.admin = Admin("t109598092@ntut.org.tw", password)
 
     def test_get_account(self):
         self.assertEqual(self.admin.get_account(), "t109598092@ntut.org.tw")
@@ -30,7 +30,9 @@ class TestAdmin(TestCase):
         self.assertEqual(password, "newpassword")
 
         # teardown
-        member_df.iloc[member_df[member_df['account'] == self.admin.get_account()].index, member_df.columns.get_loc("password")] = "islab"
+        column_index = member_df.columns.get_loc("password")
+        row_index = member_df[member_df['account'] == self.admin.get_account()].index
+        member_df.iloc[row_index, column_index] = "islab"
         member_df.to_csv(database_path + 'member/member.csv', index=False)
 
     def test_upgrade_member_level(self):

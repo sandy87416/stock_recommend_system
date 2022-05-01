@@ -8,8 +8,8 @@ from model.member.ordinary_member import OrdinaryMember
 
 class TestMember(TestCase):
     @classmethod
-    def setUpClass(self):
-        self.member = OrdinaryMember("t109598087@ntut.org.tw", 'islab')
+    def setUpClass(cls):
+        cls.member = OrdinaryMember("t109598087@ntut.org.tw", 'islab')
 
     def test_get_account(self):
         self.assertEqual(self.member.get_account(), 't109598087@ntut.org.tw')

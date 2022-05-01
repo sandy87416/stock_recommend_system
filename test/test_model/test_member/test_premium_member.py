@@ -8,8 +8,8 @@ from model.member.premium_member import PremiumMember
 
 class TestPremiumMember(TestCase):
     @classmethod
-    def setUpClass(self):
-        self.premium_member = PremiumMember("t109598087@ntut.org.tw", 'islab')
+    def setUpClass(cls):
+        cls.premium_member = PremiumMember("t109598087@ntut.org.tw", 'islab')
 
     def test_get_account(self):
         self.assertEqual(self.premium_member.get_account(), 't109598087@ntut.org.tw')

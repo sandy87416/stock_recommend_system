@@ -61,7 +61,8 @@ class Stock:
     def set_stock_classification(self, stock_classification):
         self.__stock_classification = stock_classification
 
-    def get_stock_after_hours_information(self, stock_id):
+    @staticmethod
+    def get_stock_after_hours_information(stock_id):
         df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
         df = df.sort_values(['Date'], ascending=[False])
         news_df = pd.read_csv(database_path + 'news.csv')
@@ -75,14 +76,17 @@ class Stock:
         ma20_value = get_mean_price_list(df['Close'].to_numpy(), 20)[0]
         rsi_value = get_rsi(df['Close'].to_numpy())
         foreign_buy = '0' if is_nan(df['foreign_buy'].to_numpy()[0]) else df['foreign_buy'].to_numpy()[0]
-        investment_trust_buy = '0' if is_nan(df['investment_trust_buy'].to_numpy()[0]) else df['investment_trust_buy'].to_numpy()[0]
+        investment_trust_buy = '0' if is_nan(df['investment_trust_buy'].to_numpy()[0]) else \
+            df['investment_trust_buy'].to_numpy()[0]
         self_buy = '0' if is_nan(df['self_buy'].to_numpy()[0]) else df['self_buy'].to_numpy()[0]
         news = news_list[0] if len(news_list) >= 1 else ''
         monthly_revenue = monthly_revenue_df['month_revenue'].to_numpy()[0]
-        after_hours_information = AfterHoursInformation(date, k_value, ma20_value, rsi_value, foreign_buy, investment_trust_buy, self_buy, news, monthly_revenue)
+        after_hours_information = AfterHoursInformation(date, k_value, ma20_value, rsi_value, foreign_buy,
+                                                        investment_trust_buy, self_buy, news, monthly_revenue)
         return after_hours_information
 
-    def get_stock_intraday_information(self, stock_id):
+    @staticmethod
+    def get_stock_intraday_information(stock_id):
         df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
@@ -92,7 +96,8 @@ class Stock:
         intraday_information = IntraDayInformation(end_price, min_price, max_price, start_price)
         return intraday_information
 
-    def create_stock_intraday_information(self, stock_id):
+    @staticmethod
+    def create_stock_intraday_information(stock_id):
         df = pd.read_csv(database_path + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
@@ -101,9 +106,9 @@ class Stock:
         start_price = round(df['Open'].to_numpy()[0], 2)
         return IntraDayInformation(end_price, min_price, max_price, start_price)
 
-    def get_end_price(self, stock_id):
+    @staticmethod
+    def get_end_price(stock_id):
         df = pd.read_csv(database_path + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
         return end_price
-

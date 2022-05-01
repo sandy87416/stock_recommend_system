@@ -8,12 +8,14 @@ class PremiumMember(Member):
         self.__account = account
         self.__password = password
 
-    def read_recommended_stock(self, days, odds):
+    @staticmethod
+    def read_recommended_stock(days, odds):
         calculator = Calculator()
         recommended_stock_list = calculator.read_recommended_stock(days, odds)
         return recommended_stock_list
 
-    def read_stock_odds(self, stock_id):
+    @staticmethod
+    def read_stock_odds(stock_id):
         calculator = Calculator()
         stock_odds_list = calculator.read_stock_odds(stock_id)
         return stock_odds_list

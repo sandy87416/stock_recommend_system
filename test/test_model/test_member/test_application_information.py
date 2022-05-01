@@ -1,7 +1,5 @@
-import csv
 import pandas as pd
 from unittest import TestCase
-
 
 from config import database_path
 from model.member.application_information import ApplicationInformation
@@ -9,10 +7,10 @@ from model.member.application_information import ApplicationInformation
 
 class TestApplicationInformation(TestCase):
     @classmethod
-    def setUpClass(self):
-        self.account = "t109598053@ntut.org.tw"
-        self.content = "administrator"
-        self.application_information = ApplicationInformation(self.account, self.content)
+    def setUpClass(cls):
+        cls.account = "t109598053@ntut.org.tw"
+        cls.content = "administrator"
+        cls.application_information = ApplicationInformation(cls.account, cls.content)
 
     def test_get_account(self):
         self.assertEqual(self.application_information.get_account(), "t109598053@ntut.org.tw")

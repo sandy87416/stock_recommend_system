@@ -20,3 +20,4 @@ twstock
 lxml
 yfinance
 html5lib
+joblib

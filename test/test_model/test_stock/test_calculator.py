@@ -2,15 +2,15 @@ from unittest import TestCase
 
 import numpy as np
 
-np.seterr(invalid='ignore')
-
 from model.stock.calculator import Calculator
+
+np.seterr(invalid='ignore')
 
 
 class TestCalculator(TestCase):
     @classmethod
-    def setUpClass(self):
-        self.calculator = Calculator()
+    def setUpClass(cls):
+        cls.calculator = Calculator()
 
     def test_calculate_profit_and_loss(self):
         profit_and_loss = self.calculator.calculate_profit_and_loss(600, 605, trading_volume=1000, securities_firm=0.6)

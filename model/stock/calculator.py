@@ -87,9 +87,9 @@ class Calculator:
 
     @staticmethod
     def __calculate_recommended_stock(days, odds, stock_df):
-        X_test = stock_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
+        x_test = stock_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
         clf = load(database_path + str(days) + 'RandomForest.joblib')
-        a_list = clf.predict_proba(X_test)
+        a_list = clf.predict_proba(x_test)
         stock_df['odds'] = [a[1] for a in a_list]
 
         stock_df['Open'] = stock_df['Open'].astype('float32')
@@ -116,13 +116,14 @@ class Calculator:
             to_front_end_message_list.append(print_str)
         return to_front_end_message_list
 
-    def __calculate_stock_odds(self, stock_df):
-        X_test = stock_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
+    @staticmethod
+    def __calculate_stock_odds(stock_df):
+        x_test = stock_df[['Open', 'High', 'Low', 'Close', 'rsi_6']].values
 
         odds_df = pd.DataFrame()
         for days in range(2, 10):
             clf = load(database_path + str(days) + 'RandomForest.joblib')
-            a_list = clf.predict_proba(X_test)
+            a_list = clf.predict_proba(x_test)
 
             stock_df['odds'] = [a[1] for a in a_list]
             stock_df['Open'] = stock_df['Open'].astype('float32')

@@ -28,6 +28,7 @@ def query_recommended_stock_page():
 @app.route('/read_recommended_stock', methods=['POST'])
 def read_recommended_stock():
     days = request.form.get('days_dropdown')
+
     odds = request.form.get('odds_dropdown')
     odds = float(odds) / 10
     recommended_stock_list = premium_member.read_recommended_stock(days, odds)
