@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request
+from json import dump
+
+from flask import Flask, render_template, request, json, jsonify
 from flask_bootstrap import Bootstrap
 
 from model.member.premium_member import PremiumMember
@@ -20,16 +22,22 @@ def stock_odds_menu():
 
 @app.route('/query_recommended_stock_page')
 def query_recommended_stock_page():
-    return render_template('query_recommended_stock_page.html')
+    return render_template('query_recommended_stock_page.html', recommended_stock_list='')
 
 
-@app.route('/read_recommended_stock', methods=['GET', 'POST'])
+@app.route('/read_recommended_stock', methods=['POST'])
 def read_recommended_stock():
     days = request.form.get('days_dropdown')
     odds = request.form.get('odds_dropdown')
     odds = float(odds) / 10
     recommended_stock_list = premium_member.read_recommended_stock(days, odds)
-    return render_template('query_recommended_stock_page.html', recommended_stock_list=recommended_stock_list)
+    data = list()
+    for i in range(len(recommended_stock_list)):
+        d = dict()
+        d['id'] = i+1
+        d['content'] = recommended_stock_list[i]
+        data.append(d)
+    return render_template('query_recommended_stock_page.html', recommended_stock_list=data)
 
 
 @app.route('/query_specific_stock_page')
