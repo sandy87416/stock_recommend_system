@@ -30,13 +30,7 @@ def read_recommended_stock():
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     odds = int(odds) / 10
-    # recommended_stock_list = premium_member.read_recommended_stock(days, odds)
-    recommended_stock_list = [{'stock_id': 8080, 'stock_name': '永利聯合', 'rsi_6': 100.0, 'odds': 0.93},
-                              {'stock_id': 8477, 'stock_name': '創業家', 'rsi_6': 75.61, 'odds': 0.89},
-                              {'stock_id': 4712, 'stock_name': '南璋', 'rsi_6': 60.71, 'odds': 0.93},
-                              {'stock_id': 9802, 'stock_name': '鈺齊-KY', 'rsi_6': 92.0, 'odds': 0.93}]
-    for i in range(20):
-        recommended_stock_list.append(recommended_stock_list[i % 4])
+    recommended_stock_list = premium_member.read_recommended_stock(days, odds)
     json_data = jsonify({'total': len(recommended_stock_list), 'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
     return json_data
 
