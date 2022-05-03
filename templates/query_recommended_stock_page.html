@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}" />
-<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
 {%- endblock styles %}
 
 {% block content %}
     <div class="container px-lg-5">
-        <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+        <div class="p-lg-5 bg-light rounded-3 text-center">
             <h1 class="display-5 fw-bold">設定推薦股票條件</h1>
-            <form id="recommend_stock_condition" action="/read_recommended_stock" method="post" class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+            <div id="recommend_stock_condition" class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                 <div class="col-12">
-                    <label for="odds" class="form-label">勝率</label>
-                    <select name="odds_dropdown" id="odds" class="form-select" aria-label="Default select example">
+                    <label for="odds" class="form-label">勝率：</label>
+                    <select name="odds_dropdown" id="odds_dropdown" class="form-select" aria-label="Default select example">
                         <option value="1">0.1</option>
                         <option value="2">0.2</option>
                         <option value="3">0.3</option>
@@ -25,8 +26,8 @@
                     </select>
                 </div>
                 <div class="col-12">
-                    <label for="days" class="form-label">幾天以內賣出</label>
-                    <select name="days_dropdown" id="days" class="form-select" aria-label="Default select example">
+                    <label for="days" class="form-label">幾天以內賣出：</label>
+                    <select name="days_dropdown" id="days_dropdown" class="form-select" aria-label="Default select example">
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -38,31 +39,94 @@
                     </select>
                 </div>
                 <div class="col-12">
-                    <button class="btn btn-outline-primary">確認</button>
+                    <button id="submit_button" class="btn btn-outline-primary">確認</button>
                 </div>
-            </form>
+            </div>
         </div>
-        <div class="p-4 p-lg-5 rounded-3 text-center">
+        <div class="my-lg-5 text-center">
             <div class="panel">
                 <div class="panel-body table-responsive">
-                    <table id = "recommended_stock_table" class="table table-striped table-hover table-bordered">
+                    <h2 id="title">勝率：  幾天內賣出：  </h2>
+                    <table id="recommended_stock_table" class="table table-striped table-hover table-bordered"
+                           data-toggle="table"
+                           data-sortable=true
+                           data-sort-class="table-active"
+                           data-show-search=true
+                           data-show-search-clear-button=true
+                           data-show-refresh=true
+                           data-show-columns=true
+                           data-show-columns-toggle-all=true >
                         <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Content</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            {% for recommended_stock in recommended_stock_list %}
                             <tr>
-                                <td>{{ recommended_stock.id }}</td>
-                                <td>{{ recommended_stock.content }}</td>
+                                <th data-field="stock_id" data-sortable=true>股票代號</th>
+                                <th data-field="stock_name" data-sortable=true>股票名稱</th>
+                                <th data-field="rsi_6" data-sortable=true>RSI6</th>
+                                <th data-field="odds" data-sortable=true>勝率</th>
                             </tr>
-                            {% endfor %}
-                        </tbody>
+                        </thead>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+    <script>
+        let getDropDown = function () {
+            const odds_dropdown = $("#odds_dropdown").val() === undefined ? 7 : $("#odds_dropdown").val();
+            const days_dropdown = $("#days_dropdown").val() === undefined ? 5 : $("#days_dropdown").val();
+            return {odds: odds_dropdown, days: days_dropdown}
+        }
+        let queryParams = function (params) {
+            const dropdown = getDropDown();
+            const temp = {
+                //params：
+                limit: params.limit,
+                offset: params.offset,
+                sortOrder: params.order,
+                sortField: params.sort,
+                odds_dropdown: dropdown['odds'],
+                days_dropdown: dropdown['days']
+            };
+            return temp;
+        }
+        $('#recommended_stock_table').bootstrapTable({
+            dataType: "json",
+            striped: true,
+            cache: false,
+            pagination: true,
+            pageSize: 5,
+            pageNumber: 1,
+            pageList: [5, 10, 20, 50, 100, 200, 500],
+            idField: "stock_id",
+            showColumns: true,
+            showRefresh: true,
+            singleSelect: true,
+            search: true,
+            strictSearch: false,
+            showColumns: true,
+            sidePagination: "server",
+            queryParams: queryParams,
+            queryParamsType: "limit",
+            toolbar: "#toolbar",
+            silent: true,
+        });
+
+        $("#submit_button").click(function() {
+            const dropdown = getDropDown();
+            const opt = {
+                url: "/read_recommended_stock",
+                silent: true,
+                query:{
+                    odds_dropdown: dropdown['odds'],
+                    days_dropdown: dropdown['days'],
+                }
+            }
+            $("#recommended_stock_table").bootstrapTable('refresh', opt);
+
+            $("#title")[0].innerHTML = "勝率：" + dropdown['odds'] + "幾天內賣出：" + dropdown['days'];
+        });
+    </script>
 {% endblock content %}
