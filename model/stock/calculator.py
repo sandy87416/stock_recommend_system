@@ -82,8 +82,8 @@ class Calculator:
 
         stock_df = stock_df[['stock_id', 'stock_name'] + ['Open', 'High', 'Low', 'Close', 'rsi_6']]
         stock_df = stock_df.dropna()
-        recommended_stock_lis = self.__calculate_recommended_stock(days, odds, stock_df)
-        return recommended_stock_lis
+        recommended_stock_list = self.__calculate_recommended_stock(days, odds, stock_df)
+        return recommended_stock_list
 
     @staticmethod
     def __calculate_recommended_stock(days, odds, stock_df):
@@ -102,19 +102,17 @@ class Calculator:
         stock_df = stock_df.sort_values('odds', ascending=False)
 
         # print
-        to_front_end_message_list = list()
         very_good_stock_id_np = stock_df['stock_id'].to_numpy()
         very_good_stock_stock_name_np = stock_df['stock_name'].to_numpy()
         very_good_stock_rsi_np = stock_df['rsi_6'].to_numpy()
         very_good_stock_win_rate_np = stock_df['odds'].to_numpy()
-        for i in range(len(stock_df)):
-            print_str = ''
-            print_str += str(very_good_stock_id_np[i])
-            print_str += very_good_stock_stock_name_np[i] + ' '
-            print_str += 'rsi_6:' + str(very_good_stock_rsi_np[i]) + ' '
-            print_str += 'win_rate:' + str(round(very_good_stock_win_rate_np[i], 2))
-            to_front_end_message_list.append(print_str)
-        return to_front_end_message_list
+
+        recommended_stock_list = [{'stock_id': very_good_stock_id_np[i],
+                                   'stock_name': very_good_stock_stock_name_np[i],
+                                   'rsi_6': very_good_stock_rsi_np[i],
+                                   'odds': round(very_good_stock_win_rate_np[i], 2)}
+                                  for i in range(len(stock_df))]
+        return recommended_stock_list
 
     @staticmethod
     def __calculate_stock_odds(stock_df):
@@ -137,10 +135,11 @@ class Calculator:
         stock_id = odds_df['stock_id'].to_numpy()[0]
         stock_name = stock_id_name_df[stock_id_name_df['stock_id'] == stock_id]['stock_name'].to_numpy()[0]
         # print
-        stock_odds_list = list()
-        for i in range(len(odds_df)):
-            message = str(stock_id) + stock_name + str(i + 2) + '天賣出' + '勝率:' + str(odds_df['odds'].to_numpy()[i])
-            stock_odds_list.append(message)
+        stock_odds_list = [{'stock_id': stock_id,
+                            'stock_name': stock_name,
+                            'days': (i + 2),
+                            'odds': round(odds_df['odds'].to_numpy()[i], 2)}
+                           for i in range(len(odds_df))]
         return stock_odds_list
 
     def read_stock_odds(self, stock_id):
