@@ -46,7 +46,6 @@
         <div class="my-lg-5 text-center">
             <div class="panel">
                 <div class="panel-body table-responsive">
-                    <h2 id="title">勝率：  幾天內賣出：  </h2>
                     <table id="recommended_stock_table" class="table table-striped table-hover table-bordered"
                            data-toggle="table"
                            data-sort-class="table-active"
@@ -124,8 +123,6 @@
                 }
             }
             $("#recommended_stock_table").bootstrapTable('refresh', opt);
-
-            $("#title")[0].innerHTML = "勝率：" + dropdown['odds']/10 + " 幾天內賣出：" + dropdown['days'];
         });
     </script>
 {% endblock content %}
