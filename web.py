@@ -25,8 +25,8 @@ def query_recommended_stock_page():
 
 @app.route('/read_recommended_stock', methods=['GET', 'POST'])
 def read_recommended_stock():
-    days = int(request.values.get('days_dropdown'))
-    odds = int(request.values.get('odds_dropdown'))
+    days = int(request.values.get('days'))
+    odds = int(request.values.get('odds'))
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     odds = int(odds) / 10

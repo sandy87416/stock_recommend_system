@@ -13,7 +13,7 @@
             <div id="recommend_stock_condition" class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                 <div class="col-12">
                     <label for="odds" class="form-label">勝率：</label>
-                    <select name="odds_dropdown" id="odds_dropdown" class="form-select" aria-label="Default select example">
+                    <select name="odds" id="odds" class="form-select" aria-label="Default select example">
                         <option value="1">0.1</option>
                         <option value="2">0.2</option>
                         <option value="3">0.3</option>
@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-12">
                     <label for="days" class="form-label">幾天以內賣出：</label>
-                    <select name="days_dropdown" id="days_dropdown" class="form-select" aria-label="Default select example">
+                    <select name="days" id="days" class="form-select" aria-label="Default select example">
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -75,9 +75,9 @@
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
     <script>
         let getDropDown = function () {
-            const odds_dropdown = $("#odds_dropdown").val() === undefined ? 7 : $("#odds_dropdown").val();
-            const days_dropdown = $("#days_dropdown").val() === undefined ? 5 : $("#days_dropdown").val();
-            return {odds: odds_dropdown, days: days_dropdown}
+            const odds = $("#odds").val() === undefined ? 7 : $("#odds").val();
+            const days = $("#days").val() === undefined ? 5 : $("#days").val();
+            return {odds: odds, days: days}
         }
         let queryParams = function (params) {
             const dropdown = getDropDown();
@@ -87,8 +87,8 @@
                 offset: params.offset,
                 sortOrder: params.order,
                 sortField: params.sort,
-                odds_dropdown: dropdown['odds'],
-                days_dropdown: dropdown['days']
+                odds: dropdown['odds'],
+                days: dropdown['days']
             };
             return temp;
         }
@@ -120,8 +120,8 @@
                 url: "/read_recommended_stock",
                 silent: true,
                 query:{
-                    odds_dropdown: dropdown['odds'],
-                    days_dropdown: dropdown['days'],
+                    odds: dropdown['odds'],
+                    days: dropdown['days'],
                 }
             }
             $("#recommended_stock_table").bootstrapTable('refresh', opt);
