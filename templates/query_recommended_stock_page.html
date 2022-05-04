@@ -49,19 +49,16 @@
                     <h2 id="title">勝率：  幾天內賣出：  </h2>
                     <table id="recommended_stock_table" class="table table-striped table-hover table-bordered"
                            data-toggle="table"
-                           data-sortable=true
                            data-sort-class="table-active"
-                           data-show-search=true
-                           data-show-search-clear-button=true
                            data-show-refresh=true
                            data-show-columns=true
                            data-show-columns-toggle-all=true >
                         <thead>
                             <tr>
-                                <th data-field="stock_id" data-sortable=true>股票代號</th>
-                                <th data-field="stock_name" data-sortable=true>股票名稱</th>
-                                <th data-field="rsi_6" data-sortable=true>RSI6</th>
-                                <th data-field="odds" data-sortable=true>勝率</th>
+                                <th data-field="stock_id">股票代號</th>
+                                <th data-field="stock_name">股票名稱</th>
+                                <th data-field="rsi_6">RSI6</th>
+                                <th data-field="odds">勝率</th>
                             </tr>
                         </thead>
                     </table>
@@ -104,8 +101,6 @@
             showColumns: true,
             showRefresh: true,
             singleSelect: true,
-            search: true,
-            strictSearch: false,
             showColumns: true,
             sidePagination: "server",
             queryParams: queryParams,
@@ -119,6 +114,7 @@
             const opt = {
                 url: "/read_recommended_stock",
                 silent: true,
+                pageNumber: 1,
                 query:{
                     odds: dropdown['odds'],
                     days: dropdown['days'],
@@ -126,7 +122,7 @@
             }
             $("#recommended_stock_table").bootstrapTable('refresh', opt);
 
-            $("#title")[0].innerHTML = "勝率：" + dropdown['odds'] + "幾天內賣出：" + dropdown['days'];
+            $("#title")[0].innerHTML = "勝率：" + dropdown['odds']/10 + " 幾天內賣出：" + dropdown['days'];
         });
     </script>
 {% endblock content %}
