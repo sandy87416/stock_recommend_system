@@ -107,10 +107,11 @@ class Calculator:
         very_good_stock_rsi_np = stock_df['rsi_6'].to_numpy()
         very_good_stock_win_rate_np = stock_df['odds'].to_numpy()
 
-        recommended_stock_list = [{'stock_id': very_good_stock_id_np[i],
+        recommended_stock_list = [{'stock_id': str(very_good_stock_id_np[i]),
                                    'stock_name': very_good_stock_stock_name_np[i],
-                                   'rsi_6': very_good_stock_rsi_np[i],
-                                   'odds': round(very_good_stock_win_rate_np[i], 2)}
+                                   'rsi_6': str(very_good_stock_rsi_np[i]),
+                                   'odds': str(round(very_good_stock_win_rate_np[i], 2))
+                                   }
                                   for i in range(len(stock_df))]
         return recommended_stock_list
 
@@ -135,10 +136,11 @@ class Calculator:
         stock_id = odds_df['stock_id'].to_numpy()[0]
         stock_name = stock_id_name_df[stock_id_name_df['stock_id'] == stock_id]['stock_name'].to_numpy()[0]
         # print
-        stock_odds_list = [{'stock_id': stock_id,
+        stock_odds_list = [{'stock_id': str(stock_id),
                             'stock_name': stock_name,
-                            'days': (i + 2),
-                            'odds': round(odds_df['odds'].to_numpy()[i], 2)}
+                            'days': str(i + 2),
+                            'odds': str(round(odds_df['odds'].to_numpy()[i], 2))
+                            }
                            for i in range(len(odds_df))]
         return stock_odds_list
 
