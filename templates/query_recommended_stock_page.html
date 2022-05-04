@@ -51,8 +51,11 @@
                            data-toggle="table"
                            data-sort-class="table-active"
                            data-show-refresh=true
+                           data-pagination=true
+                           data-side-pagination="server"
                            data-show-columns=true
-                           data-show-columns-toggle-all=true >
+                           data-show-columns-toggle-all=true
+                    >
                         <thead>
                             <tr>
                                 <th data-field="stock_id">股票代號</th>
@@ -76,19 +79,20 @@
             const days = $("#days").val() === undefined ? 5 : $("#days").val();
             return {odds: odds, days: days}
         }
+
         let queryParams = function (params) {
             const dropdown = getDropDown();
             const temp = {
                 //params：
+                odds: dropdown['odds'],
+                days: dropdown['days'],
                 limit: params.limit,
                 offset: params.offset,
-                sortOrder: params.order,
                 sortField: params.sort,
-                odds: dropdown['odds'],
-                days: dropdown['days']
+                sortOrder: params.order,
             };
             return temp;
-        }
+         }
         $('#recommended_stock_table').bootstrapTable({
             dataType: "json",
             striped: true,
@@ -100,14 +104,13 @@
             idField: "stock_id",
             showColumns: true,
             showRefresh: true,
-            singleSelect: true,
             showColumns: true,
             sidePagination: "server",
             queryParams: queryParams,
             queryParamsType: "limit",
             toolbar: "#toolbar",
             silent: true,
-        });
+         });
 
         $("#submit_button").click(function() {
             const dropdown = getDropDown();
