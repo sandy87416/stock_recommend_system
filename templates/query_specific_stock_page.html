@@ -68,6 +68,7 @@
             if (input_correct === false){
                 return 0;
             }
+            $("#stock_odds_table").bootstrapTable('showLoading');
             const opt = {
                 url: "/read_stock_odds",
                 silent: true,
@@ -77,6 +78,7 @@
                 }
             }
             $("#stock_odds_table").bootstrapTable('refresh', opt);
+            $("#stock_odds_table").bootstrapTable('hideLoading');
         });
     </script>
 {% endblock content %}
