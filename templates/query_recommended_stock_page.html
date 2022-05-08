@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block styles %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
 {%- endblock styles %}
@@ -39,7 +40,7 @@
                     </select>
                 </div>
                 <div class="col-12">
-                    <button id="submit_button" class="btn btn-outline-primary">確認</button>
+                    <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
                 </div>
             </div>
         </div>
@@ -56,12 +57,12 @@
                            data-show-columns-toggle-all=true
                     >
                         <thead>
-                            <tr>
-                                <th data-field="stock_id">股票代號</th>
-                                <th data-field="stock_name">股票名稱</th>
-                                <th data-field="rsi_6">RSI6</th>
-                                <th data-field="odds">勝率</th>
-                            </tr>
+                        <tr>
+                            <th data-field="stock_id">股票代號</th>
+                            <th data-field="stock_name">股票名稱</th>
+                            <th data-field="rsi_6">RSI6</th>
+                            <th data-field="odds">勝率</th>
+                        </tr>
                         </thead>
                     </table>
                 </div>
@@ -69,8 +70,10 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
     <script>
         let getDropDown = function () {
@@ -91,7 +94,7 @@
                 sortOrder: params.order,
             };
             return temp;
-         }
+        }
         $('#recommended_stock_table').bootstrapTable({
             dataType: "json",
             striped: true,
@@ -109,20 +112,34 @@
             queryParamsType: "limit",
             toolbar: "#toolbar",
             silent: true,
-         });
-
-        $("#submit_button").click(function() {
-            const dropdown = getDropDown();
-            const opt = {
-                url: "/read_recommended_stock",
-                silent: true,
-                pageNumber: 1,
-                query:{
-                    odds: dropdown['odds'],
-                    days: dropdown['days'],
-                }
-            }
-            $("#recommended_stock_table").bootstrapTable('refresh', opt);
         });
+
+
+        function getRecommendedStockOdds() {
+            return new Promise((resolve, reject) => {
+                //here our function should be implemented
+                const dropdown = getDropDown();
+                $("#recommended_stock_table").bootstrapTable('showLoading');
+                const opt = {
+                    url: "/read_recommended_stock",
+                    silent: true,
+                    pageNumber: 1,
+                    query: {
+                        odds: dropdown['odds'],
+                        days: dropdown['days'],
+                    }
+                }
+                $("#recommended_stock_table").bootstrapTable('refresh', opt);
+                setTimeout(() => {
+                        resolve();
+                    }, 20000
+                );
+            });
+        }
+
+        async function clickSubmitButton() {
+            await getRecommendedStockOdds();
+            $("#recommended_stock_table").bootstrapTable('hideLoading');
+        }
     </script>
 {% endblock content %}
