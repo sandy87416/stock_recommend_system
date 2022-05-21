@@ -36,8 +36,8 @@ class TestStock(TestCase):
         self.stock.set_stock_classification('食品工業')
         self.assertEqual(self.stock.get_stock_classification(), '食品工業')
 
-    def test_get_stock_after_hours_information(self):
-        after_hours_information = self.stock.get_stock_after_hours_information(1215)
+    def test_create_stock_after_hours_information(self):
+        after_hours_information = self.stock.create_stock_after_hours_information(1215)
         self.assertEqual(after_hours_information.get_date(), '2022-04-18')
         self.assertEqual(after_hours_information.get_k_value(), -2.0)
         self.assertEqual(after_hours_information.get_ma20_value(), 81.41)
@@ -48,7 +48,7 @@ class TestStock(TestCase):
         self.assertEqual(after_hours_information.get_news(), '')
         self.assertEqual(after_hours_information.get_monthly_revenue(), 5718985)
 
-        after_hours_information = self.stock.get_stock_after_hours_information(1605)
+        after_hours_information = self.stock.create_stock_after_hours_information(1605)
         self.assertEqual(after_hours_information.get_date(), '2022-04-18')
         self.assertEqual(after_hours_information.get_k_value(), 0.15)
         self.assertEqual(after_hours_information.get_ma20_value(), 30.81)

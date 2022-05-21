@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container row">
+        <h1>設定推薦股票條件</h1>
+        <div class="col-md-4">
+            <form action="/read_stock_after_hours_information" method="post">
+                <label for="stock_id">股票代號</label>
+                <input name="stock_id" type="text">
+                <button type="submit" name="confirm">確認</button>
+            </form>
+        </div>
+    </div>
+    <div>基本面</div>
+    <div>月營收: {{ stock_after_hours_information.get_monthly_revenue() }}</div>
+
+    <div>技術面</div>
+    <div>k_value: {{ stock_after_hours_information.get_k_value() }}</div>
+    <div>ma20_value: {{ stock_after_hours_information.get_ma20_value() }}</div>
+    <div>rsi_value: {{ stock_after_hours_information.get_rsi_value() }}</div>
+
+    <div>籌碼面</div>
+    <div>外資: {{ stock_after_hours_information.get_foreign_buy() }}</div>
+    <div>投信: {{ stock_after_hours_information.get_investment_trust_buy() }}</div>
+    <div>自營商: {{ stock_after_hours_information.get_self_buy() }}</div>
+
+    <div>消息面</div>
+    <div>news: {{ stock_after_hours_information.get_news() }}</div>
+{% endblock content %}

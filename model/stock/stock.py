@@ -41,11 +41,14 @@ class Stock:
     __stock_name = ''
     __stock_company_name = ''
     __stock_classification = ''
+    __stock_intraday_information = ''
+    __stock_after_hours_information = ''
 
     def __init__(self, stock_id, stock_name, stock_company_name, stock_classification):
         self.__stock_id = stock_id
         self.__stock_name = stock_name
         self.__stock_company_name = stock_company_name
+        self.__stock_after_hours_information = self.create_stock_after_hours_information(stock_id)
         self.__stock_classification = stock_classification
 
     def get_stock_id(self):
@@ -73,7 +76,7 @@ class Stock:
         self.__stock_classification = stock_classification
 
     @staticmethod
-    def get_stock_after_hours_information(stock_id):
+    def create_stock_after_hours_information(stock_id):
         stock_df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
         close_price_np = stock_df['Close'].to_numpy()
         rsi_list = get_rsi_list(close_price_np, 6)
@@ -103,6 +106,9 @@ class Stock:
         after_hours_information = AfterHoursInformation(date, k_value, ma20_value, rsi_value, foreign_buy,
                                                         investment_trust_buy, self_buy, news, monthly_revenue)
         return after_hours_information
+
+    def get_stock_after_hours_information(self):
+        return self.__stock_after_hours_information
 
     @staticmethod
     def get_stock_intraday_information(stock_id):

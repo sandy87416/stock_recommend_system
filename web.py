@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 from flask_bootstrap import Bootstrap
 
+from model.member.member import Member
 from model.member.premium_member import PremiumMember
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 premium_member = PremiumMember('t109598087@ntut.org.tw', 'islab')
+member = Member('t109598087@ntut.org.tw', 'islab')
 
 
 @app.route('/')
@@ -31,7 +33,8 @@ def read_recommended_stock():
     offset = request.values.get('offset', 1)
     odds = int(odds) / 10
     recommended_stock_list = premium_member.read_recommended_stock(days, odds)
-    json_data = jsonify({'total': len(recommended_stock_list), 'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
+    json_data = jsonify(
+        {'total': len(recommended_stock_list), 'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
     return json_data
 
 
@@ -47,8 +50,28 @@ def read_stock_odds():
     offset = request.values.get('offset', 1)
     stock_id = int(stock_id)
     stock_odds_list = premium_member.read_stock_odds(stock_id)
-    json_data = jsonify({'total': len(stock_odds_list), 'rows': stock_odds_list[int(offset):(int(offset) + int(limit))]})
+    json_data = jsonify(
+        {'total': len(stock_odds_list), 'rows': stock_odds_list[int(offset):(int(offset) + int(limit))]})
     return json_data
+
+
+@app.route('/stock_information_menu')
+def stock_information_menu():
+    return render_template('stock_information_menu.html')
+
+
+@app.route('/set_stock_id')  # todo: rename
+def set_stock_id():
+    return render_template('read_stock_after_hours_information.html')
+
+
+@app.route('/read_stock_after_hours_information', methods=['GET', 'POST'])
+def read_stock_after_hours_information():
+    stock_id = request.values.get('stock_id')
+    stock_id = int(stock_id)
+    stock_after_hours_information = member.read_stock_after_hours_information(stock_id)
+    return render_template('read_stock_after_hours_information.html',
+                           stock_after_hours_information=stock_after_hours_information)
 
 
 if __name__ == '__main__':

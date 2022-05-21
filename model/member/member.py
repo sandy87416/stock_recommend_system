@@ -1,6 +1,7 @@
 import pandas as pd
 
 from config import database_path
+from model.stock.stock_system import StockSystem
 
 
 class Member:
@@ -23,3 +24,9 @@ class Member:
         member_df.iloc[member_df[member_df['account'] == self.get_account()].index, member_df.columns.get_loc(
             "password")] = password
         member_df.to_csv(database_path + 'member/member.csv', index=False)
+
+    @staticmethod
+    def read_stock_after_hours_information(stock_id):
+        stock_system = StockSystem()
+        stock = stock_system.create_stock(stock_id)
+        return stock.get_stock_after_hours_information()
