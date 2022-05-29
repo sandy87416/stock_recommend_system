@@ -36,6 +36,25 @@ class TestStock(TestCase):
         self.stock.set_stock_classification('食品工業')
         self.assertEqual(self.stock.get_stock_classification(), '食品工業')
 
+    def test_get_stock_intraday_information(self):
+        stock_intraday_information = self.stock.get_stock_intraday_information()
+        self.assertEqual(stock_intraday_information.get_open_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
+        self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
+
+    def test_get_stock_after_hours_information(self):
+        stock_after_hours_information = self.stock.get_stock_after_hours_information()
+        self.assertEqual(stock_after_hours_information.get_date(), '2022-04-18')
+        self.assertEqual(stock_after_hours_information.get_k_value(), -0.6)
+        self.assertEqual(stock_after_hours_information.get_ma20_value(), 49.15)
+        self.assertEqual(stock_after_hours_information.get_rsi_value(), 0.0)
+        self.assertEqual(stock_after_hours_information.get_foreign_buy(), 3998150.0)
+        self.assertEqual(stock_after_hours_information.get_investment_trust_buy(), 1299000.0)
+        self.assertEqual(stock_after_hours_information.get_self_buy(), 1142000.0)
+        self.assertEqual(stock_after_hours_information.get_news(), '代子公司三元能源科技股份有限公司公告訂購機器設備')
+        self.assertEqual(stock_after_hours_information.get_monthly_revenue(), 22037652)
+
     def test_create_stock_after_hours_information(self):
         stock_after_hours_information = self.stock.create_stock_after_hours_information(1215)
         self.assertEqual(stock_after_hours_information.get_date(), '2022-04-18')
@@ -56,15 +75,9 @@ class TestStock(TestCase):
         self.assertEqual(stock_after_hours_information.get_foreign_buy(), 29349000.0)
         self.assertEqual(stock_after_hours_information.get_investment_trust_buy(), 2000.0)
         self.assertEqual(stock_after_hours_information.get_self_buy(), 3393544.0)
-        self.assertEqual(stock_after_hours_information.get_news(), '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
+        self.assertEqual(stock_after_hours_information.get_news(),
+                         '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
         self.assertEqual(stock_after_hours_information.get_monthly_revenue(), 28854377)
-
-    def test_get_stock_intraday_information(self):
-        stock_intraday_information = self.stock.get_stock_intraday_information()
-        self.assertEqual(stock_intraday_information.get_open_price(), 47.3)
-        self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
-        self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
-        self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
 
     def test_create_stock_intraday_information(self):
         stock_intraday_information = self.stock.create_stock_intraday_information(self.stock.get_stock_id())
@@ -72,7 +85,3 @@ class TestStock(TestCase):
         self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
         self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
         self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
-
-    def test_get_close_price(self):
-        close_price = self.stock.get_close_price(1215)
-        self.assertEqual(close_price, 81.2)
