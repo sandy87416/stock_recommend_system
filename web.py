@@ -60,8 +60,8 @@ def stock_information_menu():
     return render_template('stock_information_menu.html')
 
 
-@app.route('/set_stock_id')  # todo: rename
-def set_stock_id():
+@app.route('/set_stock_id_read_stock_after_hours_information')  # todo: rename
+def set_stock_id_read_stock_after_hours_information():
     return render_template('set_stock_id_read_stock_after_hours_information.html')
 
 
