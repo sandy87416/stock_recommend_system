@@ -33,8 +33,10 @@ class StockSystem:
             'stock_id': [selected_stock.get_stock_id()],
         })])
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
+        return self.read_selected_stock(account)
 
-        # return selected_stock_list
+    def read_selected_stock(self, account):
+        selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df = selected_stock_df[selected_stock_df['account'] == account]
         stock_id_np = selected_stock_df['stock_id'].to_numpy()
         selected_stock_list = [self.create_selected_stock(account, stock_id) for stock_id in stock_id_np]

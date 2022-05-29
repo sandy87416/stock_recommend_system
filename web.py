@@ -88,9 +88,9 @@ def read_stock_intraday_information():
                            stock_intraday_information=stock_intraday_information)
 
 
-@app.route('/manage_selected_stock')
-def manage_selected_stock():
-    return render_template('manage_selected_stock.html')
+@app.route('/add_selected_stock')
+def add_selected_stock():
+    return render_template('add_selected_stock.html')
 
 
 @app.route('/read_selected_stock', methods=['GET', 'POST'])

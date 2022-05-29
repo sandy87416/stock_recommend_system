@@ -41,3 +41,8 @@ class Member:
         stock_system = StockSystem()
         selected_stock_list = stock_system.add_selected_stock(self.get_account(), stock_id)
         return selected_stock_list
+
+    def read_selected_stock(self):
+        stock_system = StockSystem()
+        selected_stock_list = stock_system.read_selected_stock(self.get_account())
+        return selected_stock_list

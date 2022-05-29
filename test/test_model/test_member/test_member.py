@@ -56,7 +56,6 @@ class TestMember(TestCase):
         self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
         self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
 
-        # todo: teardown
         # teardown
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df = selected_stock_df.drop(selected_stock_df[
@@ -64,3 +63,14 @@ class TestMember(TestCase):
                                                                selected_stock_df['stock_id'] == 2330)].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 
+    def test_read_selected_stock(self):
+        self.member.add_selected_stock(2330)
+        selected_stock_list = self.member.read_selected_stock()
+        self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
+        self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
+        # teardown
+        selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
+        selected_stock_df = selected_stock_df.drop(selected_stock_df[
+                                                       (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
+                                                               selected_stock_df['stock_id'] == 2330)].index)
+        selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
