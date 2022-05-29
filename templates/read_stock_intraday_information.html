@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+    <div>開盤: {{ stock_intraday_information.get_start_price() }}</div>
+    <div>最高: {{ stock_intraday_information.get_max_price() }}</div>
+    <div>最低: {{ stock_intraday_information.get_min_price() }}</div>
+    <div>現價: {{ stock_intraday_information.get_end_price() }}</div>
+{% endblock content %}

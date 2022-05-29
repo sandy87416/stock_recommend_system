@@ -30,3 +30,9 @@ class Member:
         stock_system = StockSystem()
         stock_after_hours_information = stock_system.get_stock_after_hours_information(stock_id)
         return stock_after_hours_information
+
+    @staticmethod
+    def read_stock_intraday_information(stock_id):
+        stock_system = StockSystem()
+        stock_intraday_information = stock_system.get_stock_intraday_information(stock_id)
+        return stock_intraday_information

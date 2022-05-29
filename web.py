@@ -74,6 +74,20 @@ def read_stock_after_hours_information():
                            stock_after_hours_information=stock_after_hours_information)
 
 
+@app.route('/set_stock_id_read_stock_intraday_information')  # todo: rename
+def set_stock_id_read_stock_intraday_information():
+    return render_template('set_stock_id_read_stock_intraday_information.html')
+
+
+@app.route('/read_stock_intraday_information', methods=['GET', 'POST'])
+def read_stock_intraday_information():
+    stock_id = request.values.get('stock_id')
+    stock_id = int(stock_id)
+    stock_intraday_information = member.read_stock_intraday_information(stock_id)
+    return render_template('read_stock_intraday_information.html',
+                           stock_intraday_information=stock_intraday_information)
+
+
 if __name__ == '__main__':
     # app.run()
     app.run(debug=True, port=5000)  # 存檔自動更新網頁

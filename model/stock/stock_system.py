@@ -15,3 +15,8 @@ class StockSystem:
     def get_stock_after_hours_information(self, stock_id):
         stock = self.create_stock(stock_id)
         return stock.get_stock_after_hours_information()
+
+    def get_stock_intraday_information(self, stock_id):
+        stock = self.create_stock(stock_id)
+        return stock.get_stock_intraday_information_information()
+

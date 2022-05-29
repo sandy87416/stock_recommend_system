@@ -1,14 +1,14 @@
 class IntraDayInformation:
-    __end_price = 0.0
-    __min_price = 0.0
-    __max_price = 0.0
     __start_price = 0.0
+    __max_price = 0.0
+    __min_price = 0.0
+    __end_price = 0.0
 
-    def __init__(self, end_price, min_price, max_price, start_price):
-        self.__end_price = end_price
-        self.__min_price = min_price
-        self.__max_price = max_price
+    def __init__(self, start_price, max_price, min_price, end_price):
         self.__start_price = start_price
+        self.__max_price = max_price
+        self.__min_price = min_price
+        self.__end_price = end_price
 
     def get_end_price(self):
         return self.__end_price

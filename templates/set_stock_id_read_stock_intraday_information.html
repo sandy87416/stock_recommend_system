@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container row">
+        <h1>查看盤中訊息</h1>
+        <div class="col-md-4">
+            <form action="/read_stock_intraday_information" method="post">
+                <label for="stock_id">股票代號</label>
+                <input name="stock_id" type="text">
+                <button type="submit" name="confirm">確認</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

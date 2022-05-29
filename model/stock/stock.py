@@ -48,8 +48,9 @@ class Stock:
         self.__stock_id = stock_id
         self.__stock_name = stock_name
         self.__stock_company_name = stock_company_name
-        self.__stock_after_hours_information = self.create_stock_after_hours_information(stock_id)
         self.__stock_classification = stock_classification
+        self.__stock_intraday_information = self.create_stock_intraday_information(stock_id)
+        self.__stock_after_hours_information = self.create_stock_after_hours_information(stock_id)
 
     def get_stock_id(self):
         return self.__stock_id
@@ -113,16 +114,16 @@ class Stock:
     @staticmethod
     def get_stock_intraday_information(stock_id):
         stock_df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
-        end_price = round(stock_df['Close'].to_numpy()[-1], 2)
-        min_price = round(stock_df['Low'].to_numpy()[-1], 2)
-        max_price = round(stock_df['High'].to_numpy()[-1], 2)
         start_price = round(stock_df['Open'].to_numpy()[-1], 2)
-        intraday_information = IntraDayInformation(end_price, min_price, max_price, start_price)
+        max_price = round(stock_df['High'].to_numpy()[-1], 2)
+        min_price = round(stock_df['Low'].to_numpy()[-1], 2)
+        end_price = round(stock_df['Close'].to_numpy()[-1], 2)
+        intraday_information = IntraDayInformation(start_price, max_price, min_price, end_price)
         return intraday_information
 
     @staticmethod
     def create_stock_intraday_information(stock_id):
-        df = pd.read_csv(database_path + str(stock_id) + '.csv')
+        df = pd.read_csv(database_path + str(stock_id) + '.csv')  # todo: 改成即時訊息
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
         min_price = round(df['Low'].to_numpy()[0], 2)
@@ -136,3 +137,6 @@ class Stock:
         df = df.sort_values(by="Date", ascending=[False])
         end_price = round(df['Close'].to_numpy()[0], 2)
         return end_price
+
+    def get_stock_intraday_information_information(self):
+        return self.__stock_intraday_information
