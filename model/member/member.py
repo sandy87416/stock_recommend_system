@@ -36,3 +36,8 @@ class Member:
         stock_system = StockSystem()
         stock_intraday_information = stock_system.get_stock_intraday_information(stock_id)
         return stock_intraday_information
+
+    def add_selected_stock(self, stock_id):  # todo: 重複id
+        stock_system = StockSystem()
+        selected_stock_list = stock_system.add_selected_stock(self.get_account(), stock_id)
+        return selected_stock_list

@@ -3,13 +3,13 @@ from unittest import TestCase
 import pandas as pd
 
 from config import database_path
-from model.member.ordinary_member import OrdinaryMember
+from model.member.member import Member
 
 
 class TestMember(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.member = OrdinaryMember("t109598087@ntut.org.tw", 'islab')
+        cls.member = Member("t109598087@ntut.org.tw", 'islab')
 
     def test_get_account(self):
         self.assertEqual(self.member.get_account(), 't109598087@ntut.org.tw')
@@ -40,7 +40,8 @@ class TestMember(TestCase):
         self.assertEqual(stock_after_hours_information.get_foreign_buy(), 29349000.0)
         self.assertEqual(stock_after_hours_information.get_investment_trust_buy(), 2000.0)
         self.assertEqual(stock_after_hours_information.get_self_buy(), 3393544.0)
-        self.assertEqual(stock_after_hours_information.get_news(), '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
+        self.assertEqual(stock_after_hours_information.get_news(),
+                         '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
         self.assertEqual(stock_after_hours_information.get_monthly_revenue(), 28854377)
 
     def test_read_stock_intraday_information(self):
@@ -49,3 +50,17 @@ class TestMember(TestCase):
         self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
         self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
         self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
+
+    def test_add_selected_stock(self):
+        selected_stock_list = self.member.add_selected_stock(2330)
+        self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
+        self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
+
+        # todo: teardown
+        # teardown
+        selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
+        selected_stock_df = selected_stock_df.drop(selected_stock_df[
+                                                       (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
+                                                               selected_stock_df['stock_id'] == 2330)].index)
+        selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
+

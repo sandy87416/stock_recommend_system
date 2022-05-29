@@ -1,5 +1,8 @@
 from unittest import TestCase
 
+import pandas as pd
+
+from config import database_path
 from model.stock.stock_system import StockSystem
 
 
@@ -33,3 +36,22 @@ class TestStockSystem(TestCase):
         self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
         self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
         self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
+
+    def test_create_selected_stock(self):
+        selected_stock = self.stock_system.create_selected_stock('t109598087@ntut.org.tw', 2330)
+        self.assertEqual(selected_stock.get_account(), 't109598087@ntut.org.tw')
+        self.assertEqual(selected_stock.get_stock_id(), 2330)
+
+    def test_add_selected_stock(self):
+        selected_stock_list = self.stock_system.add_selected_stock('t109598087@ntut.org.tw', 2330)
+        account_list = [selected_stock.get_account() for selected_stock in selected_stock_list]
+        stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
+        self.assertTrue('t109598087@ntut.org.tw' in account_list)
+        self.assertTrue(2330 in stock_id_list)
+
+        # teardown
+        selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
+        selected_stock_df = selected_stock_df.drop(selected_stock_df[
+                                                       (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
+                                                               selected_stock_df['stock_id'] == 2330)].index)
+        selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)

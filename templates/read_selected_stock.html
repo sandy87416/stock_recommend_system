@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for selected_stock_id in selected_stock_id_list %}
+        <div>{{ selected_stock_id }}</div>
+    {% endfor %}
+{% endblock content %}
