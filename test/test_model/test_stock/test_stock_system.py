@@ -55,3 +55,6 @@ class TestStockSystem(TestCase):
                                                        (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
                                                                selected_stock_df['stock_id'] == 2330)].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
+
+    def test_get_close_price(self):
+        self.assertEqual(self.stock_system.get_close_price(2330), 561.0)

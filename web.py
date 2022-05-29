@@ -102,13 +102,23 @@ def read_selected_stock():
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
 
+@app.route('/calculate_profit_and_loss_menu')
+def calculate_profit_and_loss_menu():
+    return render_template('calculate_profit_and_loss_menu.html')
+
+
+@app.route('/set_current_calculate_profit_and_loss')
+def set_current_calculate_profit_and_loss():
+    return render_template('set_current_calculate_profit_and_loss.html')
+
+
 @app.route('/set_calculate_profit_and_loss')
 def set_calculate_profit_and_loss():
     return render_template('set_calculate_profit_and_loss.html')
 
 
-@app.route('/calculate_profit_and_loss', methods=['GET', 'POST'])
-def calculate_profit_and_loss():
+@app.route('/calculate_current_profit_and_loss', methods=['GET', 'POST'])
+def calculate_current_profit_and_loss():
     stock_id = request.form.get('stock_id')
     buy_price = request.form.get('buy_price')
     trading_volume = request.form.get('trading_volume')
@@ -118,7 +128,21 @@ def calculate_profit_and_loss():
     trading_volume = int(trading_volume)
     securities_firm = float(securities_firm)
     profit_and_loss = member.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm)
-    return render_template('calculate_profit_and_loss.html', profit_and_loss=profit_and_loss)
+    return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
+
+
+@app.route('/calculate_profit_and_loss', methods=['GET', 'POST'])
+def calculate_profit_and_loss():
+    buy_price = request.form.get('buy_price')
+    sell_price = request.form.get('sell_price')
+    trading_volume = request.form.get('trading_volume')
+    securities_firm = request.form.get('securities_firm')
+    buy_price = float(buy_price)
+    sell_price = float(sell_price)
+    trading_volume = int(trading_volume)
+    securities_firm = float(securities_firm)
+    profit_and_loss = member.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
+    return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
 if __name__ == '__main__':

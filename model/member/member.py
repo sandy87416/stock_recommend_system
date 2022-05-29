@@ -59,3 +59,8 @@ class Member:
         close_price = stock_system.get_close_price(stock_id)
         calculator = Calculator()
         return calculator.calculate_profit_and_loss(buy_price, close_price, trading_volume, securities_firm)
+
+    @staticmethod
+    def calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm):
+        calculator = Calculator()
+        return calculator.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
