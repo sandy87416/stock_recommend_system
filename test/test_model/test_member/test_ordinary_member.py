@@ -65,7 +65,8 @@ class TestOrdinaryMember(TestCase):
         self.assertEqual(stock_after_hours_information.get_foreign_buy(), 29349000.0)
         self.assertEqual(stock_after_hours_information.get_investment_trust_buy(), 2000.0)
         self.assertEqual(stock_after_hours_information.get_self_buy(), 3393544.0)
-        self.assertEqual(stock_after_hours_information.get_news(), '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
+        self.assertEqual(stock_after_hours_information.get_news(),
+                         '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
         self.assertEqual(stock_after_hours_information.get_monthly_revenue(), 28854377)
 
     def test_read_stock_intraday_information(self):

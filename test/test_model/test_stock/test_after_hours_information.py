@@ -5,8 +5,8 @@ from model.stock.after_hours_information import AfterHoursInformation
 
 class TestAfterHoursInformation(TestCase):
     @classmethod
-    def setUpClass(self):
-        self.stock = AfterHoursInformation('2022/04/25', '1.02', '25.35', '66.7', 100, 50, 10, '新聞在這', '23.2')
+    def setUpClass(cls):
+        cls.stock = AfterHoursInformation('2022/04/25', '1.02', '25.35', '66.7', 100, 50, 10, '新聞在這', '23.2')
 
     def test_get_date(self):
         self.assertEqual(self.stock.get_date(), '2022/04/25')

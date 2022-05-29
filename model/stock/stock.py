@@ -76,6 +76,22 @@ class Stock:
     def set_stock_classification(self, stock_classification):
         self.__stock_classification = stock_classification
 
+    def get_stock_intraday_information(self):
+        return self.__stock_intraday_information
+
+    def get_stock_after_hours_information(self):
+        return self.__stock_after_hours_information
+
+    @staticmethod
+    def create_stock_intraday_information(stock_id):
+        df = pd.read_csv(database_path + str(stock_id) + '.csv')  # todo: 改成即時訊息
+        df_tail = df.tail(1)
+        open_price = round(df_tail['Open'].to_numpy()[0], 2)
+        high_price = round(df_tail['High'].to_numpy()[0], 2)
+        low_price = round(df_tail['Low'].to_numpy()[0], 2)
+        close_price = round(df_tail['Close'].to_numpy()[0], 2)
+        return IntraDayInformation(open_price, high_price, low_price, close_price)
+
     @staticmethod
     def create_stock_after_hours_information(stock_id):
         stock_df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
@@ -107,26 +123,3 @@ class Stock:
         after_hours_information = AfterHoursInformation(date, k_value, ma20_value, rsi_value, foreign_buy,
                                                         investment_trust_buy, self_buy, news, monthly_revenue)
         return after_hours_information
-
-    def get_stock_after_hours_information(self):
-        return self.__stock_after_hours_information
-
-    def get_stock_intraday_information(self):
-        return self.__stock_intraday_information
-
-    @staticmethod
-    def create_stock_intraday_information(stock_id):
-        df = pd.read_csv(database_path + str(stock_id) + '.csv')  # todo: 改成即時訊息
-        df = df.sort_values(by="Date", ascending=[False])
-        close_price = round(df['Close'].to_numpy()[0], 2)
-        low_price = round(df['Low'].to_numpy()[0], 2)
-        high_price = round(df['High'].to_numpy()[0], 2)
-        open_price = round(df['Open'].to_numpy()[0], 2)
-        return IntraDayInformation(open_price, high_price, low_price, close_price)
-
-    @staticmethod
-    def get_close_price(stock_id):
-        df = pd.read_csv(database_path + str(stock_id) + '.csv')
-        df = df.sort_values(by="Date", ascending=[False])
-        close_price = round(df['Close'].to_numpy()[0], 2)
-        return close_price
