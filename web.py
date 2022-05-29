@@ -62,7 +62,7 @@ def stock_information_menu():
 
 @app.route('/set_stock_id')  # todo: rename
 def set_stock_id():
-    return render_template('read_stock_after_hours_information.html')
+    return render_template('set_stock_id_read_stock_after_hours_information.html')
 
 
 @app.route('/read_stock_after_hours_information', methods=['GET', 'POST'])
