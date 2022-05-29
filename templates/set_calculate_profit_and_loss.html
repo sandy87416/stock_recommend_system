@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container row">
+        <h1>計算當下損益</h1>
+        <div class="col-md-4">
+            <form action="/calculate_profit_and_loss" method="post">
+                <label for="stock_id">股票代號</label>
+                <input name="stock_id" type="text">
+
+                <label for="buy_price">買入價格</label>
+                <input name="buy_price" type="number">
+
+                <label for="trading_volume">買入股數</label>
+                <input name="trading_volume" type="number">
+
+                <label for="securities_firm">券商</label>
+                <select name="securities_firm" id="securities_firm">
+                    <option value="0.5">元大證券</option>
+                    <option value="0.38">玉山證券富果帳戶</option>
+                    <option value="0.6">凱基證券</option>
+                    <option value="0.28">國泰證券</option>
+                    <option value="0.3">台新證券</option>
+                    <option value="0.4">富邦證券</option>
+                    <option value="0.2">永豐金證券</option>
+                    <option value="0.65">群益證券</option>
+                </select>
+
+                <button type="submit" name="confirm">確認</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

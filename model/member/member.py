@@ -1,6 +1,7 @@
 import pandas as pd
 
 from config import database_path
+from model.stock.calculator import Calculator
 from model.stock.stock_system import StockSystem
 
 
@@ -51,3 +52,10 @@ class Member:
         stock_system = StockSystem()
         selected_stock_list = stock_system.delete_selected_stock(self.get_account(), stock_id)
         return selected_stock_list
+
+    @staticmethod
+    def calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm):
+        stock_system = StockSystem()
+        close_price = stock_system.get_close_price(stock_id)
+        calculator = Calculator()
+        return calculator.calculate_profit_and_loss(buy_price, close_price, trading_volume, securities_firm)

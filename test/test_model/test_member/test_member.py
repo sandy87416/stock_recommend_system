@@ -87,3 +87,6 @@ class TestMember(TestCase):
         stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
         self.assertFalse("t109598087@ntut.org.tw" in account_list)
         self.assertFalse(2330 in stock_id_list)
+
+    def test_calculate_current_profit_and_loss(self):
+        self.assertEqual(self.member.calculate_current_profit_and_loss(2330, 500, 10, 0.6), 584)

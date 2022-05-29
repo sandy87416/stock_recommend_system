@@ -45,6 +45,10 @@ class StockSystem:
     def delete_selected_stock(self, account, stock_id):
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df = selected_stock_df.drop(selected_stock_df[(selected_stock_df['account'] == account) & (
-                    selected_stock_df['stock_id'] == stock_id)].index)
+                selected_stock_df['stock_id'] == stock_id)].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
         return self.read_selected_stock(account)
+
+    def get_close_price(self, stock_id):
+        stock = self.create_stock(stock_id)
+        return stock.get_stock_intraday_information().get_close_price()

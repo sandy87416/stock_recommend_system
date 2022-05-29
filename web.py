@@ -102,6 +102,25 @@ def read_selected_stock():
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
 
+@app.route('/set_calculate_profit_and_loss')
+def set_calculate_profit_and_loss():
+    return render_template('set_calculate_profit_and_loss.html')
+
+
+@app.route('/calculate_profit_and_loss', methods=['GET', 'POST'])
+def calculate_profit_and_loss():
+    stock_id = request.form.get('stock_id')
+    buy_price = request.form.get('buy_price')
+    trading_volume = request.form.get('trading_volume')
+    securities_firm = request.form.get('securities_firm')
+    stock_id = int(stock_id)
+    buy_price = float(buy_price)
+    trading_volume = int(trading_volume)
+    securities_firm = float(securities_firm)
+    profit_and_loss = member.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm)
+    return render_template('calculate_profit_and_loss.html', profit_and_loss=profit_and_loss)
+
+
 if __name__ == '__main__':
     # app.run()
     app.run(debug=True, port=5000)  # 存檔自動更新網頁
