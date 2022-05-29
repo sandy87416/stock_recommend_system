@@ -7,8 +7,8 @@ from model.stock.after_hours_information import AfterHoursInformation
 from model.stock.intra_day_information import IntraDayInformation
 
 
-def get_up_down_list(end_price_list):
-    return [0] + [round(end_price_list[i] - end_price_list[i - 1], 2) for i in range(1, len(end_price_list))]
+def get_up_down_list(close_price_list):
+    return [0] + [round(close_price_list[i] - close_price_list[i - 1], 2) for i in range(1, len(close_price_list))]
 
 
 # https://wiki.mbalib.com/zh-tw/%E7%9B%B8%E5%AF%B9%E5%BC%BA%E5%BC%B1%E6%8C%87%E6%A0%87
@@ -18,21 +18,21 @@ def get_rsi(days_up_down_list):
     return round(up_mean / (up_mean + down_mean) * 100, 2)
 
 
-def get_rsi_list(end_price_list, days):
+def get_rsi_list(close_price_list, days):
     rsi_list = [0 for _ in range(days - 1)]
-    for i in range(len(end_price_list) - (days - 1)):
-        days_end_price_list = end_price_list[i:(i + days)]
-        days_up_down_list = get_up_down_list(days_end_price_list)
+    for i in range(len(close_price_list) - (days - 1)):
+        days_close_price_list = close_price_list[i:(i + days)]
+        days_up_down_list = get_up_down_list(days_close_price_list)
         rsi = get_rsi(days_up_down_list)
         rsi_list.append(rsi)
     return rsi_list
 
 
-def get_mean_price_list(end_price_list, days):
+def get_mean_price_list(close_price_list, days):
     mean_price_list = [0 for _ in range(days - 1)]
-    for i in range(len(end_price_list) - (days - 1)):
-        days_end_price_list = end_price_list[i:(i + days)]
-        mean_price_list.append(round(np.mean(days_end_price_list) + 0, 2))
+    for i in range(len(close_price_list) - (days - 1)):
+        days_close_price_list = close_price_list[i:(i + days)]
+        mean_price_list.append(round(np.mean(days_close_price_list) + 0, 2))
     return mean_price_list
 
 
@@ -111,32 +111,22 @@ class Stock:
     def get_stock_after_hours_information(self):
         return self.__stock_after_hours_information
 
-    @staticmethod
-    def get_stock_intraday_information(stock_id):
-        stock_df = pd.read_csv(database_path + '' + str(stock_id) + '.csv')
-        start_price = round(stock_df['Open'].to_numpy()[-1], 2)
-        max_price = round(stock_df['High'].to_numpy()[-1], 2)
-        min_price = round(stock_df['Low'].to_numpy()[-1], 2)
-        end_price = round(stock_df['Close'].to_numpy()[-1], 2)
-        intraday_information = IntraDayInformation(start_price, max_price, min_price, end_price)
-        return intraday_information
+    def get_stock_intraday_information(self):
+        return self.__stock_intraday_information
 
     @staticmethod
     def create_stock_intraday_information(stock_id):
         df = pd.read_csv(database_path + str(stock_id) + '.csv')  # todo: 改成即時訊息
         df = df.sort_values(by="Date", ascending=[False])
-        end_price = round(df['Close'].to_numpy()[0], 2)
-        min_price = round(df['Low'].to_numpy()[0], 2)
-        max_price = round(df['High'].to_numpy()[0], 2)
-        start_price = round(df['Open'].to_numpy()[0], 2)
-        return IntraDayInformation(end_price, min_price, max_price, start_price)
+        close_price = round(df['Close'].to_numpy()[0], 2)
+        low_price = round(df['Low'].to_numpy()[0], 2)
+        high_price = round(df['High'].to_numpy()[0], 2)
+        open_price = round(df['Open'].to_numpy()[0], 2)
+        return IntraDayInformation(open_price, high_price, low_price, close_price)
 
     @staticmethod
-    def get_end_price(stock_id):
+    def get_close_price(stock_id):
         df = pd.read_csv(database_path + str(stock_id) + '.csv')
         df = df.sort_values(by="Date", ascending=[False])
-        end_price = round(df['Close'].to_numpy()[0], 2)
-        return end_price
-
-    def get_stock_intraday_information_information(self):
-        return self.__stock_intraday_information
+        close_price = round(df['Close'].to_numpy()[0], 2)
+        return close_price

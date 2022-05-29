@@ -10,8 +10,8 @@ class Calculator:
         pass
 
     @staticmethod
-    def __get_up_down_list(end_price_list):
-        return [0] + [end_price_list[i] - end_price_list[i - 1] for i in range(1, len(end_price_list))]
+    def __get_up_down_list(close_price_list):
+        return [0] + [close_price_list[i] - close_price_list[i - 1] for i in range(1, len(close_price_list))]
 
     @staticmethod
     def __get_rsi(days_up_down_list):
@@ -19,11 +19,11 @@ class Calculator:
         down_mean = -np.sum([up_down for up_down in days_up_down_list if up_down < 0])
         return round(up_mean / (up_mean + down_mean) * 100, 2)
 
-    def __get_rsi_list(self, end_price_list, days):
+    def __get_rsi_list(self, close_price_list, days):
         rsi_list = [0 for _ in range(days - 1)]
-        for i in range(len(end_price_list) - (days - 1)):
-            days_end_price_list = end_price_list[i:(i + days)]
-            days_up_down_list = self.__get_up_down_list(days_end_price_list)
+        for i in range(len(close_price_list) - (days - 1)):
+            days_close_price_list = close_price_list[i:(i + days)]
+            days_up_down_list = self.__get_up_down_list(days_close_price_list)
             rsi = self.__get_rsi(days_up_down_list)
             rsi_list.append(rsi)
         return rsi_list
@@ -32,11 +32,11 @@ class Calculator:
     def __get_corr(end_day_end_point, start_day_end_point, days):
         return round(((end_day_end_point - start_day_end_point) / end_day_end_point) / days, 6)
 
-    def __get_corr_list(self, end_price_list, days):
+    def __get_corr_list(self, close_price_list, days):
         corr_list = [0 for _ in range(days - 1)]
-        for i in range(len(end_price_list) - (days - 1)):
-            days_end_price_list = end_price_list[i:(i + days)]
-            corr_list.append(self.__get_corr(days_end_price_list[-1], days_end_price_list[0], days))
+        for i in range(len(close_price_list) - (days - 1)):
+            days_close_price_list = close_price_list[i:(i + days)]
+            corr_list.append(self.__get_corr(days_close_price_list[-1], days_close_price_list[0], days))
         return corr_list
 
     @staticmethod

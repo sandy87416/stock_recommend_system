@@ -1,35 +1,35 @@
 class IntraDayInformation:
-    __start_price = 0.0
-    __max_price = 0.0
-    __min_price = 0.0
-    __end_price = 0.0
+    __open_price = 0.0
+    __high_price = 0.0
+    __low_price = 0.0
+    __close_price = 0.0
 
-    def __init__(self, start_price, max_price, min_price, end_price):
-        self.__start_price = start_price
-        self.__max_price = max_price
-        self.__min_price = min_price
-        self.__end_price = end_price
+    def __init__(self, open_price, high_price, low_price, close_price):
+        self.__open_price = open_price
+        self.__high_price = high_price
+        self.__low_price = low_price
+        self.__close_price = close_price
 
-    def get_end_price(self):
-        return self.__end_price
+    def get_close_price(self):
+        return self.__close_price
 
-    def set_end_price(self, end_price):
-        self.__end_price = end_price
+    def set_close_price(self, close_price):
+        self.__close_price = close_price
 
-    def get_min_price(self):
-        return self.__min_price
+    def get_low_price(self):
+        return self.__low_price
 
-    def set_min_price(self, min_price):
-        self.__min_price = min_price
+    def set_low_price(self, low_price):
+        self.__low_price = low_price
 
-    def get_max_price(self):
-        return self.__max_price
+    def get_high_price(self):
+        return self.__high_price
 
-    def set_max_price(self, max_price):
-        self.__max_price = max_price
+    def set_high_price(self, high_price):
+        self.__high_price = high_price
 
-    def get_start_price(self):
-        return self.__start_price
+    def get_open_price(self):
+        return self.__open_price
 
-    def set_start_price(self, start_price):
-        self.__start_price = start_price
+    def set_open_price(self, open_price):
+        self.__open_price = open_price

@@ -18,5 +18,5 @@ class StockSystem:
 
     def get_stock_intraday_information(self, stock_id):
         stock = self.create_stock(stock_id)
-        return stock.get_stock_intraday_information_information()
+        return stock.get_stock_intraday_information()
 

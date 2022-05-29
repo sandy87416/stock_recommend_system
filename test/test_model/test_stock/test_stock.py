@@ -5,8 +5,8 @@ from model.stock.stock import Stock
 
 class TestStock(TestCase):
     @classmethod
-    def setUpClass(self):
-        self.stock = Stock(1101, '台泥', '台灣水泥', '水泥工業')
+    def setUpClass(cls):
+        cls.stock = Stock(1101, '台泥', '台灣水泥', '水泥工業')
 
     def test_get_stock_id(self):
         self.assertEqual(self.stock.get_stock_id(), 1101)
@@ -60,19 +60,19 @@ class TestStock(TestCase):
         self.assertEqual(after_hours_information.get_monthly_revenue(), 28854377)
 
     def test_get_stock_intraday_information(self):
-        intraday_information = self.stock.get_stock_intraday_information(1215)
-        self.assertEqual(intraday_information.get_end_price(), 81.2)
-        self.assertEqual(intraday_information.get_min_price(), 81.1)
-        self.assertEqual(intraday_information.get_max_price(), 83.3)
-        self.assertEqual(intraday_information.get_start_price(), 83.3)
+        stock_intraday_information = self.stock.get_stock_intraday_information()
+        self.assertEqual(stock_intraday_information.get_open_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
+        self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
 
     def test_create_stock_intraday_information(self):
         stock_intraday_information = self.stock.create_stock_intraday_information(self.stock.get_stock_id())
-        self.assertEqual(stock_intraday_information.get_end_price(), 46.5)
-        self.assertEqual(stock_intraday_information.get_min_price(), 46.5)
-        self.assertEqual(stock_intraday_information.get_max_price(), 47.3)
-        self.assertEqual(stock_intraday_information.get_start_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_open_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
+        self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
 
-    def test_get_end_price(self):
-        end_price = self.stock.get_end_price(1215)
-        self.assertEqual(end_price, 81.2)
+    def test_get_close_price(self):
+        close_price = self.stock.get_close_price(1215)
+        self.assertEqual(close_price, 81.2)
