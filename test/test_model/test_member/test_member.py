@@ -74,3 +74,16 @@ class TestMember(TestCase):
                                                        (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
                                                                selected_stock_df['stock_id'] == 2330)].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
+
+    def test_delete_selected_stock(self):
+        self.member.add_selected_stock(2330)
+        selected_stock_list = self.member.read_selected_stock()
+        self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
+        self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
+
+        self.member.delete_selected_stock(2330)
+        selected_stock_list = self.member.read_selected_stock()
+        account_list = [selected_stock.get_account() for selected_stock in selected_stock_list]
+        stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
+        self.assertFalse("t109598087@ntut.org.tw" in account_list)
+        self.assertFalse(2330 in stock_id_list)

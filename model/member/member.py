@@ -46,3 +46,8 @@ class Member:
         stock_system = StockSystem()
         selected_stock_list = stock_system.read_selected_stock(self.get_account())
         return selected_stock_list
+
+    def delete_selected_stock(self, stock_id):
+        stock_system = StockSystem()
+        selected_stock_list = stock_system.delete_selected_stock(self.get_account(), stock_id)
+        return selected_stock_list
