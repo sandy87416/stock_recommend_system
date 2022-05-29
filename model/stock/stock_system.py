@@ -52,3 +52,17 @@ class StockSystem:
     def get_close_price(self, stock_id):
         stock = self.create_stock(stock_id)
         return stock.get_stock_intraday_information().get_close_price()
+
+    @staticmethod
+    def get_stock_classification():
+        stock_id_table_df = pd.read_csv(database_path + 'stock_id_table.csv')
+        stock_name_np = stock_id_table_df['stock_name'].to_numpy()
+        stock_id_np = stock_id_table_df['stock_id'].to_numpy()
+        stock_id_table_df['number_name'] = [str(stock_name_np[i]) + ' ' + str(stock_id_np[i]) for i in
+                                            range(len(stock_name_np))]
+        stock_class_list = list(set(stock_id_table_df['class'].to_list()))
+        stock_class_dict = dict()
+        for stock_class in stock_class_list:
+            stock_class_dict[stock_class] = stock_id_table_df[
+                stock_id_table_df['class'] == stock_class]['number_name'].to_list()
+        return stock_class_dict

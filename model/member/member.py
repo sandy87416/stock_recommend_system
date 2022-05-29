@@ -64,3 +64,8 @@ class Member:
     def calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm):
         calculator = Calculator()
         return calculator.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
+
+    @staticmethod
+    def read_stock_classification():
+        stock_system = StockSystem()
+        return stock_system.get_stock_classification()

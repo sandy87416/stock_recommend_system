@@ -145,6 +145,12 @@ def calculate_profit_and_loss():
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
+@app.route('/read_stock_classification')
+def read_stock_classification():
+    stock_class_dict = member.read_stock_classification()
+    return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
+
+
 if __name__ == '__main__':
     # app.run()
     app.run(debug=True, port=5000)  # 存檔自動更新網頁

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>查看股票分類</h1>
+    {% for stock_class, stock_list in stock_class_dict.items() %}
+        <h2>{{ stock_class }}</h2>
+        {% for stock in stock_list %}
+        <p>{{ stock }}</p>
+        {% endfor %}
+    <p>{{ news }}</p>
+    {% endfor %}
+{% endblock content %}
