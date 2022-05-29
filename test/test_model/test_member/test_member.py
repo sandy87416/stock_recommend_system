@@ -30,3 +30,22 @@ class TestMember(TestCase):
             member_df[member_df['account'] == self.member.get_account()].index, member_df.columns.get_loc(
                 "password")] = "islab"
         member_df.to_csv(database_path + 'member/member.csv', index=False)
+
+    def test_read_stock_after_hours_information(self):
+        stock_after_hours_information = self.member.read_stock_after_hours_information(1605)
+        self.assertEqual(stock_after_hours_information.get_date(), '2022-04-18')
+        self.assertEqual(stock_after_hours_information.get_k_value(), 0.15)
+        self.assertEqual(stock_after_hours_information.get_ma20_value(), 30.81)
+        self.assertEqual(stock_after_hours_information.get_rsi_value(), 100.0)
+        self.assertEqual(stock_after_hours_information.get_foreign_buy(), 29349000.0)
+        self.assertEqual(stock_after_hours_information.get_investment_trust_buy(), 2000.0)
+        self.assertEqual(stock_after_hours_information.get_self_buy(), 3393544.0)
+        self.assertEqual(stock_after_hours_information.get_news(), '係因本公司有價證券於集中交易市場達公布注意交易資訊標準，故公布相關財務業務等重大訊息，以利投資人區別瞭解。')
+        self.assertEqual(stock_after_hours_information.get_monthly_revenue(), 28854377)
+
+    def test_read_stock_intraday_information(self):
+        stock_intraday_information = self.member.read_stock_intraday_information(1101)
+        self.assertEqual(stock_intraday_information.get_open_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_high_price(), 47.3)
+        self.assertEqual(stock_intraday_information.get_low_price(), 46.5)
+        self.assertEqual(stock_intraday_information.get_close_price(), 46.5)
