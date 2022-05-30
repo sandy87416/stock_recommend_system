@@ -181,8 +181,14 @@ def index():
             session['password'] = str(password)
             session['level'] = str(level)
             return redirect(url_for('menu'))
-    # if session['account']:
-    #     return redirect(url_for('menu'))
+    if session['account']:
+        return redirect(url_for('menu'))
+    return render_template('login.html')
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()
     return render_template('login.html')
 
 
