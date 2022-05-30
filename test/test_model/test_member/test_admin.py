@@ -4,6 +4,7 @@ import pandas as pd
 
 from config import database_path
 from model.member.admin import Admin
+from model.member.ordinary_member import OrdinaryMember
 
 
 class TestAdmin(TestCase):
@@ -46,7 +47,26 @@ class TestAdmin(TestCase):
         level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
         self.assertEqual(level, 1)
 
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        self.assertEqual(len(application_information_df[application_information_df['account'] == account]), 0)
+
         # teardown
         if level == 1:
             member_df.iloc[member_df[member_df['account'] == account].index, member_df.columns.get_loc("level")] = 2
         member_df.to_csv(database_path + 'member/member.csv', index=False)
+
+    def test_get_application_information_zip(self):
+        ordinary_member = OrdinaryMember('test', 'test')
+        ordinary_member.apply_premium_member('123')
+        application_information_zip = self.admin.get_application_information_zip()
+        for account, content in application_information_zip:
+            self.assertEqual(account, 'test')
+            self.assertEqual(content, '123')
+
+        # teardown
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        application_information_df['account'] = application_information_df['account'].astype('str')
+        application_information_df = application_information_df.drop(
+            application_information_df[application_information_df['account'] == 'test'].index)
+        application_information_df.to_csv(database_path + 'member/application_information.csv', index=False)
+

@@ -40,4 +40,5 @@ class Admin:
     @staticmethod
     def get_application_information_zip():
         application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        application_information_df['content'] = application_information_df['content'].astype('str')
         return zip(application_information_df['account'].to_list(), application_information_df['content'].to_list())
