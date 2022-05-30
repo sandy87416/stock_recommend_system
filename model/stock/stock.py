@@ -7,35 +7,6 @@ from model.stock.after_hours_information import AfterHoursInformation
 from model.stock.intra_day_information import IntraDayInformation
 
 
-# def get_up_down_list(close_price_list):
-#     return [0] + [round(close_price_list[i] - close_price_list[i - 1], 2) for i in range(1, len(close_price_list))]
-#
-#
-# # https://wiki.mbalib.com/zh-tw/%E7%9B%B8%E5%AF%B9%E5%BC%BA%E5%BC%B1%E6%8C%87%E6%A0%87
-# def get_rsi(days_up_down_list):
-#     up_mean = np.sum([up_down for up_down in days_up_down_list if up_down > 0])
-#     down_mean = -np.sum([up_down for up_down in days_up_down_list if up_down < 0])
-#     return round(up_mean / (up_mean + down_mean) * 100, 2)
-#
-#
-# def get_rsi_list(close_price_list, days):
-#     rsi_list = [0 for _ in range(days - 1)]
-#     for i in range(len(close_price_list) - (days - 1)):
-#         days_close_price_list = close_price_list[i:(i + days)]
-#         days_up_down_list = get_up_down_list(days_close_price_list)
-#         rsi = get_rsi(days_up_down_list)
-#         rsi_list.append(rsi)
-#     return rsi_list
-#
-#
-# def get_mean_price_list(close_price_list, days):
-#     mean_price_list = [0 for _ in range(days - 1)]
-#     for i in range(len(close_price_list) - (days - 1)):
-#         days_close_price_list = close_price_list[i:(i + days)]
-#         mean_price_list.append(round(np.mean(days_close_price_list) + 0, 2))
-#     return mean_price_list
-
-
 class Stock:
     __stock_id = 0
     __stock_name = ''
