@@ -151,6 +151,11 @@ def read_stock_classification():
     return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
 
 
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+
 if __name__ == '__main__':
     # app.run()
     app.run(debug=True, port=5000)  # 存檔自動更新網頁
