@@ -1,5 +1,4 @@
 import pandas as pd
-
 from config import database_path
 from model.utils import update_database
 

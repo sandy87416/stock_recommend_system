@@ -93,7 +93,7 @@ def read_stock_intraday_information():
                            stock_intraday_information=stock_intraday_information)
 
 
-@app.route('/add_selected_stock')  # todo: frontend
+@app.route('/add_selected_stock')  # todo: delete_selected_stock
 def add_selected_stock():
     return render_template('add_selected_stock.html')
 
@@ -207,7 +207,7 @@ def upgrade_member_level():
     admin = Admin(session['account'], session['password'])
     if flask.request.method == 'POST':
         account = request.form.get('account')
-        upgrade_member_message = admin.upgrade_member_level(account)  # todo:alert 申請成功
+        admin.upgrade_member_level(account)  # todo:alert 申請成功
         return redirect(url_for('upgrade_member_level'))
     application_information_zip = admin.get_application_information_zip()
     return render_template('upgrade_member_level.html', application_information_zip=application_information_zip)
