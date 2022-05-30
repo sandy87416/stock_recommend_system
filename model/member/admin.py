@@ -33,9 +33,6 @@ class Admin:
         # delete application_information data
         application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
         application_information_df['account'] = application_information_df['account'].astype('str')
-        print(application_information_df)
-        print(account)
-        print(application_information_df[application_information_df['account'] == account])
         application_information_df = application_information_df.drop(
             application_information_df[application_information_df['account'] == account].index)
         application_information_df.to_csv(database_path + 'member/application_information.csv', index=False)
