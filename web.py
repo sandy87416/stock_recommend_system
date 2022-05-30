@@ -93,7 +93,7 @@ def read_stock_intraday_information():
                            stock_intraday_information=stock_intraday_information)
 
 
-@app.route('/add_selected_stock')
+@app.route('/add_selected_stock')  # todo: frontend
 def add_selected_stock():
     return render_template('add_selected_stock.html')
 
