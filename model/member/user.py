@@ -15,8 +15,12 @@ class User:
 
     @staticmethod
     def login(account, password):
+        print(account, password)
         member_df = pd.read_csv(database_path + 'member/member.csv')
+        print(member_df)
         member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
+        print(member1_df)
+        print(len(member1_df))
         if len(member1_df) == 1:
             return '登入成功'
         else:

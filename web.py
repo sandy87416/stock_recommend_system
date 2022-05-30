@@ -1,13 +1,17 @@
-from flask import Flask, render_template, request, jsonify
+import flask
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_bootstrap import Bootstrap
 
 from model.member.member import Member
 from model.member.premium_member import PremiumMember
+from model.member.user import User
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 premium_member = PremiumMember('t109598087@ntut.org.tw', 'islab')
 member = Member('t109598087@ntut.org.tw', 'islab')
+
+user = User()
 
 
 @app.route('/')
@@ -151,9 +155,28 @@ def read_stock_classification():
     return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
+    if flask.request.method == 'POST':
+        account = request.form.get('account')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        if password == confirm_password:
+            user.register(account, password)
+        return redirect(url_for('login'))
     return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'POST':
+        account = request.form.get('account')
+        password = request.form.get('password')
+        login_message = user.login(account, password)
+        print(login_message)
+        if login_message == '登入成功':
+            return redirect(url_for('index'))
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
