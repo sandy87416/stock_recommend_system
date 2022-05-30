@@ -177,12 +177,12 @@ def index():
         password = request.form.get('password')
         login_message, level = user.login(account, password)
         if login_message == '登入成功':
-            session['account'] = account
-            session['password'] = password
-            session['level'] = level
+            session['account'] = str(account)
+            session['password'] = str(password)
+            session['level'] = str(level)
             return redirect(url_for('menu'))
-    if session['account']:
-        return redirect(url_for('menu'))
+    # if session['account']:
+    #     return redirect(url_for('menu'))
     return render_template('login.html')
 
 
