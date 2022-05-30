@@ -1,6 +1,7 @@
 import flask
 from flask import render_template, request, jsonify, redirect, url_for, session
 from config import app
+from model.member.admin import Admin
 from model.member.member import Member
 from model.member.ordinary_member import OrdinaryMember
 from model.member.premium_member import PremiumMember
@@ -199,6 +200,17 @@ def apply_premium_member():
         ordinary_member.apply_premium_member(content)  # todo:alert 申請成功
         return redirect(url_for('menu'))
     return render_template('apply_premium_member.html')
+
+
+@app.route('/upgrade_member_level', methods=['GET', 'POST'])
+def upgrade_member_level():
+    admin = Admin(session['account'], session['password'])
+    if flask.request.method == 'POST':
+        account = request.form.get('account')
+        upgrade_member_message = admin.upgrade_member_level(account)  # todo:alert 申請成功
+        return redirect(url_for('upgrade_member_level'))
+    application_information_zip = admin.get_application_information_zip()
+    return render_template('upgrade_member_level.html', application_information_zip=application_information_zip)
 
 
 if __name__ == '__main__':

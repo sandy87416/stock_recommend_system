@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container row">
+        <form action="/upgrade_member_level" method="post">
+            <table>
+                <thead>
+                <td>帳號</td>
+                <td>申請理由</td>
+                <td></td>
+                </thead>
+                <tbody>
+                {% for account_content in application_information_zip %}
+                    <tr>
+                        <td>{{ account_content[0] }}</td>
+                        <td>{{ account_content[1] }}</td>
+                        <td><input type="submit" name="account" value="{{ account_content[0] }}">升級</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </div>
+{% endblock content %}

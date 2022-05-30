@@ -29,3 +29,18 @@ class Admin:
         if level == 2:
             member_df.iloc[member_df[member_df['account'] == account].index, member_df.columns.get_loc("level")] = 1
         member_df.to_csv(database_path + 'member/member.csv', index=False)
+
+        # delete application_information data
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        application_information_df['account'] = application_information_df['account'].astype('str')
+        print(application_information_df)
+        print(account)
+        print(application_information_df[application_information_df['account'] == account])
+        application_information_df = application_information_df.drop(
+            application_information_df[application_information_df['account'] == account].index)
+        application_information_df.to_csv(database_path + 'member/application_information.csv', index=False)
+
+    @staticmethod
+    def get_application_information_zip():
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        return zip(application_information_df['account'].to_list(), application_information_df['content'].to_list())
