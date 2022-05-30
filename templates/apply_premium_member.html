@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container row">
+        <h1>申請成為高級會員</h1>
+        <div class="col-md-4">
+            <form action="/apply_premium_member" method="post">
+                <div>
+                    <label for="content">申請理由</label>
+                    <input name="content" type="text">
+                </div>
+                <button type="submit" name="confirm">送出申請</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

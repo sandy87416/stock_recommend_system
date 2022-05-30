@@ -2,6 +2,7 @@ import flask
 from flask import render_template, request, jsonify, redirect, url_for, session
 from config import app
 from model.member.member import Member
+from model.member.ordinary_member import OrdinaryMember
 from model.member.premium_member import PremiumMember
 from model.member.user import User
 
@@ -181,8 +182,6 @@ def index():
             session['password'] = str(password)
             session['level'] = str(level)
             return redirect(url_for('menu'))
-    if session['account']:
-        return redirect(url_for('menu'))
     return render_template('login.html')
 
 
@@ -190,6 +189,16 @@ def index():
 def logout():
     session.clear()
     return render_template('login.html')
+
+
+@app.route('/apply_premium_member', methods=['GET', 'POST'])
+def apply_premium_member():
+    if flask.request.method == 'POST':
+        ordinary_member = OrdinaryMember(session['account'], session['password'])
+        content = request.form.get('content')
+        ordinary_member.apply_premium_member(content)  # todo:alert 申請成功
+        return redirect(url_for('menu'))
+    return render_template('apply_premium_member.html')
 
 
 if __name__ == '__main__':

@@ -10,13 +10,13 @@ class OrdinaryMember(Member):
         super().__init__(account, password)
         self.__account = account
         self.__password = password
-        self.__application_information = None
+        self.__application_information = self.create_application_information()
 
     def get_application_information(self):
         return self.__application_information
 
     def create_application_information(self):
-        self.__application_information = ApplicationInformation(self.get_account(), '')
+        return ApplicationInformation(self.get_account(), '')
 
     def apply_premium_member(self, content):
         self.__application_information.set_content(content)
