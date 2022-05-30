@@ -23,7 +23,8 @@ class User:
     def login(account, password):
         member_df = pd.read_csv(database_path + 'member/member.csv')
         member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
+        level = member1_df['level'].to_numpy()[0]
         if len(member1_df) == 1:
-            return '登入成功'
+            return '登入成功', level
         else:
             return '登入失敗'

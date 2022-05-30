@@ -1,20 +1,16 @@
 import flask
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
-from flask_bootstrap import Bootstrap
-
-from config import app, bootstrap
+from flask import render_template, request, jsonify, redirect, url_for, session
+from config import app
 from model.member.member import Member
 from model.member.premium_member import PremiumMember
 from model.member.user import User
 
-premium_member = PremiumMember('t109598087@ntut.org.tw', 'islab')
-member = Member('t109598087@ntut.org.tw', 'islab')
+# premium_member =
 user = User()
 
 
 @app.route('/menu')
 def menu():
-    print(session['username'])
     return render_template('menu.html')
 
 
@@ -35,6 +31,7 @@ def read_recommended_stock():
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     odds = int(odds) / 10
+    premium_member = PremiumMember(session['account'], session['password'])
     recommended_stock_list = premium_member.read_recommended_stock(days, odds)
     json_data = jsonify(
         {'total': len(recommended_stock_list), 'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
@@ -52,6 +49,7 @@ def read_stock_odds():
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     stock_id = int(stock_id)
+    premium_member = PremiumMember(session['account'], session['password'])
     stock_odds_list = premium_member.read_stock_odds(stock_id)
     json_data = jsonify(
         {'total': len(stock_odds_list), 'rows': stock_odds_list[int(offset):(int(offset) + int(limit))]})
@@ -72,6 +70,7 @@ def set_stock_id_read_stock_after_hours_information():
 def read_stock_after_hours_information():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
+    member = Member(session['account'], session['password'])
     stock_after_hours_information = member.read_stock_after_hours_information(stock_id)
     return render_template('read_stock_after_hours_information.html',
                            stock_after_hours_information=stock_after_hours_information)
@@ -86,6 +85,7 @@ def set_stock_id_read_stock_intraday_information():
 def read_stock_intraday_information():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
+    member = Member(session['account'], session['password'])
     stock_intraday_information = member.read_stock_intraday_information(stock_id)
     return render_template('read_stock_intraday_information.html',
                            stock_intraday_information=stock_intraday_information)
@@ -100,6 +100,7 @@ def add_selected_stock():
 def read_selected_stock():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
+    member = Member(session['account'], session['password'])
     selected_stock_list = member.add_selected_stock(stock_id)
     selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
@@ -130,6 +131,7 @@ def calculate_current_profit_and_loss():
     buy_price = float(buy_price)
     trading_volume = int(trading_volume)
     securities_firm = float(securities_firm)
+    member = Member(session['account'], session['password'])
     profit_and_loss = member.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm)
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
@@ -144,12 +146,14 @@ def calculate_profit_and_loss():
     sell_price = float(sell_price)
     trading_volume = int(trading_volume)
     securities_firm = float(securities_firm)
+    member = Member(session['account'], session['password'])
     profit_and_loss = member.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
 @app.route('/read_stock_classification')
 def read_stock_classification():
+    member = Member(session['account'], session['password'])
     stock_class_dict = member.read_stock_classification()
     return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
 
@@ -171,10 +175,14 @@ def index():
     if flask.request.method == 'POST':
         account = request.form.get('account')
         password = request.form.get('password')
-        login_message = user.login(account, password)
+        login_message, level = user.login(account, password)
         if login_message == '登入成功':
-            session['username'] = user
+            session['account'] = account
+            session['password'] = password
+            session['level'] = level
             return redirect(url_for('menu'))
+    if session['account']:
+        return redirect(url_for('menu'))
     return render_template('login.html')
 
 
