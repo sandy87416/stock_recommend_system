@@ -31,11 +31,13 @@ class TestOrdinaryMember(TestCase):
                 "password")] = "islab"
         member_df.to_csv(database_path + 'member/member.csv', index=False)
 
-    def test_create_application_information(self):
-        self.assertEqual(self.ordinary_member.get_application_information(), None)
-        self.ordinary_member.create_application_information()
-
+    def test_get_application_information(self):
         application_information = self.ordinary_member.get_application_information()
+        self.assertEqual(application_information.get_account(), self.ordinary_member.get_account())
+        self.assertEqual(application_information.get_content(), '')
+
+    def test_create_application_information(self):
+        application_information = self.ordinary_member.create_application_information()
         self.assertNotEqual(application_information, None)
         self.assertEqual(application_information.get_account(), self.ordinary_member.get_account())
         self.assertEqual(application_information.get_content(), '')

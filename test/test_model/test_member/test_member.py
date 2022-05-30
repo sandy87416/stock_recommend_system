@@ -91,6 +91,16 @@ class TestMember(TestCase):
     def test_calculate_current_profit_and_loss(self):
         self.assertEqual(self.member.calculate_current_profit_and_loss(2330, 500, 10, 0.6), 584)
 
+    def test_calculate_profit_and_loss(self):
+        profit_and_loss = self.member.calculate_profit_and_loss(600, 605, trading_volume=1000, securities_firm=0.6)
+        self.assertEqual(profit_and_loss, 2155)
+
+        profit_and_loss = self.member.calculate_profit_and_loss(600, 605, trading_volume=500, securities_firm=0.6)
+        self.assertEqual(profit_and_loss, 1077)
+
+        profit_and_loss = self.member.calculate_profit_and_loss(600, 605, trading_volume=1000, securities_firm=0.2)
+        self.assertEqual(profit_and_loss, 2842)
+
     def test_read_stock_classification(self):
         stock_class_dict = self.member.read_stock_classification()
         self.assertEqual(stock_class_dict['油電燃氣業'][0], '山隆 2616')

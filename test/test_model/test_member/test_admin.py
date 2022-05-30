@@ -59,9 +59,13 @@ class TestAdmin(TestCase):
         ordinary_member = OrdinaryMember('test', 'test')
         ordinary_member.apply_premium_member('123')
         application_information_zip = self.admin.get_application_information_zip()
+        account_list = list()
+        content_list = list()
         for account, content in application_information_zip:
-            self.assertEqual(account, 'test')
-            self.assertEqual(content, '123')
+            account_list.append(account)
+            content_list.append(content)
+        self.assertTrue('test' in account_list)
+        self.assertTrue('123' in content_list)
 
         # teardown
         application_information_df = pd.read_csv(database_path + 'member/application_information.csv')

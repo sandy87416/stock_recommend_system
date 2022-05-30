@@ -29,7 +29,7 @@ class TestUser(TestCase):
         self.user.register(account, password)
 
         login_message = self.user.login(account, password)
-        self.assertEqual(login_message, '登入成功')
+        self.assertEqual(login_message, ('登入成功', 2))
 
         member_df = pd.read_csv(database_path + 'member/member.csv')
         member_df = member_df.drop(

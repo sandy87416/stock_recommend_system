@@ -21,9 +21,12 @@ class User:
 
     @staticmethod
     def login(account, password):
+        level = '-1'
         member_df = pd.read_csv(database_path + 'member/member.csv')
         member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
-        level = member1_df['level'].to_numpy()[0]
+        level_np = member1_df['level'].to_numpy()
+        if len(level_np) > 0:
+            level = level_np[0]
         if len(member1_df) == 1:
             return '登入成功', level
         else:

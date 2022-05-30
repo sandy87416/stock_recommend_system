@@ -8,12 +8,18 @@ from model.member.application_information import ApplicationInformation
 class TestApplicationInformation(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.account = "t109598053@ntut.org.tw"
+        cls.account = "t109598087@ntut.org.tw"
         cls.content = "administrator"
         cls.application_information = ApplicationInformation(cls.account, cls.content)
+        application_info_df = pd.read_csv(database_path + 'member/application_information.csv')
+        application_info_df = pd.concat([application_info_df, pd.DataFrame({
+            'account': [cls.application_information.get_account()],
+            'content': [cls.application_information.get_content()]
+        })])
+        application_info_df.to_csv(database_path + 'member/application_information.csv', index=False)
 
     def test_get_account(self):
-        self.assertEqual(self.application_information.get_account(), "t109598053@ntut.org.tw")
+        self.assertEqual(self.application_information.get_account(), "t109598087@ntut.org.tw")
 
     def test_get_content(self):
         self.assertEqual(self.application_information.get_content(), "administrator")
