@@ -84,7 +84,15 @@ class Stock:
 
     @staticmethod
     def create_stock_intraday_information(stock_id):
-        df = pd.read_csv(database_path + str(stock_id) + '.csv')  # todo: 改成即時訊息
+        # # new
+        # now_df = pd.read_html('https://histock.tw/stock/rank.aspx?p=all')[0]
+        # now_df = now_df[now_df['代號▼'] == str(stock_id)]
+        # open_price = round(now_df['昨收▼'].to_numpy()[0], 2)
+        # high_price = round(now_df['最高▼'].to_numpy()[0], 2)
+        # low_price = round(now_df['最低▼'].to_numpy()[0], 2)
+        # close_price = round(now_df['價格▼'].to_numpy()[0], 2)
+        # old
+        df = pd.read_csv(database_path + str(stock_id) + '.csv')
         df_tail = df.tail(1)
         open_price = round(df_tail['Open'].to_numpy()[0], 2)
         high_price = round(df_tail['High'].to_numpy()[0], 2)
