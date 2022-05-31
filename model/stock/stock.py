@@ -4,7 +4,7 @@ import numpy as np
 from config import database_path
 
 from model.stock.after_hours_information import AfterHoursInformation
-from model.stock.intra_day_information import IntraDayInformation
+from model.stock.intraday_information import IntraDayInformation
 
 
 class Stock:
@@ -27,7 +27,7 @@ class Stock:
         down_mean = -np.sum([up_down for up_down in days_up_down_list if up_down < 0])
         return round(up_mean / (up_mean + down_mean) * 100, 2)
 
-    def __get_rsi_list(self, close_price_list, days):
+    def __get_rsi_list(self, close_price_list, days):  # todo: calculator?
         rsi_list = [0 for _ in range(days - 1)]
         for i in range(len(close_price_list) - (days - 1)):
             days_close_price_list = close_price_list[i:(i + days)]

@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for selected_stock_id in selected_stock_id_list %}
-        <div>{{ selected_stock_id }}</div>
-    {% endfor %}
+    <div class="container row">
+        <h1>新增自選股票</h1>
+        <div class="col-md-4">
+            <form action="/read_selected_stock" method="post">
+                <label for="stock_id">股票代號</label>
+                <input name="stock_id" type="text">
+                <button type="submit" name="confirm">確認</button>
+            </form>
+        </div>
+    </div>
+    <form action="/read_selected_stock" method="get">
+        <table>
+            <thead>
+            <td>股票代號</td>
+            <td></td>
+            </thead>
+            <tbody>
+            {% for selected_stock_id in selected_stock_id_list %}
+                <tr>
+                    <td>{{ selected_stock_id }}</td>
+                    <td><input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}">刪除</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+
 {% endblock content %}

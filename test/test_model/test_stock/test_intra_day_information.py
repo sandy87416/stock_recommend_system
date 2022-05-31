@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from model.stock.intra_day_information import IntraDayInformation
+from model.stock.intraday_information import IntraDayInformation
 
 
 class TestIntraDayInformation(TestCase):
