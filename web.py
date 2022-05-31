@@ -1,3 +1,5 @@
+from time import sleep
+
 import flask
 from flask import render_template, request, jsonify, redirect, url_for, session, flash
 from config import app
@@ -49,7 +51,7 @@ def query_specific_stock_page():
 
 @app.route('/read_stock_odds', methods=['GET', 'POST'])
 def read_stock_odds():
-    stock_id = request.values.get('stock_id')
+    stock_id = request.values.get('stock_id')  # todo: 輸入資料庫沒有的股票
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     stock_id = int(stock_id)
@@ -208,7 +210,9 @@ def apply_premium_member():
     if flask.request.method == 'POST':
         ordinary_member = OrdinaryMember(session['account'], session['password'])
         content = request.form.get('content')
-        ordinary_member.apply_premium_member(content)  # todo:alert 申請成功
+        ordinary_member.apply_premium_member(content)
+        flash('申請成功')
+        sleep(1)
         return redirect(url_for('menu'))
     return render_template('apply_premium_member.html')
 
@@ -218,7 +222,9 @@ def upgrade_member_level():
     admin = Admin(session['account'], session['password'])
     if flask.request.method == 'POST':
         account = request.form.get('account')
-        admin.upgrade_member_level(account)  # todo:alert 申請成功
+        admin.upgrade_member_level(account)
+        flash('升級成功')
+        sleep(1)
         return redirect(url_for('upgrade_member_level'))
     application_information_zip = admin.get_application_information_zip()
     return render_template('upgrade_member_level.html', application_information_zip=application_information_zip)
