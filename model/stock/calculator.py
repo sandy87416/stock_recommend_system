@@ -78,7 +78,7 @@ class Calculator:
         for stock_id in all_stock_id_np:
             stock_id_df = all_company_df_dict[stock_id]
             stock_id_df['corr_20'] = self.__get_corr_list(stock_id_df['Close'].to_numpy(), 20)
-            stock_id_df['rsi_6'] = self.__get_rsi_list(stock_id_df['Close'].to_numpy(), 6)
+            stock_id_df['rsi_6'] = self.get_rsi_list(stock_id_df['Close'].to_numpy(), 6)
             stock_id_df['stock_id'] = [stock_id] * len(stock_id_df)
             all_company_df_dict[stock_id] = stock_id_df
 
@@ -171,7 +171,7 @@ class Calculator:
         all_company_df_dict[stock_id] = stock_id_df
 
         stock_id_df['corr_20'] = self.__get_corr_list(stock_id_df['Close'].to_numpy(), 20)
-        stock_id_df['rsi_6'] = self.__get_rsi_list(stock_id_df['Close'].to_numpy(), 6)
+        stock_id_df['rsi_6'] = self.get_rsi_list(stock_id_df['Close'].to_numpy(), 6)
         stock_id_df['stock_id'] = [stock_id] * len(stock_id_df)
         all_company_df_dict[stock_id] = stock_id_df
 
