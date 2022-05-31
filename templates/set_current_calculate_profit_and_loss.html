@@ -6,16 +6,16 @@
             <form action="/calculate_current_profit_and_loss" method="post">
                 <div>
                     <label for="stock_id">股票代號</label>
-                    <input name="stock_id" type="text">
+                    <input name="stock_id" type="number" max="9999" required="required">
                 </div>
                 <div>
                     <label for="buy_price">買入價格</label>
-                    <input name="buy_price" type="number">
+                    <input name="buy_price" type="number" required="required">
                 </div>
 
                 <div>
                     <label for="trading_volume">買入股數</label>
-                    <input name="trading_volume" type="number">
+                    <input name="trading_volume" type="number" required="required">
                 </div>
                 <div>
                     <label for="securities_firm">券商</label>

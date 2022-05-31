@@ -1,5 +1,3 @@
-from time import sleep
-
 import flask
 from flask import render_template, request, jsonify, redirect, url_for, session, flash
 from config import app
@@ -9,7 +7,6 @@ from model.member.ordinary_member import OrdinaryMember
 from model.member.premium_member import PremiumMember
 from model.member.user import User
 
-# premium_member =
 user = User()
 
 
@@ -93,11 +90,6 @@ def read_stock_intraday_information():
     stock_intraday_information = member.read_stock_intraday_information(stock_id)
     return render_template('read_stock_intraday_information.html',
                            stock_intraday_information=stock_intraday_information)
-
-
-@app.route('/delete_selected_stock')  # todo: delete_selected_stock
-def delete_selected_stock():
-    return render_template('add_selected_stock.html')
 
 
 @app.route('/read_selected_stock', methods=['GET', 'POST'])

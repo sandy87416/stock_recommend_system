@@ -4,8 +4,8 @@
         <h1>查看盤後訊息</h1>
         <div class="col-md-4">
             <form action="/read_stock_after_hours_information" method="post">
-                <label for="stock_id">股票代號</label>
-                <input name="stock_id" type="number" max="9999">
+                <label for="stock_id">請輸入股票代號</label>
+                <input name="stock_id" type="number" max="9999" required="required">
                 <button type="submit" name="confirm">確認</button>
             </form>
         </div>
