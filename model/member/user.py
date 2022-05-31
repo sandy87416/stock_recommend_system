@@ -9,7 +9,7 @@ class User:
         # 判斷帳號重複
         account_np = member_df['account'].to_numpy()
         if account in account_np:
-            return '註冊失敗'
+            return '此帳號已經被註冊過'
         # 寫入member.csv
         member_df = pd.concat([member_df, pd.DataFrame({
             'account': [account],

@@ -1,5 +1,7 @@
+from time import sleep
+
 import flask
-from flask import render_template, request, jsonify, redirect, url_for, session
+from flask import render_template, request, jsonify, redirect, url_for, session, flash
 from config import app
 from model.member.admin import Admin
 from model.member.member import Member
@@ -171,8 +173,12 @@ def register():
         account = request.form.get('account')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
+        if password != confirm_password:
+            flash('密碼與確認密碼不相符')
+            return redirect(url_for('register'))
         register_message = user.register(account, password)
-        if password == confirm_password and register_message == '註冊成功':
+        flash(register_message)
+        if register_message == '註冊成功':
             return redirect(url_for('index'))
     return render_template('register.html')
 
@@ -189,7 +195,8 @@ def index():
             session['level'] = str(level)
             return redirect(url_for('menu'))
         else:
-            return render_template('login.html')
+            flash('登入失敗')
+            return redirect(url_for('index'))
     if 'account' in session.keys():
         return redirect(url_for('menu'))
     return render_template('login.html')

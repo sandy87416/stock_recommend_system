@@ -19,6 +19,14 @@
                 <button type="submit" name="confirm">註冊</button>
             </form>
         </div>
-
     </div>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flash">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 {% endblock content %}
