@@ -10,8 +10,16 @@ class Calculator:
         pass
 
     @staticmethod
-    def __get_up_down_list(close_price_list):
-        return [0] + [close_price_list[i] - close_price_list[i - 1] for i in range(1, len(close_price_list))]
+    def get_mean_price_list(close_price_list, days):
+        mean_price_list = [0 for _ in range(days - 1)]
+        for i in range(len(close_price_list) - (days - 1)):
+            days_close_price_list = close_price_list[i:(i + days)]
+            mean_price_list.append(round(np.mean(days_close_price_list) + 0, 2))
+        return mean_price_list
+
+    @staticmethod
+    def get_up_down_list(close_price_list):
+        return [0] + [round(close_price_list[i] - close_price_list[i - 1], 2) for i in range(1, len(close_price_list))]
 
     @staticmethod
     def __get_rsi(days_up_down_list):
@@ -19,11 +27,11 @@ class Calculator:
         down_mean = -np.sum([up_down for up_down in days_up_down_list if up_down < 0])
         return round(up_mean / (up_mean + down_mean) * 100, 2)
 
-    def __get_rsi_list(self, close_price_list, days):
+    def get_rsi_list(self, close_price_list, days):
         rsi_list = [0 for _ in range(days - 1)]
         for i in range(len(close_price_list) - (days - 1)):
             days_close_price_list = close_price_list[i:(i + days)]
-            days_up_down_list = self.__get_up_down_list(days_close_price_list)
+            days_up_down_list = self.get_up_down_list(days_close_price_list)
             rsi = self.__get_rsi(days_up_down_list)
             rsi_list.append(rsi)
         return rsi_list
