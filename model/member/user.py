@@ -30,4 +30,4 @@ class User:
         if len(member1_df) == 1:
             return '登入成功', level
         else:
-            return '登入失敗'
+            return '登入失敗', level

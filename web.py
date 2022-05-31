@@ -188,6 +188,10 @@ def index():
             session['password'] = str(password)
             session['level'] = str(level)
             return redirect(url_for('menu'))
+        else:
+            return render_template('login.html')
+
+    # todo: 如果登入到index應該要去menu
     return render_template('login.html')
 
 
