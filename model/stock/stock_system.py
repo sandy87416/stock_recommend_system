@@ -50,7 +50,7 @@ class StockSystem:
         selected_stock_df['account'] = selected_stock_df['account'].astype('str')
         selected_stock_df['stock_id'] = selected_stock_df['stock_id'].astype('str')
         selected_stock_df = selected_stock_df.drop(selected_stock_df[(selected_stock_df['account'] == account) & (
-                selected_stock_df['stock_id'] == stock_id)].index)
+                selected_stock_df['stock_id'] == str(stock_id))].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
         return self.read_selected_stock(account)
 

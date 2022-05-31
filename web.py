@@ -12,7 +12,10 @@ user = User()
 
 @app.route('/menu')
 def menu():
-    return render_template('menu.html')
+    if 'account' in session.keys():
+        return render_template('menu.html')
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/stock_odds_menu')

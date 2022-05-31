@@ -36,4 +36,4 @@ class TestUser(TestCase):
             member_df[(member_df['account'] == account) & (member_df['password'] == password)].index)
         member_df.to_csv(database_path + 'member/member.csv', index=False)
         login_message = self.user.login(account, password)
-        self.assertEqual(login_message, '登入失敗')
+        self.assertEqual(login_message, ('登入失敗', '-1'))
