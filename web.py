@@ -30,6 +30,7 @@ def query_recommended_stock_page():
     return render_template('query_recommended_stock_page.html')
 
 
+# UC-01
 @app.route('/read_recommended_stock', methods=['GET', 'POST'])
 def read_recommended_stock():
     days = int(request.values.get('days'))
@@ -49,6 +50,7 @@ def query_specific_stock_page():
     return render_template('query_specific_stock_page.html')
 
 
+# UC-02
 @app.route('/read_stock_odds', methods=['GET', 'POST'])
 def read_stock_odds():
     stock_id = request.values.get('stock_id')  # todo: 輸入資料庫沒有的股票
@@ -67,11 +69,12 @@ def stock_information_menu():
     return render_template('stock_information_menu.html')
 
 
-@app.route('/set_stock_id_read_stock_after_hours_information')  # todo: rename
+@app.route('/set_stock_id_read_stock_after_hours_information')  # todo: 不要跳轉
 def set_stock_id_read_stock_after_hours_information():
     return render_template('set_stock_id_read_stock_after_hours_information.html')
 
 
+# UC-03
 @app.route('/read_stock_after_hours_information', methods=['GET', 'POST'])
 def read_stock_after_hours_information():
     stock_id = request.values.get('stock_id')
@@ -87,6 +90,7 @@ def set_stock_id_read_stock_intraday_information():
     return render_template('set_stock_id_read_stock_intraday_information.html')
 
 
+# UC-04
 @app.route('/read_stock_intraday_information', methods=['GET', 'POST'])
 def read_stock_intraday_information():
     stock_id = request.values.get('stock_id')
@@ -97,6 +101,7 @@ def read_stock_intraday_information():
                            stock_intraday_information=stock_intraday_information)
 
 
+# UC-05 UC-13 UC-14
 @app.route('/read_selected_stock', methods=['GET', 'POST'])
 def read_selected_stock():
     member = Member(session['account'], session['password'])
@@ -127,6 +132,7 @@ def set_calculate_profit_and_loss():
     return render_template('set_calculate_profit_and_loss.html')
 
 
+# UC-10
 @app.route('/calculate_current_profit_and_loss', methods=['GET', 'POST'])
 def calculate_current_profit_and_loss():
     stock_id = request.form.get('stock_id')
@@ -142,6 +148,7 @@ def calculate_current_profit_and_loss():
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
+# UC-11
 @app.route('/calculate_profit_and_loss', methods=['GET', 'POST'])
 def calculate_profit_and_loss():
     buy_price = request.form.get('buy_price')
@@ -157,6 +164,7 @@ def calculate_profit_and_loss():
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
+# UC-12
 @app.route('/read_stock_classification')
 def read_stock_classification():
     member = Member(session['account'], session['password'])
@@ -164,6 +172,7 @@ def read_stock_classification():
     return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
 
 
+# UC-07
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if flask.request.method == 'POST':
@@ -205,6 +214,7 @@ def logout():
     return render_template('login.html')
 
 
+# UC-08
 @app.route('/apply_premium_member', methods=['GET', 'POST'])
 def apply_premium_member():
     if flask.request.method == 'POST':
@@ -217,6 +227,7 @@ def apply_premium_member():
     return render_template('apply_premium_member.html')
 
 
+# UC-09
 @app.route('/upgrade_member_level', methods=['GET', 'POST'])
 def upgrade_member_level():
     admin = Admin(session['account'], session['password'])
