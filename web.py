@@ -1,15 +1,15 @@
 from time import sleep
 
 import flask
+import pandas as pd
+from config import database_path
 from flask import render_template, request, jsonify, redirect, url_for, session, flash
 from config import app
 from model.member.admin import Admin
-from model.member.member import Member
 from model.member.ordinary_member import OrdinaryMember
 from model.member.premium_member import PremiumMember
-from model.member.user import User
 
-user = User()
+user = None
 
 
 @app.route('/menu')
@@ -38,10 +38,10 @@ def read_recommended_stock():
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     odds = int(odds) / 10
-    premium_member = PremiumMember(session['account'], session['password'])
-    recommended_stock_list = premium_member.read_recommended_stock(days, odds)
+    recommended_stock_list = user.read_recommended_stock(days, odds)
     json_data = jsonify(
-        {'total': len(recommended_stock_list), 'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
+        {'total': len(recommended_stock_list),
+         'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
     return json_data
 
 
@@ -57,8 +57,7 @@ def read_stock_odds():
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     stock_id = int(stock_id)
-    premium_member = PremiumMember(session['account'], session['password'])
-    stock_odds_list = premium_member.read_stock_odds(stock_id)
+    stock_odds_list = user.read_stock_odds(stock_id)
     json_data = jsonify(
         {'total': len(stock_odds_list), 'rows': stock_odds_list[int(offset):(int(offset) + int(limit))]})
     return json_data
@@ -79,8 +78,7 @@ def set_stock_id_read_stock_after_hours_information():
 def read_stock_after_hours_information():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
-    member = Member(session['account'], session['password'])
-    stock_after_hours_information = member.read_stock_after_hours_information(stock_id)
+    stock_after_hours_information = user.read_stock_after_hours_information(stock_id)
     return render_template('read_stock_after_hours_information.html',
                            stock_after_hours_information=stock_after_hours_information)
 
@@ -95,8 +93,7 @@ def set_stock_id_read_stock_intraday_information():
 def read_stock_intraday_information():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
-    member = Member(session['account'], session['password'])
-    stock_intraday_information = member.read_stock_intraday_information(stock_id)
+    stock_intraday_information = user.read_stock_intraday_information(stock_id)
     return render_template('read_stock_intraday_information.html',
                            stock_intraday_information=stock_intraday_information)
 
@@ -104,15 +101,14 @@ def read_stock_intraday_information():
 # UC-05 UC-13 UC-14
 @app.route('/read_selected_stock', methods=['GET', 'POST'])
 def read_selected_stock():
-    member = Member(session['account'], session['password'])
-    selected_stock_list = member.read_selected_stock()
+    selected_stock_list = user.read_selected_stock()
     if flask.request.method == 'GET':
         stock_id = request.values.get('selected_stock_id')
-        selected_stock_list = member.delete_selected_stock(stock_id)
+        selected_stock_list = user.delete_selected_stock(stock_id)
     elif flask.request.method == 'POST':
         stock_id = request.values.get('stock_id')
         stock_id = int(stock_id)
-        selected_stock_list = member.add_selected_stock(stock_id)
+        selected_stock_list = user.add_selected_stock(stock_id)
     selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
@@ -143,8 +139,7 @@ def calculate_current_profit_and_loss():
     buy_price = float(buy_price)
     trading_volume = int(trading_volume)
     securities_firm = float(securities_firm)
-    member = Member(session['account'], session['password'])
-    profit_and_loss = member.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm)
+    profit_and_loss = user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm)
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
@@ -159,17 +154,31 @@ def calculate_profit_and_loss():
     sell_price = float(sell_price)
     trading_volume = int(trading_volume)
     securities_firm = float(securities_firm)
-    member = Member(session['account'], session['password'])
-    profit_and_loss = member.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
+    profit_and_loss = user.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
 # UC-12
 @app.route('/read_stock_classification')
 def read_stock_classification():
-    member = Member(session['account'], session['password'])
-    stock_class_dict = member.read_stock_classification()
+    stock_class_dict = user.read_stock_classification()
     return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
+
+
+def sign_up(account, password):
+    member_df = pd.read_csv(database_path + 'member/member.csv')
+    # 判斷帳號重複
+    account_np = member_df['account'].to_numpy()
+    if account in account_np:
+        return '此帳號已經被註冊過'
+    # 寫入member.csv
+    member_df = pd.concat([member_df, pd.DataFrame({
+        'account': [account],
+        'password': [password],
+        'level': [2],
+    })])
+    member_df.to_csv(database_path + 'member/member.csv', index=False)
+    return '註冊成功'
 
 
 # UC-07
@@ -182,11 +191,28 @@ def register():
         if password != confirm_password:
             flash('密碼與確認密碼不相符')
             return redirect(url_for('register'))
-        register_message = user.register(account, password)
+        register_message = sign_up(account, password)
         flash(register_message)
         if register_message == '註冊成功':
             return redirect(url_for('index'))
     return render_template('register.html')
+
+
+def login(account, password):
+    level = '-1'
+    member_df = pd.read_csv(database_path + 'member/member.csv')
+    member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
+    level_np = member1_df['level'].to_numpy()
+    if len(level_np) > 0:
+        level = str(level_np[0])
+    if level == '0':
+        return Admin(account, password), level
+    elif level == '1':
+        return PremiumMember(account, password), level
+    elif level == '2':
+        return OrdinaryMember(account, password), level
+    else:
+        return None, level
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -194,11 +220,11 @@ def index():
     if flask.request.method == 'POST':
         account = request.form.get('account')
         password = request.form.get('password')
-        login_message, level = user.login(account, password)
-        if login_message == '登入成功':
-            session['account'] = str(account)
-            session['password'] = str(password)
-            session['level'] = str(level)
+        global user
+        user, level = login(account, password)
+        if level != '-1':
+            session['account'] = user.get_account()
+            session['level'] = level
             return redirect(url_for('menu'))
         else:
             flash('登入失敗')
@@ -218,9 +244,8 @@ def logout():
 @app.route('/apply_premium_member', methods=['GET', 'POST'])
 def apply_premium_member():
     if flask.request.method == 'POST':
-        ordinary_member = OrdinaryMember(session['account'], session['password'])
         content = request.form.get('content')
-        ordinary_member.apply_premium_member(content)
+        user.apply_premium_member(content)
         flash('申請成功')
         sleep(1)
         return redirect(url_for('menu'))
@@ -230,14 +255,13 @@ def apply_premium_member():
 # UC-09
 @app.route('/upgrade_member_level', methods=['GET', 'POST'])
 def upgrade_member_level():
-    admin = Admin(session['account'], session['password'])
     if flask.request.method == 'POST':
         account = request.form.get('account')
-        admin.upgrade_member_level(account)
+        user.upgrade_member_level(account)
         flash('升級成功')
         sleep(1)
         return redirect(url_for('upgrade_member_level'))
-    application_information_zip = admin.get_application_information_zip()
+    application_information_zip = user.get_application_information_zip()
     return render_template('upgrade_member_level.html', application_information_zip=application_information_zip)
 
 
