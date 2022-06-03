@@ -6,7 +6,7 @@
             <form action="/apply_premium_member" method="post">
                 <div>
                     <label for="content">申請理由</label>
-                    <input name="content" type="text">
+                    <input name="content" type="text" required="required" oninvalid="setCustomValidity('請輸入申請理由');">
                 </div>
                 <button type="submit" name="confirm">送出申請</button>
             </form>

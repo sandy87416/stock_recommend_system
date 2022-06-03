@@ -6,11 +6,11 @@
             <form action="/" method="post">
                 <div>
                     <label for="account">帳號</label>
-                    <input name="account" type="text" required="required">
+                    <input name="account" type="text" required="required" oninvalid="setCustomValidity('請輸入帳號');">
                 </div>
                 <div>
                     <label for="password">密碼</label>
-                    <input name="password" type="password" required="required">
+                    <input name="password" type="password" required="required" oninvalid="setCustomValidity('請輸入密碼');">
                 </div>
                 <button type="submit" name="confirm">登入</button>
             </form>
