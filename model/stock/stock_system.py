@@ -34,7 +34,6 @@ class StockSystem:
         })])
         selected_stock_df = selected_stock_df.drop_duplicates()
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
-        return self.read_selected_stock(account)
 
     def read_selected_stock(self, account):
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
@@ -45,14 +44,14 @@ class StockSystem:
         selected_stock_list = [self.create_selected_stock(account, stock_id) for stock_id in stock_id_np]
         return selected_stock_list
 
-    def delete_selected_stock(self, account, stock_id):
+    @staticmethod
+    def delete_selected_stock(account, stock_id):
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df['account'] = selected_stock_df['account'].astype('str')
         selected_stock_df['stock_id'] = selected_stock_df['stock_id'].astype('str')
         selected_stock_df = selected_stock_df.drop(selected_stock_df[(selected_stock_df['account'] == account) & (
                 selected_stock_df['stock_id'] == str(stock_id))].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
-        return self.read_selected_stock(account)
 
     def get_close_price(self, stock_id):
         stock = self.create_stock(stock_id)

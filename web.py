@@ -93,17 +93,23 @@ def read_stock_intraday_information():
                            stock_intraday_information=stock_intraday_information)
 
 
-# UC-05 UC-13 UC-14
+# UC-05 UC-13
 @app.route('/read_selected_stock', methods=['GET', 'POST'])
 def read_selected_stock():
     selected_stock_list = current_user.read_selected_stock()
-    if flask.request.method == 'GET':
-        stock_id = request.values.get('selected_stock_id')
-        selected_stock_list = current_user.delete_selected_stock(stock_id)
-    elif flask.request.method == 'POST':
+    if flask.request.method == 'POST':
         stock_id = request.values.get('stock_id')
         stock_id = int(stock_id)
         selected_stock_list = current_user.add_selected_stock(stock_id)
+    selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
+    return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
+
+
+# UC-14
+@app.route('/delete_selected_stock', methods=['POST'])
+def delete_selected_stock():
+    stock_id = request.values.get('selected_stock_id')
+    selected_stock_list = current_user.delete_selected_stock(stock_id)
     selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
