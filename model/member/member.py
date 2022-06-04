@@ -37,7 +37,8 @@ class Member(UserMixin):
         return stock_intraday_information
 
     def add_selected_stock(self, stock_id):
-        selected_stock_list = stock_system.add_selected_stock(self.get_account(), stock_id)
+        stock_system.add_selected_stock(self.get_account(), stock_id)
+        selected_stock_list = stock_system.read_selected_stock(self.get_account())
         return selected_stock_list
 
     def read_selected_stock(self):
@@ -45,7 +46,8 @@ class Member(UserMixin):
         return selected_stock_list
 
     def delete_selected_stock(self, stock_id):
-        selected_stock_list = stock_system.delete_selected_stock(self.get_account(), stock_id)
+        stock_system.delete_selected_stock(self.get_account(), stock_id)
+        selected_stock_list = stock_system.read_selected_stock(self.get_account())
         return selected_stock_list
 
     @staticmethod

@@ -20,13 +20,4 @@ class OrdinaryMember(Member):
 
     def apply_premium_member(self, content):
         self.__application_information.set_content(content)
-        apply_account = self.__application_information.get_account()
-        apply_content = self.__application_information.get_content()
-
-        df = pd.read_csv(database_path + 'member/application_information.csv')
-        df = pd.concat([df, pd.DataFrame({
-            'account': [apply_account],
-            'content': [apply_content],
-        })])
-        df.to_csv(database_path + 'member/application_information.csv', index=False)
         return 'Success'
