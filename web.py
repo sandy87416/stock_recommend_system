@@ -3,54 +3,12 @@ import pandas as pd
 from time import sleep
 from config import database_path
 from model.member.admin import Admin
+from model.member.member import Member
 from model.member.premium_member import PremiumMember
 from model.member.ordinary_member import OrdinaryMember
 from flask_login import login_user, current_user, logout_user
 from flask import render_template, request, jsonify, redirect, url_for, flash, session
 from . import app, login
-
-
-def sign_up(account, password):
-    member_df = pd.read_csv(database_path + 'member/member.csv')
-    # 判斷帳號重複
-    account_np = member_df['account'].to_numpy()
-    if account in account_np:
-        return '此帳號已經被註冊過'
-    # 寫入member.csv
-    member_df = pd.concat([member_df, pd.DataFrame({
-        'account': [account],
-        'password': [password],
-        'level': [2],
-    })])
-    member_df.to_csv(database_path + 'member/member.csv', index=False)
-    return "註冊成功"
-
-
-@login.user_loader
-def load_user(account):
-    member_df = pd.read_csv(database_path + 'member/member.csv')
-    password = member_df[member_df['account'] == account]['password'].to_numpy()[0]
-    level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
-    session['level'] = str(level)
-    if level == 0:
-        return Admin(account, password)
-    elif level == 1:
-        return PremiumMember(account, password)
-    else:
-        return OrdinaryMember(account, password)
-
-
-def is_account_and_password_validate(account, password):
-    level = '-1'
-    member_df = pd.read_csv(database_path + 'member/member.csv')
-    member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
-    level_np = member1_df['level'].to_numpy()
-    if len(level_np) > 0:
-        level = str(level_np[0])
-    if len(member1_df) == 1:
-        return True, level
-    else:
-        return False, level
 
 
 @app.route('/menu')
@@ -222,35 +180,6 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('menu'))
-    if flask.request.method == 'POST':
-        account = request.form.get('account')
-        password = request.form.get('password')
-        is_validate, level = is_account_and_password_validate(account, password)
-        if is_validate:
-            if level == '0':
-                user = Admin(account, password)
-            elif level == '1':
-                user = PremiumMember(account, password)
-            else:
-                user = OrdinaryMember(account, password)
-            login_user(user)
-            return redirect(url_for('menu'))
-        else:
-            flash('登入失敗', category='success')
-            return redirect(url_for('index'))
-    return render_template('login.html')
-
-
-@app.route('/logout', methods=['GET', 'POST'])
-def logout():
-    logout_user()
-    return render_template('login.html')
-
-
 # UC-08
 @app.route('/apply_premium_member', methods=['GET', 'POST'])
 def apply_premium_member():
@@ -274,6 +203,73 @@ def upgrade_member_level():
         return redirect(url_for('upgrade_member_level'))
     application_information_zip = current_user.get_application_information_zip()
     return render_template('upgrade_member_level.html', application_information_zip=application_information_zip)
+
+
+@login.user_loader
+def load_user(account):
+    member_df = pd.read_csv(database_path + 'member/member.csv')
+    password = member_df[member_df['account'] == account]['password'].to_numpy()[0]
+    level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
+    session['level'] = str(level)
+    if level == 0:
+        return Admin(account, password)
+    elif level == 1:
+        return PremiumMember(account, password)
+    else:
+        return OrdinaryMember(account, password)
+
+
+def sign_up(account, password):
+    member_df = pd.read_csv(database_path + 'member/member.csv')
+    # 判斷帳號重複
+    account_np = member_df['account'].to_numpy()
+    if account in account_np:
+        return '此帳號已經被註冊過'
+    # 寫入member.csv
+    member_df = pd.concat([member_df, pd.DataFrame({
+        'account': [account],
+        'password': [password],
+        'level': [2],
+    })])
+    member_df.to_csv(database_path + 'member/member.csv', index=False)
+    return "註冊成功"
+
+
+def is_account_and_password_validate(account, password):
+    level = '-1'
+    member_df = pd.read_csv(database_path + 'member/member.csv')
+    member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
+    level_np = member1_df['level'].to_numpy()
+    if len(level_np) > 0:
+        level = str(level_np[0])
+    if len(member1_df) == 1:
+        return True, level
+    else:
+        return False, level
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('menu'))
+    if flask.request.method == 'POST':
+        account = request.form.get('account')
+        password = request.form.get('password')
+        is_validate, level = is_account_and_password_validate(account, password)
+        if is_validate:
+            user = Member(account, password)
+            login_user(user)
+            return redirect(url_for('menu'))
+        else:
+            flash('登入失敗')
+            return redirect(url_for('index'))
+    return render_template('login.html')
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    logout_user()
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
