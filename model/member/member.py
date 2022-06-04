@@ -1,10 +1,11 @@
 import pandas as pd
+from flask_login import UserMixin
 from config import database_path
 from model import stock_system
 from model.stock.calculator import Calculator
 
 
-class Member:
+class Member(UserMixin):
     __account = ''
     __password = ''
 
@@ -61,3 +62,6 @@ class Member:
     @staticmethod
     def read_stock_classification():
         return stock_system.get_stock_classification()
+
+    def get_id(self):
+        return self.__account
