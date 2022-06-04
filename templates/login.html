@@ -3,31 +3,6 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}"/>
 {%- endblock styles %}
 {% block content %}
-    {#    <div class="container row">#}
-    {#        <h1>登入</h1>#}
-    {#        <div class="col-md-4">#}
-    {#            <form action="/" method="post">#}
-    {#                <div>#}
-    {#                    <label for="account">帳號</label>#}
-    {#                    <input name="account" type="text" required="required">#}
-    {#                </div>#}
-    {#                <div>#}
-    {#                    <label for="password">密碼</label>#}
-    {#                    <input name="password" type="password" required="required">#}
-    {#                </div>#}
-    {#                <button type="submit" name="confirm">登入</button>#}
-    {#            </form>#}
-    {#        </div>#}
-    {#        {% with messages = get_flashed_messages() %}#}
-    {#            {% if messages %}#}
-    {#                <ul class="flash">#}
-    {#                    {% for message in messages %}#}
-    {#                        <li>{{ message }}</li>#}
-    {#                    {% endfor %}#}
-    {#                </ul>#}
-    {#            {% endif %}#}
-    {#        {% endwith %}#}
-    {#    </div>#}
     <div class="limiter">
         <div class="container-login100">
             <div class="wrap-login100">
@@ -40,17 +15,16 @@
 						Login
 					</span>
 
-                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" name="account" placeholder="Email" required="required">
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="account" placeholder="Email" required="required" oninvalid="setCustomValidity('請輸入帳號');" >
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
 							<i class="fa fa-envelope" aria-hidden="true"></i>
 						</span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input class="input100" type="password" name="password" placeholder="Password"
-                               required="required">
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="password" name="password" placeholder="Password" required="required" oninvalid="setCustomValidity('請輸入密碼');" >
                         <span class="focus-input100"></span>
                         <span class="symbol-input100">
 							<i class="fa fa-lock" aria-hidden="true"></i>
@@ -66,4 +40,14 @@
             </div>
         </div>
     </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 {% endblock content %}

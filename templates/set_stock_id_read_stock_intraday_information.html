@@ -5,7 +5,8 @@
         <div class="col-md-4">
             <form action="/read_stock_intraday_information" method="post">
                 <label for="stock_id">請輸入股票代號</label>
-                <input name="stock_id" type="number" max="9999" required="required">
+                <input name="stock_id" type="number" max="9999" required="required"
+                       oninvalid="setCustomValidity('請輸入股票代號');">
                 <button type="submit" name="confirm">確認</button>
             </form>
         </div>
