@@ -1,9 +1,10 @@
 import pandas as pd
+from flask_login import UserMixin
 from config import database_path
 from model.utils import update_database
 
 
-class Admin:
+class Admin(UserMixin):
     __account = ''
     __password = ''
 
@@ -41,3 +42,6 @@ class Admin:
         application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
         application_information_df['content'] = application_information_df['content'].astype('str')
         return zip(application_information_df['account'].to_list(), application_information_df['content'].to_list())
+
+    def get_id(self):
+        return self.__account
