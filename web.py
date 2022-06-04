@@ -220,13 +220,17 @@ def index():
     if flask.request.method == 'POST':
         account = request.form.get('account')
         password = request.form.get('password')
+        print("account", account)
+        print("password", password)
         global user
         user, level = login(account, password)
         if level != '-1':
+            print("登入成功")
             session['account'] = user.get_account()
             session['level'] = level
             return redirect(url_for('menu'))
         else:
+            print('登入失敗')
             flash('登入失敗')
             return redirect(url_for('index'))
     if 'account' in session.keys():

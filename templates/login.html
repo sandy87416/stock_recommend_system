@@ -1,28 +1,69 @@
 {% extends "base.html" %}
+{%- block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}"/>
+{%- endblock styles %}
 {% block content %}
-    <div class="container row">
-        <h1>登入</h1>
-        <div class="col-md-4">
-            <form action="/" method="post">
-                <div>
-                    <label for="account">帳號</label>
-                    <input name="account" type="text" required="required">
+    {#    <div class="container row">#}
+    {#        <h1>登入</h1>#}
+    {#        <div class="col-md-4">#}
+    {#            <form action="/" method="post">#}
+    {#                <div>#}
+    {#                    <label for="account">帳號</label>#}
+    {#                    <input name="account" type="text" required="required">#}
+    {#                </div>#}
+    {#                <div>#}
+    {#                    <label for="password">密碼</label>#}
+    {#                    <input name="password" type="password" required="required">#}
+    {#                </div>#}
+    {#                <button type="submit" name="confirm">登入</button>#}
+    {#            </form>#}
+    {#        </div>#}
+    {#        {% with messages = get_flashed_messages() %}#}
+    {#            {% if messages %}#}
+    {#                <ul class="flash">#}
+    {#                    {% for message in messages %}#}
+    {#                        <li>{{ message }}</li>#}
+    {#                    {% endfor %}#}
+    {#                </ul>#}
+    {#            {% endif %}#}
+    {#        {% endwith %}#}
+    {#    </div>#}
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-pic js-tilt" data-tilt style="text-align: center; display: block; align-self: center;">
+                    <img src="{{ url_for('static', filename='favicon.png') }}" alt="IMG">
                 </div>
-                <div>
-                    <label for="password">密碼</label>
-                    <input name="password" type="password" required="required">
-                </div>
-                <button type="submit" name="confirm">登入</button>
-            </form>
+
+                <form class="login100-form validate-form" action="/" method="post">
+					<span class="login100-form-title">
+						Login
+					</span>
+
+                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+                        <input class="input100" type="text" name="account" placeholder="Email" required="required">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+							<i class="fa fa-envelope" aria-hidden="true"></i>
+						</span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                        <input class="input100" type="password" name="password" placeholder="Password"
+                               required="required">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" type="submit" name="confirm">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class="flash">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
     </div>
 {% endblock content %}
