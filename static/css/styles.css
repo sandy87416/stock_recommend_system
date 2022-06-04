@@ -4026,7 +4026,7 @@ textarea.form-control-lg {
 }
 
 .navbar {
-    margin-bottom: 5rem;
+    /*margin-bottom: 5rem;*/
     position: relative;
     display: flex;
     flex-wrap: wrap;
