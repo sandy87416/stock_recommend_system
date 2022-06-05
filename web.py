@@ -1,15 +1,23 @@
 import flask
 import pandas as pd
+from flask_bootstrap import Bootstrap
 from time import sleep
 from config import database_path
 from model.member.admin import Admin
 from model.member.member import Member
 from model.member.premium_member import PremiumMember
 from model.member.ordinary_member import OrdinaryMember
-from flask_login import login_user, current_user, logout_user
-from flask import render_template, request, jsonify, redirect, url_for, flash, session
-from . import app, login
+from flask_login import login_user, current_user, logout_user, LoginManager
+from flask import render_template, request, jsonify, redirect, url_for, flash, session, Flask
 
+app = Flask(__name__)
+bootstrap = Bootstrap(app)
+# https://www.796t.com/p/461428.html
+app.config['SECRET_KEY'] = b'\x1f\x92\xcc\x81\x1e\x972h\x89\x0e\xaaC\xdc+lh\xed5\xe8,\xf5>\xec~'
+login = LoginManager(app)
+login.login_view = 'login'
+login.login_message = 'You must login to access this page'
+login.login_message_category = 'info'
 
 @app.route('/menu')
 def menu():
@@ -173,13 +181,13 @@ def read_stock_classification():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if flask.request.method == 'POST':
-        account = request.form.get('account')
+        id = request.form.get('id')
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
         if password != confirm_password:
             flash('密碼與確認密碼不相符')
             return redirect(url_for('register'))
-        register_message = sign_up(account, password)
+        register_message = sign_up(id, password)
         flash(register_message)
         if register_message == '註冊成功':
             return redirect(url_for('index'))
@@ -201,39 +209,39 @@ def apply_premium_member():
 # UC-09
 @app.route('/upgrade_member_level', methods=['GET', 'POST'])
 def upgrade_member_level():
-    if flask.request.method == 'POST':
-        account = request.form.get('account')
-        current_user.upgrade_member_level(account)
+    application_information_list = list()
+    if flask.request.method == 'GET':
+        application_information_list = current_user.get_application_information_list()
+    elif flask.request.method == 'POST':
+        id = request.form.get('id')
+        application_information_list = current_user.upgrade_member_level(id)
         flash('升級成功')
-        sleep(1)
-        return redirect(url_for('upgrade_member_level'))
-    application_information_zip = current_user.get_application_information_zip()
-    return render_template('upgrade_member_level.html', application_information_zip=application_information_zip)
+    return render_template('upgrade_member_level.html', application_information_list=application_information_list)
 
 
 @login.user_loader
-def load_user(account):
+def load_user(id):
     member_df = pd.read_csv(database_path + 'member/member.csv')
-    password = member_df[member_df['account'] == account]['password'].to_numpy()[0]
-    level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
+    password = member_df[member_df['id'] == id]['password'].to_numpy()[0]
+    level = member_df[member_df['id'] == id]['level'].to_numpy()[0]
     session['level'] = str(level)
     if level == 0:
-        return Admin(account, password)
+        return Admin(id, password)
     elif level == 1:
-        return PremiumMember(account, password)
+        return PremiumMember(id, password)
     else:
-        return OrdinaryMember(account, password)
+        return OrdinaryMember(id, password)
 
 
-def sign_up(account, password):
+def sign_up(id, password):
     member_df = pd.read_csv(database_path + 'member/member.csv')
     # 判斷帳號重複
-    account_np = member_df['account'].to_numpy()
-    if account in account_np:
+    id_np = member_df['id'].to_numpy()
+    if id in id_np:
         return '此帳號已經被註冊過'
     # 寫入member.csv
     member_df = pd.concat([member_df, pd.DataFrame({
-        'account': [account],
+        'id': [id],
         'password': [password],
         'level': [2],
     })])
@@ -241,10 +249,10 @@ def sign_up(account, password):
     return "註冊成功"
 
 
-def is_account_and_password_validate(account, password):
+def is_id_and_password_validate(id, password):
     level = '-1'
     member_df = pd.read_csv(database_path + 'member/member.csv')
-    member1_df = member_df[(member_df['account'] == account) & (member_df['password'] == password)]
+    member1_df = member_df[(member_df['id'] == id) & (member_df['password'] == password)]
     level_np = member1_df['level'].to_numpy()
     if len(level_np) > 0:
         level = str(level_np[0])
@@ -259,11 +267,11 @@ def index():
     if current_user.is_authenticated:
         return redirect(url_for('menu'))
     if flask.request.method == 'POST':
-        account = request.form.get('account')
+        id = request.form.get('id')
         password = request.form.get('password')
-        is_validate, level = is_account_and_password_validate(account, password)
+        is_validate, level = is_id_and_password_validate(id, password)
         if is_validate:
-            user = Member(account, password)
+            user = Member(id, password)
             login_user(user)
             return redirect(url_for('menu'))
         else:

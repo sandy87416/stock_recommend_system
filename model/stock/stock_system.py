@@ -22,34 +22,34 @@ class StockSystem:
         return stock.get_stock_intraday_information()
 
     @staticmethod
-    def create_selected_stock(account, stock_id):
-        return SelectStock(account, stock_id)
+    def create_selected_stock(id, stock_id):
+        return SelectStock(id, stock_id)
 
-    def add_selected_stock(self, account, stock_id):
-        selected_stock = self.create_selected_stock(account, stock_id)
+    def add_selected_stock(self, id, stock_id):
+        selected_stock = self.create_selected_stock(id, stock_id)
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df = pd.concat([selected_stock_df, pd.DataFrame({
-            'account': [selected_stock.get_account()],
+            'id': [selected_stock.get_id()],
             'stock_id': [selected_stock.get_stock_id()],
         })])
         selected_stock_df = selected_stock_df.drop_duplicates()
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 
-    def read_selected_stock(self, account):
+    def read_selected_stock(self, id):
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
-        selected_stock_df['account'] = selected_stock_df['account'].astype('str')
+        selected_stock_df['id'] = selected_stock_df['id'].astype('str')
         selected_stock_df = selected_stock_df.drop_duplicates()
-        selected_stock_df = selected_stock_df[selected_stock_df['account'] == account]
+        selected_stock_df = selected_stock_df[selected_stock_df['id'] == id]
         stock_id_np = selected_stock_df['stock_id'].to_numpy()
-        selected_stock_list = [self.create_selected_stock(account, stock_id) for stock_id in stock_id_np]
+        selected_stock_list = [self.create_selected_stock(id, stock_id) for stock_id in stock_id_np]
         return selected_stock_list
 
     @staticmethod
-    def delete_selected_stock(account, stock_id):
+    def delete_selected_stock(id, stock_id):
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
-        selected_stock_df['account'] = selected_stock_df['account'].astype('str')
+        selected_stock_df['id'] = selected_stock_df['id'].astype('str')
         selected_stock_df['stock_id'] = selected_stock_df['stock_id'].astype('str')
-        selected_stock_df = selected_stock_df.drop(selected_stock_df[(selected_stock_df['account'] == account) & (
+        selected_stock_df = selected_stock_df.drop(selected_stock_df[(selected_stock_df['id'] == id) & (
                 selected_stock_df['stock_id'] == str(stock_id))].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 

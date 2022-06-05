@@ -4,10 +4,10 @@ from config import database_path
 
 class MemberSystem:
     @staticmethod
-    def create_member(member_df, account, password):
+    def create_member(member_df, id, password):
         # 寫入member.csv
         member_df = pd.concat([member_df, pd.DataFrame({
-            'account': [account],
+            'id': [id],
             'password': [password],
             'level': [2],
         })])

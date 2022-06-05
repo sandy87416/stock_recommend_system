@@ -11,8 +11,8 @@ class TestMember(TestCase):
     def setUpClass(cls):
         cls.member = Member("t109598087@ntut.org.tw", 'islab')
 
-    def test_get_account(self):
-        self.assertEqual(self.member.get_account(), 't109598087@ntut.org.tw')
+    def test_get_id(self):
+        self.assertEqual(self.member.get_id(), 't109598087@ntut.org.tw')
 
     def test_get_password(self):
         self.assertEqual(self.member.get_password(), 'islab')
@@ -22,12 +22,12 @@ class TestMember(TestCase):
         self.assertEqual(self.member.get_password(), '802138')
 
         member_df = pd.read_csv(database_path + 'member/member.csv')
-        password = member_df[member_df['account'] == "t109598087@ntut.org.tw"]['password'].to_numpy()[0]
+        password = member_df[member_df['id'] == "t109598087@ntut.org.tw"]['password'].to_numpy()[0]
         self.assertEqual(password, '802138')
 
         # teardown
         member_df.iloc[
-            member_df[member_df['account'] == self.member.get_account()].index, member_df.columns.get_loc(
+            member_df[member_df['id'] == self.member.get_id()].index, member_df.columns.get_loc(
                 "password")] = "islab"
         member_df.to_csv(database_path + 'member/member.csv', index=False)
 
@@ -53,39 +53,39 @@ class TestMember(TestCase):
 
     def test_add_selected_stock(self):
         selected_stock_list = self.member.add_selected_stock(2330)
-        self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
+        self.assertEqual(selected_stock_list[0].get_id(), "t109598087@ntut.org.tw")
         self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
 
         # teardown
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df = selected_stock_df.drop(selected_stock_df[
-                                                       (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
+                                                       (selected_stock_df['id'] == 't109598087@ntut.org.tw') & (
                                                                selected_stock_df['stock_id'] == 2330)].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 
     def test_read_selected_stock(self):
         self.member.add_selected_stock(2330)
         selected_stock_list = self.member.read_selected_stock()
-        self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
+        self.assertEqual(selected_stock_list[0].get_id(), "t109598087@ntut.org.tw")
         self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
         # teardown
         selected_stock_df = pd.read_csv(database_path + 'selected_stock.csv')
         selected_stock_df = selected_stock_df.drop(selected_stock_df[
-                                                       (selected_stock_df['account'] == 't109598087@ntut.org.tw') & (
+                                                       (selected_stock_df['id'] == 't109598087@ntut.org.tw') & (
                                                                selected_stock_df['stock_id'] == 2330)].index)
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 
     def test_delete_selected_stock(self):
         self.member.add_selected_stock(2330)
         selected_stock_list = self.member.read_selected_stock()
-        self.assertEqual(selected_stock_list[0].get_account(), "t109598087@ntut.org.tw")
+        self.assertEqual(selected_stock_list[0].get_id(), "t109598087@ntut.org.tw")
         self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
 
         self.member.delete_selected_stock(2330)
         selected_stock_list = self.member.read_selected_stock()
-        account_list = [selected_stock.get_account() for selected_stock in selected_stock_list]
+        id_list = [selected_stock.get_id() for selected_stock in selected_stock_list]
         stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
-        self.assertFalse("t109598087@ntut.org.tw" in account_list)
+        self.assertFalse("t109598087@ntut.org.tw" in id_list)
         self.assertFalse(2330 in stock_id_list)
 
     def test_calculate_current_profit_and_loss(self):

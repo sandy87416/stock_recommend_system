@@ -3,9 +3,9 @@ from model.stock.calculator import Calculator
 
 
 class PremiumMember(Member):
-    def __init__(self, account, password):
-        super().__init__(account, password)
-        self.__account = account
+    def __init__(self, id, password):
+        super().__init__(id, password)
+        self.__id = id
         self.__password = password
 
     @staticmethod

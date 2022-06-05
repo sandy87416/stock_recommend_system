@@ -11,11 +11,11 @@ class TestAdmin(TestCase):
     @classmethod
     def setUpClass(cls):
         member_df = pd.read_csv(database_path + 'member/member.csv')
-        password = member_df[member_df['account'] == "t109598092@ntut.org.tw"]['password'].to_numpy()[0]
+        password = member_df[member_df['id'] == "t109598092@ntut.org.tw"]['password'].to_numpy()[0]
         cls.admin = Admin("t109598092@ntut.org.tw", password)
 
-    def test_get_account(self):
-        self.assertEqual(self.admin.get_account(), "t109598092@ntut.org.tw")
+    def test_get_id(self):
+        self.assertEqual(self.admin.get_id(), "t109598092@ntut.org.tw")
 
     def test_get_password(self):
         self.assertEqual(self.admin.get_password(), "islab")
@@ -27,50 +27,50 @@ class TestAdmin(TestCase):
 
         self.assertEqual(self.admin.get_password(), "newpassword")
         member_df = pd.read_csv(database_path + 'member/member.csv')
-        password = member_df[member_df['account'] == self.admin.get_account()]['password'].to_numpy()[0]
+        password = member_df[member_df['id'] == self.admin.get_id()]['password'].to_numpy()[0]
         self.assertEqual(password, "newpassword")
 
         # teardown
         column_index = member_df.columns.get_loc("password")
-        row_index = member_df[member_df['account'] == self.admin.get_account()].index
+        row_index = member_df[member_df['id'] == self.admin.get_id()].index
         member_df.iloc[row_index, column_index] = "islab"
         member_df.to_csv(database_path + 'member/member.csv', index=False)
 
     def test_upgrade_member_level(self):
         member_df = pd.read_csv(database_path + 'member/member.csv')
-        account = "t109598053@ntut.org.tw"
-        level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
+        id = "t109598053@ntut.org.tw"
+        level = member_df[member_df['id'] == id]['level'].to_numpy()[0]
         self.assertEqual(level, 2)
-        self.admin.upgrade_member_level(account)
+        self.admin.upgrade_member_level(id)
 
         member_df = pd.read_csv(database_path + 'member/member.csv')
-        level = member_df[member_df['account'] == account]['level'].to_numpy()[0]
+        level = member_df[member_df['id'] == id]['level'].to_numpy()[0]
         self.assertEqual(level, 1)
 
         application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
-        self.assertEqual(len(application_information_df[application_information_df['account'] == account]), 0)
+        self.assertEqual(len(application_information_df[application_information_df['id'] == id]), 0)
 
         # teardown
         if level == 1:
-            member_df.iloc[member_df[member_df['account'] == account].index, member_df.columns.get_loc("level")] = 2
+            member_df.iloc[member_df[member_df['id'] == id].index, member_df.columns.get_loc("level")] = 2
         member_df.to_csv(database_path + 'member/member.csv', index=False)
 
-    def test_get_application_information_zip(self):
-        ordinary_member = OrdinaryMember('test', 'test')
-        ordinary_member.apply_premium_member('123')
-        application_information_zip = self.admin.get_application_information_zip()
-        account_list = list()
-        content_list = list()
-        for account, content in application_information_zip:
-            account_list.append(account)
-            content_list.append(content)
-        self.assertTrue('test' in account_list)
-        self.assertTrue('123' in content_list)
+    def test_get_application_information_list(self):
+        id = 'test@gmail.com'
+        password = 'test'
+        content = 'apply premium member content'
+        ordinary_member = OrdinaryMember(id, password)
+        ordinary_member.apply_premium_member(content)
+        application_information_list = self.admin.get_application_information_list()
+        id_list = [application_information.get_id() for application_information in application_information_list]
+        content_list = [application_information.get_content() for application_information in application_information_list]
+        self.assertTrue(id in id_list)
+        self.assertTrue(content in content_list)
+        self.assertEqual(id_list.index(id), content_list.index(content))
 
         # teardown
         application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
-        application_information_df['account'] = application_information_df['account'].astype('str')
+        application_information_df['id'] = application_information_df['id'].astype('str')
         application_information_df = application_information_df.drop(
-            application_information_df[application_information_df['account'] == 'test'].index)
+            application_information_df[application_information_df['id'] == id].index)
         application_information_df.to_csv(database_path + 'member/application_information.csv', index=False)
-
