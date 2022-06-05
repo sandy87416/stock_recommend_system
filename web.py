@@ -212,11 +212,9 @@ def upgrade_member_level():
 
 @login.user_loader
 def load_user(id):
-    member_df = pd.read_csv(database_path + 'member/member.csv')
-    password = str(member_df[member_df['id'] == id]['password'].to_numpy()[0])
-    level = str(member_df[member_df['id'] == id]['level'].to_numpy()[0])
+    user, level = User().login(id)
     session['level'] = level
-    return User().login(id, password, level)
+    return user
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -224,9 +222,8 @@ def index():
     if flask.request.method == 'POST':
         id = request.form.get('id')
         password = request.form.get('password')
-        if member_system.is_id_and_password_validate(id, password) != '-1':
+        if member_system.is_id_and_password_validate(id, password):
             login_user(Member(id, password))
-        # if current_user.is_authenticated:
             return redirect(url_for('menu'))
         else:
             flash('登入失敗')

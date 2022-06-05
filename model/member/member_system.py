@@ -18,7 +18,6 @@ class MemberSystem:
     def is_id_and_password_validate(id, password):
         member_df = pd.read_csv(database_path + 'member/member.csv')
         member1_df = member_df[(member_df['id'] == id) & (member_df['password'] == password)]
-        level = '-1'
         if len(member1_df) == 1:
-            level = str(member_df[member_df['id'] == id]['level'].to_numpy()[0])
-        return level
+            return True
+        return False

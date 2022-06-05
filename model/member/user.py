@@ -18,12 +18,15 @@ class User:
         return result
 
     @staticmethod
-    def login(id, password, level):
+    def login(id):
+        member_df = pd.read_csv(database_path + 'member/member.csv')
+        password = str(member_df[member_df['id'] == id]['password'].to_numpy()[0])
+        level = str(member_df[member_df['id'] == id]['level'].to_numpy()[0])
         if level == '0':
-            return Admin(id, password)
+            return Admin(id, password), level
         elif level == '1':
-            return PremiumMember(id, password)
+            return PremiumMember(id, password), level
         elif level == '2':
-            return OrdinaryMember(id, password)
+            return OrdinaryMember(id, password), level
         else:
-            return None
+            return None, level
