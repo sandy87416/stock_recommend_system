@@ -6,7 +6,7 @@
             <form action="/read_stock_after_hours_information" method="post">
                 <label for="stock_id">請輸入股票代號</label>
                 <input name="stock_id" type="number" max="9999" required="required"
-                       oninvalid="setCustomValidity('請輸入股票代號');">
+                       oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
                 <button type="submit" name="confirm">確認</button>
             </form>
         </div>

@@ -7,17 +7,17 @@
                 <div>
                     <label for="stock_id">股票代號</label>
                     <input name="stock_id" type="number" max="9999" required="required"
-                           oninvalid="setCustomValidity('請輸入股票代號');">
+                           oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
                 </div>
                 <div>
                     <label for="buy_price">買入價格</label>
-                    <input name="buy_price" type="number" required="required" oninvalid="setCustomValidity('請輸入買入價格');">
+                    <input name="buy_price" type="number" required="required" oninvalid="setCustomValidity('請輸入買入價格');" onchange="setCustomValidity('');">
                 </div>
 
                 <div>
                     <label for="trading_volume">買入股數</label>
                     <input name="trading_volume" type="number" required="required"
-                           oninvalid="setCustomValidity('請輸入買入股數');">
+                           oninvalid="setCustomValidity('請輸入買入股數');" onchange="setCustomValidity('');">
                 </div>
                 <div>
                     <label for="securities_firm">券商</label>
