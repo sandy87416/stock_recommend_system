@@ -1,5 +1,5 @@
 import pandas as pd
-from flask_login import UserMixin
+from flask_login import UserMixin, logout_user
 from config import database_path
 from model.member.application_information import ApplicationInformation
 from model.utils import update_database
@@ -51,3 +51,7 @@ class Admin(UserMixin):
         id_np = application_information_df['id'].to_numpy()
         content_np = application_information_df['content'].to_numpy()
         return [ApplicationInformation(id_np[i], content_np[i]) for i in range(len(id_np))]
+
+    @staticmethod
+    def logout():
+        logout_user()

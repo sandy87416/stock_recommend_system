@@ -1,8 +1,8 @@
 import pandas as pd
-from flask_login import UserMixin
 from config import database_path
 from model import stock_system
 from model.stock.calculator import Calculator
+from flask_login import UserMixin, logout_user
 
 
 class Member(UserMixin):
@@ -64,3 +64,7 @@ class Member(UserMixin):
     @staticmethod
     def read_stock_classification():
         return stock_system.get_stock_classification()
+
+    @staticmethod
+    def logout():
+        logout_user()
