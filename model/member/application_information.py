@@ -9,6 +9,7 @@ class ApplicationInformation:
     def __init__(self, account, content):
         self.__account = account
         self.__content = content
+        self.__create_content_to_database(self.__account, self.__content)
 
     def get_account(self):
         return self.__account
@@ -18,11 +19,20 @@ class ApplicationInformation:
 
     def set_content(self, content):
         self.__content = content
-        self.__save_content_to_database(self.__account, self.__content)
+        self.__update_content_to_database(self.__account, self.__content)
 
     @staticmethod
-    def __save_content_to_database(account, content):
+    def __create_content_to_database(account, content):
         application_info_df = pd.read_csv(database_path + 'member/application_information.csv')
         application_info_index = application_info_df[application_info_df['account'] == account].index
         application_info_df.iloc[application_info_index, application_info_df.columns.get_loc("content")] = content
         application_info_df.to_csv(database_path + 'member/application_information.csv', index=False)
+
+    @staticmethod
+    def __update_content_to_database(account, content):
+        df = pd.read_csv(database_path + 'member/application_information.csv')
+        df = pd.concat([df, pd.DataFrame({
+            'account': [account],
+            'content': [content],
+        })])
+        df.to_csv(database_path + 'member/application_information.csv', index=False)
