@@ -107,13 +107,11 @@ class TestPremiumMember(TestCase):
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 
     def test_delete_selected_stock(self):
-        self.premium_member.add_selected_stock(2330)
-        selected_stock_list = self.premium_member.read_selected_stock()
+        selected_stock_list = self.premium_member.add_selected_stock(2330)
         self.assertEqual(selected_stock_list[0].get_id(), "t109598087@ntut.org.tw")
         self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
 
-        self.premium_member.delete_selected_stock(2330)
-        selected_stock_list = self.premium_member.read_selected_stock()
+        selected_stock_list = self.premium_member.delete_selected_stock(2330)
         id_list = [selected_stock.get_id() for selected_stock in selected_stock_list]
         stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
         self.assertFalse("t109598087@ntut.org.tw" in id_list)

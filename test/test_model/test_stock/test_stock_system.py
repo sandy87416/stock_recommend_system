@@ -1,7 +1,5 @@
-from unittest import TestCase
-
 import pandas as pd
-
+from unittest import TestCase
 from config import database_path
 from model.stock.stock_system import StockSystem
 

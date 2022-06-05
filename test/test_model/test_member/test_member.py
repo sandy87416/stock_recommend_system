@@ -76,8 +76,7 @@ class TestMember(TestCase):
         selected_stock_df.to_csv(database_path + 'selected_stock.csv', index=False)
 
     def test_delete_selected_stock(self):
-        self.member.add_selected_stock(2330)
-        selected_stock_list = self.member.read_selected_stock()
+        selected_stock_list = self.member.add_selected_stock(2330)
         self.assertEqual(selected_stock_list[0].get_id(), "t109598087@ntut.org.tw")
         self.assertEqual(selected_stock_list[0].get_stock_id(), 2330)
 

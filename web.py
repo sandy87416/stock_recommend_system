@@ -104,10 +104,11 @@ def read_stock_intraday_information():
 # UC-05 UC-13
 @app.route('/read_selected_stock', methods=['GET', 'POST'])
 def read_selected_stock():
-    selected_stock_list = current_user.read_selected_stock()
-    if flask.request.method == 'POST':
-        stock_id = request.values.get('stock_id')
-        stock_id = int(stock_id)
+    selected_stock_list = list()
+    if flask.request.method == 'GET':
+        selected_stock_list = current_user.read_selected_stock()
+    elif flask.request.method == 'POST':
+        stock_id = int(request.values.get('stock_id'))
         selected_stock_list = current_user.add_selected_stock(stock_id)
     selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
@@ -140,16 +141,10 @@ def set_calculate_profit_and_loss():
 # UC-10
 @app.route('/calculate_current_profit_and_loss', methods=['GET', 'POST'])
 def calculate_current_profit_and_loss():
-    print(current_user)
-    print(type(current_user))
-    stock_id = request.form.get('stock_id')
-    buy_price = request.form.get('buy_price')
-    trading_volume = request.form.get('trading_volume')
-    securities_firm = request.form.get('securities_firm')
-    stock_id = int(stock_id)
-    buy_price = float(buy_price)
-    trading_volume = int(trading_volume)
-    securities_firm = float(securities_firm)
+    stock_id = int(request.form.get('stock_id'))
+    buy_price = float(request.form.get('buy_price'))
+    trading_volume = int(request.form.get('trading_volume'))
+    securities_firm = float(request.form.get('securities_firm'))
     profit_and_loss = current_user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume,
                                                                      securities_firm)
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
@@ -158,14 +153,10 @@ def calculate_current_profit_and_loss():
 # UC-11
 @app.route('/calculate_profit_and_loss', methods=['GET', 'POST'])
 def calculate_profit_and_loss():
-    buy_price = request.form.get('buy_price')
-    sell_price = request.form.get('sell_price')
-    trading_volume = request.form.get('trading_volume')
-    securities_firm = request.form.get('securities_firm')
-    buy_price = float(buy_price)
-    sell_price = float(sell_price)
-    trading_volume = int(trading_volume)
-    securities_firm = float(securities_firm)
+    buy_price = float(request.form.get('buy_price'))
+    sell_price = float(request.form.get('sell_price'))
+    trading_volume = int(request.form.get('trading_volume'))
+    securities_firm = float(request.form.get('securities_firm'))
     profit_and_loss = current_user.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
     return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
