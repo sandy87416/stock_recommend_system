@@ -123,42 +123,31 @@ def delete_selected_stock():
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
 
-@app.route('/calculate_profit_and_loss_menu')
-def calculate_profit_and_loss_menu():
-    return render_template('calculate_profit_and_loss_menu.html')
-
-
-@app.route('/set_current_calculate_profit_and_loss')
-def set_current_calculate_profit_and_loss():
-    return render_template('set_current_calculate_profit_and_loss.html')
-
-
-@app.route('/set_calculate_profit_and_loss')
-def set_calculate_profit_and_loss():
-    return render_template('set_calculate_profit_and_loss.html')
+@app.route('/calculate_profit_and_loss_page')
+def calculate_profit_and_loss_page():
+    return render_template('calculate_profit_and_loss_page.html')
 
 
 # UC-10
-@app.route('/calculate_current_profit_and_loss', methods=['GET', 'POST'])
+@app.route('/calculate_current_profit_and_loss', methods=['POST'])
 def calculate_current_profit_and_loss():
     stock_id = int(request.form.get('stock_id'))
     buy_price = float(request.form.get('buy_price'))
     trading_volume = int(request.form.get('trading_volume'))
     securities_firm = float(request.form.get('securities_firm'))
-    profit_and_loss = current_user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume,
-                                                                     securities_firm)
-    return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
+    current_profit_and_loss = current_user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume, securities_firm)
+    return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
 
 
 # UC-11
-@app.route('/calculate_profit_and_loss', methods=['GET', 'POST'])
+@app.route('/calculate_profit_and_loss', methods=['POST'])
 def calculate_profit_and_loss():
     buy_price = float(request.form.get('buy_price'))
     sell_price = float(request.form.get('sell_price'))
     trading_volume = int(request.form.get('trading_volume'))
     securities_firm = float(request.form.get('securities_firm'))
     profit_and_loss = current_user.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
-    return render_template('calculate_current_profit_and_loss.html', profit_and_loss=profit_and_loss)
+    return render_template('calculate_profit_and_loss_page.html', profit_and_loss=profit_and_loss)
 
 
 # UC-12

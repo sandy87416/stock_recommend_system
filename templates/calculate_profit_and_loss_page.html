@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container text-center">
+        <div class="rounded-5" style="border: outset;">
+            <div class="bg-light p-lg-5 rounded-5">
+                <h1 class="display-5 fw-bold">計算股票損益</h1>
+                <form action="/calculate_profit_and_loss" method="post">
+                    <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+                        <div class="col-12">
+                            <label for="buy_price" class="form-label fs-4">買入價格</label>
+                            <input name="buy_price" type="number required" required="required"
+                                   oninvalid="setCustomValidity('請輸入買入價格');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <label for="sell_price" class="form-label fs-4">賣出價格</label>
+                            <input name="sell_price" type="number required" required="required"
+                                   oninvalid="setCustomValidity('請輸入賣出價格');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <label for="trading_volume" class="form-label fs-4">買入股數</label>
+                            <input name="trading_volume" type="number required" required="required"
+                                   oninvalid="setCustomValidity('請輸入買入股數');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <label for="securities_firm" class="form-label fs-4">券商</label>
+                            <select name="securities_firm" id="securities_firm" class="form-select">
+                                <option value="0.5">元大證券</option>
+                                <option value="0.38">玉山證券富果帳戶</option>
+                                <option value="0.6">凱基證券</option>
+                                <option value="0.28">國泰證券</option>
+                                <option value="0.3">台新證券</option>
+                                <option value="0.4">富邦證券</option>
+                                <option value="0.2">永豐金證券</option>
+                                <option value="0.65">群益證券</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" name="confirm" class="btn btn-outline-primary">確認</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="p-lg-5"><label class="form-label fs-4">損益：{{ profit_and_loss }}</label></div>
+        </div>
+        <div class="rounded-5" style="border: outset;">
+            <div class="bg-light p-lg-5 rounded-5">
+                <h1 class="display-5 fw-bold">計算當下損益</h1>
+                <form action="/calculate_current_profit_and_loss#current" method="post">
+                    <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+                        <div class="col-12">
+                            <label for="stock_id" class="form-label fs-4">股票代號</label>
+                            <input name="stock_id" type="number required" max="9999" required="required"
+                                   oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <label for="buy_price" class="form-label fs-4">買入價格</label>
+                            <input name="buy_price" type="number required" required="required" oninvalid="setCustomValidity('請輸入買入價格');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <label for="trading_volume" class="form-label fs-4">買入股數</label>
+                            <input name="trading_volume" type="number required" required="required"
+                                   oninvalid="setCustomValidity('請輸入買入股數');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <label for="securities_firm" class="form-label fs-4">券商</label>
+                            <select name="securities_firm" id="securities_firm" class="form-select">
+                                <option value="0.5">元大證券</option>
+                                <option value="0.38">玉山證券富果帳戶</option>
+                                <option value="0.6">凱基證券</option>
+                                <option value="0.28">國泰證券</option>
+                                <option value="0.3">台新證券</option>
+                                <option value="0.4">富邦證券</option>
+                                <option value="0.2">永豐金證券</option>
+                                <option value="0.65">群益證券</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" name="confirm" class="btn btn-outline-primary">確認</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="p-lg-5"><label class="form-label fs-4" id="current">當下損益：{{ current_profit_and_loss }}</label></div>
+        </div>
+    </div>
+{% endblock content %}
