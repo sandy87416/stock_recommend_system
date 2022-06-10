@@ -30,3 +30,6 @@ class TestApplicationInformation(TestCase):
 
         self.application_information.set_content("I want to be the premium member.")
         self.assertEqual(self.application_information.get_content(), "I want to be the premium member.")
+
+    def test_create_content_to_database(self):
+        pass  # todo:test

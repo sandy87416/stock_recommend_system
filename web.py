@@ -56,7 +56,7 @@ def query_specific_stock_page():
 # UC-02
 @app.route('/read_stock_odds', methods=['GET', 'POST'])
 def read_stock_odds():
-    stock_id = request.values.get('stock_id')  # todo: 輸入資料庫沒有的股票
+    stock_id = request.values.get('stock_id')
     limit = request.values.get('limit', 10)
     offset = request.values.get('offset', 1)
     stock_id = int(stock_id)
@@ -90,7 +90,7 @@ def read_stock_after_hours_information():
                            stock_after_hours_information=stock_after_hours_information)
 
 
-@app.route('/set_stock_id_read_stock_intraday_information')  # todo: rename
+@app.route('/set_stock_id_read_stock_intraday_information')  # todo: 不要跳轉
 def set_stock_id_read_stock_intraday_information():
     return render_template('set_stock_id_read_stock_intraday_information.html')
 

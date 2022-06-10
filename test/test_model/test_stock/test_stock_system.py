@@ -62,6 +62,6 @@ class TestStockSystem(TestCase):
         stock_class_dict = self.stock_system.get_stock_classification()
         self.assertEqual(stock_class_dict['油電燃氣業'][0], '山隆 2616')
 
-    def test_is_stock_id(self):
+    def test_check_stock_id(self):
         self.assertTrue(self.stock_system.check_stock_id(2330))
         self.assertFalse(self.stock_system.check_stock_id(1111))

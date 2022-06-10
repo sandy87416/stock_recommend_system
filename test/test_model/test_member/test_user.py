@@ -20,3 +20,6 @@ class TestUser(TestCase):
         member_df = member_df.drop(
             member_df[(member_df['id'] == id) & (member_df['password'] == password)].index)
         member_df.to_csv(database_path + 'member/member.csv', index=False)
+
+    def test_login(self):
+        pass  # todo: test
