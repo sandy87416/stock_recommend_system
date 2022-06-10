@@ -202,9 +202,16 @@ def upgrade_member_level():
     if flask.request.method == 'GET':
         application_information_list = current_user.get_application_information_list()
     elif flask.request.method == 'POST':
-        id = request.form.get('id')
-        application_information_list = current_user.upgrade_member_level(id)
-        flash('升級成功')
+        action_id = request.form.get('id')
+        action_id_split = action_id.split(' ')
+        action = action_id_split[0]
+        id = action_id_split[1]
+        print(action)
+        if action == '升級':
+            application_information_list = current_user.upgrade_member_level(id)
+        elif action == '刪除':
+            current_user.delete_application_information_data(id)
+            application_information_list = current_user.get_application_information_list()
     return render_template('upgrade_member_level.html', application_information_list=application_information_list)
 
 
