@@ -72,7 +72,7 @@ class StockSystem:
         return stock_class_dict
 
     @staticmethod
-    def is_stock_id(stock_id):
+    def check_stock_id(stock_id):
         stock_id_table_df = pd.read_csv(database_path + 'stock_id_table.csv')
         stock_np = stock_id_table_df['stock_id'].to_numpy()
         if stock_id in stock_np:

@@ -81,7 +81,7 @@ def set_stock_id_read_stock_after_hours_information():
 def read_stock_after_hours_information():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
-    if stock_system.is_stock_id(stock_id):
+    if stock_system.check_stock_id(stock_id):
         stock_after_hours_information = current_user.read_stock_after_hours_information(stock_id)
     else:
         flash("查無股票資料")
@@ -100,7 +100,7 @@ def set_stock_id_read_stock_intraday_information():
 def read_stock_intraday_information():
     stock_id = request.values.get('stock_id')
     stock_id = int(stock_id)
-    if stock_system.is_stock_id(stock_id):
+    if stock_system.check_stock_id(stock_id):
         stock_intraday_information = current_user.read_stock_intraday_information(stock_id)
     else:
         flash("查無股票資料")
@@ -139,12 +139,17 @@ def calculate_profit_and_loss_page():
 # UC-10
 @app.route('/calculate_current_profit_and_loss', methods=['POST'])
 def calculate_current_profit_and_loss():
+    current_profit_and_loss = 0
     stock_id = int(request.form.get('stock_id'))
     buy_price = float(request.form.get('buy_price'))
     trading_volume = int(request.form.get('trading_volume'))
     securities_firm = float(request.form.get('securities_firm'))
-    current_profit_and_loss = current_user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume,
-                                                                             securities_firm)
+    if stock_system.check_stock_id(stock_id):
+        current_profit_and_loss = current_user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume,
+                                                                                 securities_firm)
+    else:
+        flash('查無此股票代號')
+        return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
     return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
 
 
@@ -206,7 +211,6 @@ def upgrade_member_level():
         action_id_split = action_id.split(' ')
         action = action_id_split[0]
         id = action_id_split[1]
-        print(action)
         if action == '升級':
             application_information_list = current_user.upgrade_member_level(id)
         elif action == '刪除':

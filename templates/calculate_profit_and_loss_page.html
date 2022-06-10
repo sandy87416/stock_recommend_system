@@ -83,4 +83,13 @@
             <div class="p-lg-5"><label class="form-label fs-4" id="current">當下損益：{{ current_profit_and_loss }}</label></div>
         </div>
     </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 {% endblock content %}
