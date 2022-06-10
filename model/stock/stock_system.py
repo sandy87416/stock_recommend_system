@@ -70,3 +70,11 @@ class StockSystem:
             stock_class_dict[stock_class] = stock_id_table_df[
                 stock_id_table_df['class'] == stock_class]['number_name'].to_list()
         return stock_class_dict
+
+    @staticmethod
+    def is_stock_id(stock_id):
+        stock_id_table_df = pd.read_csv(database_path + 'stock_id_table.csv')
+        stock_np = stock_id_table_df['stock_id'].to_numpy()
+        if stock_id in stock_np:
+            return True
+        return False
