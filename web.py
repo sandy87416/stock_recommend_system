@@ -117,7 +117,13 @@ def read_selected_stock():
         selected_stock_list = current_user.read_selected_stock()
     elif flask.request.method == 'POST':
         stock_id = int(request.values.get('stock_id'))
-        selected_stock_list = current_user.add_selected_stock(stock_id)
+        if stock_system.check_stock_id(stock_id):
+            selected_stock_list = current_user.add_selected_stock(stock_id)
+        else:
+            flash('查無此股票代號')
+            selected_stock_list = current_user.read_selected_stock()
+            selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
+            return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
     selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
     return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 

@@ -5,7 +5,8 @@
         <div class="col-md-4">
             <form action="/read_selected_stock" method="post">
                 <label for="stock_id">股票代號</label>
-                <input name="stock_id" type="number" max="9999" required="required" oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
+                <input name="stock_id" type="number" max="9999" required="required"
+                       oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
                 <button type="submit" name="confirm">確認</button>
             </form>
         </div>
@@ -26,5 +27,13 @@
             </tbody>
         </table>
     </form>
-
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flash">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 {% endblock content %}
