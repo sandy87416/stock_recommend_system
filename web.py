@@ -84,7 +84,7 @@ def read_stock_after_hours_information():
     if stock_system.check_stock_id(stock_id):
         stock_after_hours_information = current_user.read_stock_after_hours_information(stock_id)
     else:
-        flash("查無股票資料")
+        flash("查無股票資料", 'warning')
         return redirect(url_for('set_stock_id_read_stock_after_hours_information'))
     return render_template('read_stock_after_hours_information.html',
                            stock_after_hours_information=stock_after_hours_information)
@@ -103,7 +103,7 @@ def read_stock_intraday_information():
     if stock_system.check_stock_id(stock_id):
         stock_intraday_information = current_user.read_stock_intraday_information(stock_id)
     else:
-        flash("查無股票資料")
+        flash("查無股票資料", 'warning')
         return redirect(url_for('set_stock_id_read_stock_intraday_information'))
     return render_template('read_stock_intraday_information.html',
                            stock_intraday_information=stock_intraday_information)
@@ -120,7 +120,7 @@ def read_selected_stock():
         if stock_system.check_stock_id(stock_id):
             selected_stock_list = current_user.add_selected_stock(stock_id)
         else:
-            flash('查無此股票代號')
+            flash('查無此股票代號', 'warning')
             selected_stock_list = current_user.read_selected_stock()
             selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
             return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
@@ -154,7 +154,7 @@ def calculate_current_profit_and_loss():
         current_profit_and_loss = current_user.calculate_current_profit_and_loss(stock_id, buy_price, trading_volume,
                                                                                  securities_firm)
     else:
-        flash('查無此股票代號')
+        flash('查無此股票代號', 'warning')
         return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
     return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
 
@@ -185,10 +185,10 @@ def register():
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
         if password != confirm_password:
-            flash('密碼與確認密碼不相符')
+            flash('密碼與確認密碼不相符', 'warning')
             return redirect(url_for('register'))
         register_message = User().register(id, password)
-        flash(register_message)
+        flash(register_message, 'success')
         if register_message == '註冊成功':
             return redirect(url_for('index'))
     return render_template('register.html')
@@ -200,8 +200,6 @@ def apply_premium_member():
     if flask.request.method == 'POST':
         content = request.form.get('content')
         current_user.apply_premium_member(content)
-        flash('申請成功')
-        sleep(1)
         return redirect(url_for('menu'))
     return render_template('apply_premium_member.html')
 
@@ -241,7 +239,7 @@ def index():
             login_user(Member(id, password))
             return redirect(url_for('menu'))
         else:
-            flash('登入失敗')
+            flash('登入失敗', 'warning')
             return redirect(url_for('index'))
     return render_template('login.html')
 
