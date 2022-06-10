@@ -11,7 +11,7 @@
             </form>
         </div>
     </div>
-    <form action="/delete_selected_stock" method="post">
+    <form action="/delete_selected_stock" method="post" onsubmit="return submitTest();">
         <table>
             <thead>
             <td>股票代號</td>
@@ -21,7 +21,10 @@
             {% for selected_stock_id in selected_stock_id_list %}
                 <tr>
                     <td>{{ selected_stock_id }}</td>
-                    <td><input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}">刪除</td>
+                    <td>
+                        <input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}"
+                               onclick="clickDeleteButton()">刪除
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -36,4 +39,16 @@
             </ul>
         {% endif %}
     {% endwith %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        let is_delete = true;
+
+        function submitTest() {
+            return is_delete;
+        }
+
+        async function clickDeleteButton() {
+            is_delete = confirm('確定刪除?')
+        }
+    </script>
 {% endblock content %}
