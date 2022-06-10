@@ -30,15 +30,7 @@
             </tbody>
         </table>
     </form>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flash">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+    {% include "flash.html" %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
         let is_delete = true;

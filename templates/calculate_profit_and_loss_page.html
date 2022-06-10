@@ -54,7 +54,8 @@
                         </div>
                         <div class="col-12">
                             <label for="buy_price" class="form-label fs-4">買入價格</label>
-                            <input name="buy_price" type="number required" required="required" oninvalid="setCustomValidity('請輸入買入價格');" onchange="setCustomValidity('');">
+                            <input name="buy_price" type="number required" required="required"
+                                   oninvalid="setCustomValidity('請輸入買入價格');" onchange="setCustomValidity('');">
                         </div>
                         <div class="col-12">
                             <label for="trading_volume" class="form-label fs-4">買入股數</label>
@@ -80,16 +81,9 @@
                     </div>
                 </form>
             </div>
-            <div class="p-lg-5"><label class="form-label fs-4" id="current">當下損益：{{ current_profit_and_loss }}</label></div>
+            <div class="p-lg-5"><label class="form-label fs-4" id="current">當下損益：{{ current_profit_and_loss }}</label>
+            </div>
         </div>
     </div>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul class="flash">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %}
+    {% include "flash.html" %}
 {% endblock content %}
