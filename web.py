@@ -87,23 +87,29 @@ def read_stock_after_hours_information():
                            stock_after_hours_information=stock_after_hours_information)
 
 
-@app.route('/set_stock_id_read_stock_intraday_information')  # todo: 不要跳轉
-def set_stock_id_read_stock_intraday_information():
-    return render_template('set_stock_id_read_stock_intraday_information.html')
+@app.route('/query_stock_intraday_information_page')
+def query_stock_intraday_information_page():
+    return render_template('query_stock_intraday_information_page.html')
 
 
 # UC-04
-@app.route('/read_stock_intraday_information', methods=['GET', 'POST'])
+@app.route('/read_stock_intraday_information')
 def read_stock_intraday_information():
-    stock_id = request.values.get('stock_id')
-    stock_id = int(stock_id)
-    if stock_system.check_stock_id(stock_id):
+    stock_id = int(request.values.get('stock_id', '0'))
+    stock_intraday_information_dict = dict()
+    if stock_id != '0' and stock_system.check_stock_id(stock_id):
         stock_intraday_information = current_user.read_stock_intraday_information(stock_id)
+        stock_intraday_information_dict['open_price'] = stock_intraday_information.get_open_price()
+        stock_intraday_information_dict['high_price'] = stock_intraday_information.get_high_price()
+        stock_intraday_information_dict['low_price'] = stock_intraday_information.get_low_price()
+        stock_intraday_information_dict['close_price'] = stock_intraday_information.get_close_price()
     else:
-        flash("查無股票資料", 'warning')
-        return redirect(url_for('set_stock_id_read_stock_intraday_information'))
-    return render_template('read_stock_intraday_information.html',
-                           stock_intraday_information=stock_intraday_information)
+        return ''
+    if len(stock_intraday_information_dict) == 0:
+        return ''
+    stock_intraday_information_list = [stock_intraday_information_dict]
+    stock_intraday_information = jsonify({'total': len(stock_intraday_information_list), 'rows': stock_intraday_information_list})
+    return stock_intraday_information
 
 
 # UC-05 UC-13

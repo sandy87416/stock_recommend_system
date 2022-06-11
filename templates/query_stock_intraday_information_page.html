@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+{%- endblock styles %}
+
+{% block content %}
+    <div class="container px-lg-5">
+        <div class="p-lg-5 bg-light rounded-5 text-center">
+            <h1 class="display-5 fw-bold">查看盤中訊息</h1>
+            <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+                <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
+                <input id="stock_id" name="stock_id" type="number required" maxlength="4">
+                <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
+            </div>
+        </div>
+        <div class="my-lg-5 text-center">
+            <div class="panel">
+                <div class="panel-body table-responsive">
+                    <table id="stock_intraday_information_table" class="table table-striped table-hover table-bordered"
+                           data-toggle="table"
+                           data-sort-class="table-active"
+                           data-show-refresh=true
+                           data-pagination=true
+                           data-side-pagination="server"
+                           data-show-columns=true
+                           data-show-columns-toggle-all=true
+                           noDataText='Your_custom_text'
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="open_price">開盤</th>
+                            <th data-field="high_price">最高</th>
+                            <th data-field="low_price">最低</th>
+                            <th data-field="close_price">現價</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+    <script>
+        function checkInput(stock_id) {
+            if (stock_id.length === 0) {
+                alert("請輸入股票代號");
+                return false;
+            }
+            if (!(/(^[1-9]\d*$)/.test(stock_id)) || stock_id.length != 4) {
+                alert("請輸入正確的股票代號");
+                return false;
+            }
+            return true;
+        }
+
+        function getStockIntradayInformation() {
+            return new Promise((resolve, reject) => {
+                //here our function should be implemented
+                const stock_id = $("#stock_id").val();
+                const input_correct = checkInput(stock_id);
+                if (input_correct === false) {
+                    return 0;
+                }
+                $("#stock_intraday_information_table").bootstrapTable('showLoading');
+                const opt = {
+                    url: "/read_stock_intraday_information",
+                    silent: true,
+                    pageNumber: 1,
+                    query: {
+                        stock_id: stock_id
+                    }
+                }
+                $("#stock_intraday_information_table").bootstrapTable('refresh', opt);
+                setTimeout(() => {
+                        resolve();
+                    }, 100
+                );
+            });
+        }
+
+        async function clickSubmitButton() {
+            await getStockIntradayInformation();
+            $("#stock_intraday_information_table").bootstrapTable('hideLoading');
+            if ($("#stock_intraday_information_table").bootstrapTable('getData').length === 0){
+                alert("查無股票資料")
+            }
+        }
+    </script>
+{% endblock content %}
