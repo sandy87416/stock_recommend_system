@@ -43,14 +43,5 @@
             </form>
         </div>
     </div>
-</div>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flash">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+   {% include "flash.html" %}
 {% endblock content %}

@@ -6,19 +6,29 @@
             <form action="/apply_premium_member" method="post">
                 <div>
                     <label for="content">申請理由</label>
-                    <input name="content" type="text" required="required" oninvalid="setCustomValidity('請輸入申請理由');" onchange="setCustomValidity('');">
+                    <input id="content" name="content" type="text" required="required"
+                           oninvalid="setCustomValidity('請輸入申請理由');"
+                           onchange="setCustomValidity('');">
                 </div>
-                <button type="submit" name="confirm">送出申請</button>
+                <button type="submit" name="confirm" onclick="clickSubmitButton()">送出申請</button>
             </form>
         </div>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flash">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        async function clickSubmitButton() {
+            const content = $("#content").val();
+            const input_correct = checkInput(content);
+            if (input_correct === true) {
+                return 0;
+            }
+        }
+        function checkInput(content) {
+            if (content.length !== 0) {
+                alert("申請成功!");
+                return true;
+            }
+            return false;
+        }
+    </script>
 {% endblock content %}

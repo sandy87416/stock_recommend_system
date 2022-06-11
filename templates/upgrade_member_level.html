@@ -6,27 +6,61 @@
                 <thead>
                 <td>帳號</td>
                 <td>申請理由</td>
-                <td></td>
+                <td>升級</td>
+                <td>刪除</td>
+
                 </thead>
                 <tbody>
                 {% for id_content in application_information_list %}
                     <tr>
                         <td>{{ id_content.get_id() }}</td>
                         <td>{{ id_content.get_content() }}</td>
-                        <td><input type="submit" name="id" value="{{ id_content.get_id() }}">升級</td>
+                        <td>
+                            <input type="submit" id="id" name="id" value="升級 {{ id_content.get_id() }}"
+                                   onclick="clickSubmitButton()">
+                        </td>
+                        <td>
+                            <input type="submit" id="delete_id" name="id" value="刪除 {{ id_content.get_id() }}"
+                                   onclick="clickDeleteButton()">
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </form>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flash">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        async function clickSubmitButton() {
+            const id = $("#id").val();
+            const input_correct = checkInput(id);
+            if (input_correct === true) {
+                return 0;
+            }
+        }
+
+        function checkInput(id) {
+            if (id.length !== 0) {
+                alert("升級成功!");
+                return true;
+            }
+            return false;
+        }
+
+        async function clickDeleteButton() {
+            const id = $("#delete_id").val();
+            const input_correct = checkDeleteInput(id);
+            if (input_correct === true) {
+                return 0;
+            }
+        }
+
+        function checkDeleteInput(delete_id) {
+            if (delete_id.length !== 0) {
+                alert("刪除成功!");
+                return true;
+            }
+            return false;
+        }
+    </script>
 {% endblock content %}

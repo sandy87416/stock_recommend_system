@@ -13,6 +13,7 @@ class TestAdmin(TestCase):
         member_df = pd.read_csv(database_path + 'member/member.csv')
         password = member_df[member_df['id'] == "t109598092@ntut.org.tw"]['password'].to_numpy()[0]
         cls.admin = Admin("t109598092@ntut.org.tw", password)
+        cls.ordinary_member = OrdinaryMember("t109598053@ntut.org.tw", password)
 
     def test_get_id(self):
         self.assertEqual(self.admin.get_id(), "t109598092@ntut.org.tw")
@@ -35,6 +36,15 @@ class TestAdmin(TestCase):
         row_index = member_df[member_df['id'] == self.admin.get_id()].index
         member_df.iloc[row_index, column_index] = "islab"
         member_df.to_csv(database_path + 'member/member.csv', index=False)
+
+    def test_delete_application_information_data(self):
+        self.ordinary_member.apply_premium_member("I want to be the premium member.")
+        self.admin.delete_application_information_data(self.ordinary_member.get_id())
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        id_list = application_information_df['id'].to_list()
+        content_list = application_information_df['content'].to_list()
+        self.assertFalse(self.ordinary_member.get_id() in id_list)
+        self.assertFalse("I want to be the premium member." in content_list)
 
     def test_upgrade_member_level(self):
         member_df = pd.read_csv(database_path + 'member/member.csv')
@@ -63,7 +73,8 @@ class TestAdmin(TestCase):
         ordinary_member.apply_premium_member(content)
         application_information_list = self.admin.get_application_information_list()
         id_list = [application_information.get_id() for application_information in application_information_list]
-        content_list = [application_information.get_content() for application_information in application_information_list]
+        content_list = [application_information.get_content() for application_information in
+                        application_information_list]
         self.assertTrue(id in id_list)
         self.assertTrue(content in content_list)
         self.assertEqual(id_list.index(id), content_list.index(content))
@@ -74,3 +85,6 @@ class TestAdmin(TestCase):
         application_information_df = application_information_df.drop(
             application_information_df[application_information_df['id'] == id].index)
         application_information_df.to_csv(database_path + 'member/application_information.csv', index=False)
+
+    def test_logout(self):
+        pass  # todo:test

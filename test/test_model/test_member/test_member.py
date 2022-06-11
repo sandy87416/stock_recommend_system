@@ -103,3 +103,6 @@ class TestMember(TestCase):
     def test_read_stock_classification(self):
         stock_class_dict = self.member.read_stock_classification()
         self.assertEqual(stock_class_dict['油電燃氣業'][0], '山隆 2616')
+
+    def test_logout(self):
+        pass  # todo: test

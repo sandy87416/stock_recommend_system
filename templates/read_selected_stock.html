@@ -5,12 +5,13 @@
         <div class="col-md-4">
             <form action="/read_selected_stock" method="post">
                 <label for="stock_id">股票代號</label>
-                <input name="stock_id" type="number" max="9999" required="required" oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
+                <input name="stock_id" type="number" max="9999" required="required"
+                       oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
                 <button type="submit" name="confirm">確認</button>
             </form>
         </div>
     </div>
-    <form action="/delete_selected_stock" method="post">
+    <form action="/delete_selected_stock" method="post" onsubmit="return submitTest();">
         <table>
             <thead>
             <td>股票代號</td>
@@ -20,11 +21,26 @@
             {% for selected_stock_id in selected_stock_id_list %}
                 <tr>
                     <td>{{ selected_stock_id }}</td>
-                    <td><input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}">刪除</td>
+                    <td>
+                        <input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}"
+                               onclick="clickDeleteButton()">刪除
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </form>
+    {% include "flash.html" %}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        let is_delete = true;
 
+        function submitTest() {
+            return is_delete;
+        }
+
+        async function clickDeleteButton() {
+            is_delete = confirm('確定刪除?')
+        }
+    </script>
 {% endblock content %}
