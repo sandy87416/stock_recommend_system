@@ -5,7 +5,7 @@
 {%- endblock styles %}
 {% block content %}
     <div class="container px-lg-5">
-    <div class="p-lg-5 bg-light rounded-5 text-center">
+        <div class="p-lg-5 bg-light rounded-5 text-center">
         <h1 class="display-5 fw-bold">新增自選股票</h1>
         <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
             <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
@@ -13,7 +13,7 @@
             <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
         </div>
     </div>
-    <table
+        <table
             id="table"
             data-show-refresh="true"
             data-show-columns="true"
@@ -26,26 +26,7 @@
             data-url="/read_selected_stock"
             data-response-handler="responseHandler">
     </table>
-
-{#    <form action="/delete_selected_stock" method="post" onsubmit="return submitTest();">#}
-{#        <table>#}
-{#            <thead>#}
-{#            <td>股票代號</td>#}
-{#            <td></td>#}
-{#            </thead>#}
-{#            <tbody>#}
-{#            {% for selected_stock_id in selected_stock_id_list %}#}
-{#                <tr>#}
-{#                    <td>{{ selected_stock_id }}</td>#}
-{#                    <td>#}
-{#                        <input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}"#}
-{#                               onclick="clickDeleteButton()">刪除#}
-{#                    </td>#}
-{#                </tr>#}
-{#            {% endfor %}#}
-{#            </tbody>#}
-{#        </table>#}
-{#    </form>#}
+    </div>
     {% include "flash.html" %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
