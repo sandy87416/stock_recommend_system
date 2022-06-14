@@ -3,45 +3,51 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}"/>
 {%- endblock styles %}
 {% block content %}
-<div class="limiter">
-    <div class="container-login100">
-        <div class="wrap-login100">
-            <div class="login100-pic js-tilt" data-tilt style="text-align: center; display: block; align-self: center;">
-                <img src="{{ url_for('static', filename='favicon.png') }}" alt="IMG">
-            </div>
-
-            <form class="login100-form validate-form" action="/register" method="post">
+    {% include "flash.html" %}
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-pic js-tilt" data-tilt
+                     style="text-align: center; display: block; align-self: center;">
+                    <img src="{{ url_for('static', filename='favicon.png') }}" alt="IMG">
+                </div>
+                <form class="login100-form validate-form" action="/register" method="post">
                 <span class="login100-form-title">
                     Register
                 </span>
-                <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" name="id" placeholder="Email" required="required" oninvalid="setCustomValidity('請輸入帳號');" onchange="setCustomValidity('');" >
-                    <span class="focus-input100"></span>
-                    <span class="symbol-input100">
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="text" name="id" placeholder="Email" required="required"
+                               oninvalid="setCustomValidity('請輸入帳號');" onchange="setCustomValidity('');">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
                         <i class="fa fa-envelope" aria-hidden="true"></i>
                     </span>
-                </div>
-                <div class="wrap-input100 validate-input">
-                    <input class="input100" type="password" name="password" placeholder="Password" required="required" oninvalid="setCustomValidity('請輸入密碼');" onchange="setCustomValidity('');" >
-                    <span class="focus-input100"></span>
-                    <span class="symbol-input100">
+                    </div>
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="password" name="password" placeholder="Password"
+                               required="required" oninvalid="setCustomValidity('請輸入密碼');"
+                               onchange="setCustomValidity('');">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
                         <i class="fa fa-lock" aria-hidden="true"></i>
                     </span>
-                </div>
-                <div class="wrap-input100 validate-input">
-                    <input class="input100" type="password" name="confirm_password" placeholder="Confirm Password" required="required" oninvalid="setCustomValidity('請輸入確認密碼');" onchange="setCustomValidity('');" >
-                    <span class="focus-input100"></span>
-                    <span class="symbol-input100">
+                    </div>
+                    <div class="wrap-input100 validate-input">
+                        <input class="input100" type="password" name="confirm_password" placeholder="Confirm Password"
+                               required="required" oninvalid="setCustomValidity('請輸入確認密碼');"
+                               onchange="setCustomValidity('');">
+                        <span class="focus-input100"></span>
+                        <span class="symbol-input100">
                         <i class="fa fa-lock" aria-hidden="true"></i>
                     </span>
-                </div>
-                <div class="container-login100-form-btn">
-                    <button class="login100-form-btn" type="submit" name="confirm">
-                        REGISTER
-                    </button>
-                </div>
-            </form>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" type="submit" name="confirm">
+                            REGISTER
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-   {% include "flash.html" %}
 {% endblock content %}

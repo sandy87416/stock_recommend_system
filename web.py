@@ -211,7 +211,7 @@ def register():
             flash('密碼與確認密碼不相符', 'warning')
             return redirect(url_for('register'))
         register_message = User().register(id, password)
-        flash(register_message, 'success')
+        flash(register_message, 'danger')
         if register_message == '註冊成功':
             return redirect(url_for('index'))
     return render_template('register.html')
