@@ -192,11 +192,26 @@ def calculate_profit_and_loss():
     return render_template('calculate_profit_and_loss_page.html', profit_and_loss=profit_and_loss)
 
 
+
+@app.route('/query_stock_classification_page')
+def query_stock_classification_page():
+    return render_template('read_stock_classification.html')
+
+
 # UC-12
 @app.route('/read_stock_classification')
 def read_stock_classification():
     stock_class_dict = current_user.read_stock_classification()
-    return render_template('read_stock_classification.html', stock_class_dict=stock_class_dict)
+    stock_classification_list = list()
+    for stock_class in stock_class_dict:
+        stock_list = stock_class_dict[stock_class]
+        for stock in stock_list:
+            stock_classification_dict = dict()
+            stock_classification_dict["stock_class"] = stock_class
+            stock_classification_dict["stock_id"] = stock[-4:]
+            stock_classification_dict["stock_name"] = stock[:-5]
+            stock_classification_list.append(stock_classification_dict)
+    return jsonify(stock_classification_list)
 
 
 # UC-07
