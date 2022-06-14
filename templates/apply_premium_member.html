@@ -1,34 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container row">
-        <h1>申請成為高級會員</h1>
-        <div class="col-md-4">
-            <form action="/apply_premium_member" method="post">
-                <div>
-                    <label for="content">申請理由</label>
-                    <input id="content" name="content" type="text" required="required"
-                           oninvalid="setCustomValidity('請輸入申請理由');"
-                           onchange="setCustomValidity('');">
-                </div>
-                <button type="submit" name="confirm" onclick="clickSubmitButton()">送出申請</button>
-            </form>
+    {% include "flash.html" %}
+    <div class="container text-center">
+        <div class="rounded-5 feature" style="width: fit-content; height: auto;">
+            <div class="bg-light p-lg-5 rounded-5">
+                <h1 class="display-5 fw-bold">申請成為高級會員</h1>
+                <form action="/apply_premium_member" method="post">
+                    <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+                        <div class="col-12">
+                            <label for="content" class="form-label fs-4">申請理由：</label>
+                            <input id="content" name="content" type="text" required="required" value="{{ content }}"
+                                   oninvalid="setCustomValidity('請輸入申請理由');" onchange="setCustomValidity('');">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" name="confirm" class="btn btn-outline-primary">送出申請</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        async function clickSubmitButton() {
-            const content = $("#content").val();
-            const input_correct = checkInput(content);
-            if (input_correct === true) {
-                return 0;
-            }
-        }
-        function checkInput(content) {
-            if (content.length !== 0) {
-                alert("申請成功!");
-                return true;
-            }
-            return false;
-        }
-    </script>
 {% endblock content %}

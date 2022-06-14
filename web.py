@@ -220,11 +220,14 @@ def register():
 # UC-08
 @app.route('/apply_premium_member', methods=['GET', 'POST'])
 def apply_premium_member():
-    if flask.request.method == 'POST':
+    content = ''
+    if flask.request.method == 'GET':
+        content = current_user.get_application_information().get_content()
+    elif flask.request.method == 'POST':
         content = request.form.get('content')
         current_user.apply_premium_member(content)
-        return redirect(url_for('menu'))
-    return render_template('apply_premium_member.html')
+        flash("sent", 'success')
+    return render_template('apply_premium_member.html', content=content)
 
 
 # UC-09
