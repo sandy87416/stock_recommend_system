@@ -121,18 +121,13 @@ def read_selected_stock_page():
 # UC-05
 @app.route('/read_selected_stock', methods=['GET'])
 def read_selected_stock():
-    limit = request.values.get('limit', 10)
-    offset = request.values.get('offset', 1)
-
     selected_stock_list = current_user.read_selected_stock()
     selected_stock_id_list = list()
     for selected_stock in selected_stock_list:
         selected_stock_dict = dict()
         selected_stock_dict["selected_stock_id"] = str(selected_stock.get_stock_id())
         selected_stock_id_list.append(selected_stock_dict)
-    json_data = jsonify(
-        {'total': len(selected_stock_id_list), 'rows': selected_stock_id_list[int(offset):(int(offset) + int(limit))]})
-    return json_data
+    return jsonify(selected_stock_id_list)
 
 
 # UC-13

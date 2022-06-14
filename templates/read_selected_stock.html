@@ -15,15 +15,17 @@
     </div>
         <table
             id="table"
+            data-toggle="table"
+            data-search="true"
             data-show-refresh="true"
-            data-show-columns="true"
-            data-click-to-select="true"
+            data-visible-search="true"
+            data-sort-class="table-active"
             data-pagination="true"
-            data-id-field="selected_stock_id"
-            data-page-list="[10, 25, 50, 100, all]"
-            data-show-footer="true"
-            data-side-pagination="server"
+            data-side-pagination="client"
             data-url="/read_selected_stock"
+            data-show-footer="true"
+            data-click-to-select="true"
+            data-id-field="selected_stock_id"
             data-response-handler="responseHandler">
     </table>
     </div>
