@@ -36,13 +36,9 @@ def query_recommended_stock_page():
 def read_recommended_stock():
     days = int(request.values.get('days'))
     odds = int(request.values.get('odds'))
-    limit = request.values.get('limit', 10)
-    offset = request.values.get('offset', 1)
     odds = int(odds) / 10
     recommended_stock_list = current_user.read_recommended_stock(days, odds)
-    json_data = jsonify(
-        {'total': len(recommended_stock_list), 'rows': recommended_stock_list[int(offset):(int(offset) + int(limit))]})
-    return json_data
+    return jsonify(recommended_stock_list)
 
 
 @app.route('/query_specific_stock_page')
@@ -53,14 +49,9 @@ def query_specific_stock_page():
 # UC-02
 @app.route('/read_stock_odds', methods=['GET', 'POST'])
 def read_stock_odds():
-    stock_id = request.values.get('stock_id')
-    limit = request.values.get('limit', 10)
-    offset = request.values.get('offset', 1)
-    stock_id = int(stock_id)
+    stock_id = int(request.values.get('stock_id'))
     stock_odds_list = current_user.read_stock_odds(stock_id)
-    json_data = jsonify(
-        {'total': len(stock_odds_list), 'rows': stock_odds_list[int(offset):(int(offset) + int(limit))]})
-    return json_data
+    return jsonify(stock_odds_list)
 
 
 @app.route('/stock_information_menu')

@@ -49,12 +49,12 @@
                 <div class="panel-body table-responsive">
                     <table id="recommended_stock_table" class="table table-striped table-hover table-bordered"
                            data-toggle="table"
+                           data-search="true"
+                           data-show-refresh="true"
+                           data-visible-search="true"
                            data-sort-class="table-active"
-                           data-show-refresh=true
-                           data-pagination=true
-                           data-side-pagination="server"
-                           data-show-columns=true
-                           data-show-columns-toggle-all=true
+                           data-pagination="true"
+                           data-side-pagination="client"
                     >
                         <thead>
                         <tr>
@@ -87,11 +87,7 @@
             const temp = {
                 //params：
                 odds: dropdown['odds'],
-                days: dropdown['days'],
-                limit: params.limit,
-                offset: params.offset,
-                sortField: params.sort,
-                sortOrder: params.order,
+                days: dropdown['days']
             };
             return temp;
         }
@@ -99,18 +95,8 @@
             dataType: "json",
             striped: true,
             cache: false,
-            pagination: true,
-            pageSize: 5,
-            pageNumber: 1,
-            pageList: [5, 10, 20, 50, 100, 200, 500],
             idField: "stock_id",
-            showColumns: true,
-            showRefresh: true,
-            showColumns: true,
-            sidePagination: "server",
             queryParams: queryParams,
-            queryParamsType: "limit",
-            toolbar: "#toolbar",
             silent: true,
         });
 
@@ -123,7 +109,6 @@
                 const opt = {
                     url: "/read_recommended_stock",
                     silent: true,
-                    pageNumber: 1,
                     query: {
                         odds: dropdown['odds'],
                         days: dropdown['days'],
