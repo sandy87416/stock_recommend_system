@@ -32,4 +32,14 @@ class TestApplicationInformation(TestCase):
         self.assertEqual(self.application_information.get_content(), "I want to be the premium member.")
 
     def test_create_content_to_database(self):
-        pass  # todo:test
+        id = self.application_information.get_id()
+        content = self.application_information.get_content()
+        application_information = ApplicationInformation(id, content)
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        self.assertEqual(len(application_information_df[application_information_df['id'] == id]), 0)
+
+        application_information.create_content_to_database()
+        application_information_df = pd.read_csv(database_path + 'member/application_information.csv')
+        self.assertEqual(len(application_information_df[application_information_df['id'] == id]), 1)
+        self.assertEqual(len(application_information_df[application_information_df['content'] == content]), 1)
+
