@@ -222,7 +222,7 @@ def register():
 def apply_premium_member():
     content = ''
     if flask.request.method == 'GET':
-        content = current_user.get_application_information().get_content()
+        content = current_user.get_apply_content()
     elif flask.request.method == 'POST':
         content = request.form.get('content')
         current_user.apply_premium_member(content)
