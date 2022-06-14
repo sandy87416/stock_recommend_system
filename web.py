@@ -231,22 +231,35 @@ def apply_premium_member():
 
 
 # UC-09
-@app.route('/upgrade_member_level', methods=['GET', 'POST'])
+@app.route('/upgrade_member_level_page', methods=['GET'])
+def upgrade_member_level_page():
+    return render_template('upgrade_member_level.html')
+
+
+@app.route('/read_application_information', methods=['GET'])
+def read_application_information():
+    application_information_list = current_user.get_application_information_list()
+    data_list = list()
+    for application_information in application_information_list:
+        application_information_dict = dict()
+        application_information_dict["id"] = str(application_information.get_id())
+        application_information_dict["content"] = application_information.get_content()
+        data_list.append(application_information_dict)
+    return jsonify(data_list)
+
+
+@app.route('/upgrade_member_level', methods=['POST'])
 def upgrade_member_level():
-    application_information_list = list()
-    if flask.request.method == 'GET':
-        application_information_list = current_user.get_application_information_list()
-    elif flask.request.method == 'POST':
-        action_id = request.form.get('id')
-        action_id_split = action_id.split(' ')
-        action = action_id_split[0]
-        id = action_id_split[1]
-        if action == '升級':
-            application_information_list = current_user.upgrade_member_level(id)
-        elif action == '刪除':
-            current_user.delete_application_information_data(id)
-            application_information_list = current_user.get_application_information_list()
-    return render_template('upgrade_member_level.html', application_information_list=application_information_list)
+    id = request.form.get('id')
+    current_user.upgrade_member_level(id)
+    return "升級成功!"
+
+
+@app.route('/delete_application_information', methods=['POST'])
+def delete_application_information():
+    id = request.form.get('id')
+    current_user.delete_application_information_data(id)
+    return "刪除成功!"
 
 
 @login.user_loader

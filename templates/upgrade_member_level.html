@@ -1,66 +1,120 @@
 {% extends "base.html" %}
+{%- block styles %}
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{%- endblock styles %}
 {% block content %}
-    <div class="container row">
-        <form action="/upgrade_member_level" method="post">
-            <table>
-                <thead>
-                <td>帳號</td>
-                <td>申請理由</td>
-                <td>升級</td>
-                <td>刪除</td>
-
-                </thead>
-                <tbody>
-                {% for id_content in application_information_list %}
-                    <tr>
-                        <td>{{ id_content.get_id() }}</td>
-                        <td>{{ id_content.get_content() }}</td>
-                        <td>
-                            <input type="submit" id="id" name="id" value="升級 {{ id_content.get_id() }}"
-                                   onclick="clickSubmitButton()">
-                        </td>
-                        <td>
-                            <input type="submit" id="delete_id" name="id" value="刪除 {{ id_content.get_id() }}"
-                                   onclick="clickDeleteButton()">
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </form>
+    {% include "flash.html" %}
+    <div class="container px-lg-5">
+        <div class="p-lg-5 bg-light rounded-5 text-center">
+            <h1 class="display-5 fw-bold">審核會員等級</h1>
+        </div>
+        <table
+                id="table"
+                data-toggle="table"
+                data-search="true"
+                data-show-refresh="true"
+                data-visible-search="true"
+                data-sort-class="table-active"
+                data-pagination="true"
+                data-side-pagination="client"
+                data-url="/read_application_information"
+                data-id-field="id"
+        >
+        </table>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        async function clickSubmitButton() {
-            const id = $("#id").val();
-            const input_correct = checkInput(id);
-            if (input_correct === true) {
-                return 0;
+        var $table = $('#table')
+
+        async function clickUpgradeButton(id) {
+            $.ajax({
+                url: "/upgrade_member_level",
+                type: "POST",
+                data : {'id': id},
+                success: function(response) {
+                    alert(response)
+                    initTable();
+                },
+            });
+        }
+
+        async function clickRemoveButton(id) {
+            $.ajax({
+                url: "/delete_application_information",
+                type: "POST",
+                data : {'id': id},
+                success: function(response) {
+                    alert(response)
+                    initTable();
+                },
+            });
+
+        }
+
+        function operateFormatter() {
+            return [
+                '<a class="upgrade" href="javascript:void(0)" title="Upgrade">',
+                '<i class="bi bi-award"></i>',
+                '</a>  ',
+                '<a class="remove" href="javascript:void(0)" title="Remove">',
+                '<i class="fa fa-trash"></i>',
+                '</a>'
+            ].join('')
+        }
+
+        window.operateEvents = {
+            'click .upgrade': function (e, value, row) {
+                if (confirm("upgrade " + row.id + "?")) { //todo
+                    clickUpgradeButton(row.id)
+                }
+            },
+            'click .remove': function (e, value, row) {
+                if (confirm("remove " + row.id + "?")) { //todo
+                    clickRemoveButton(row.id)
+                }
             }
         }
 
-        function checkInput(id) {
-            if (id.length !== 0) {
-                alert("升級成功!");
-                return true;
-            }
-            return false;
+        function initTable() {
+            $table.bootstrapTable('destroy').bootstrapTable({
+                columns: [
+                    {
+                        title: '帳號',
+                        field: 'id',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                    },
+                    {
+                        width: "80%",
+                        title: '申請理由',
+                        field: 'content',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                    },
+                    {
+                        width: "10%",
+                        field: 'operate',
+                        title: '操作',
+                        align: 'center',
+                        clickToSelect: false,
+                        events: window.operateEvents,
+                        formatter: operateFormatter
+                    }
+                ]
+            })
         }
 
-        async function clickDeleteButton() {
-            const id = $("#delete_id").val();
-            const input_correct = checkDeleteInput(id);
-            if (input_correct === true) {
-                return 0;
-            }
-        }
-
-        function checkDeleteInput(delete_id) {
-            if (delete_id.length !== 0) {
-                alert("刪除成功!");
-                return true;
-            }
-            return false;
-        }
+        $(function () {
+            initTable();
+        })
     </script>
 {% endblock content %}
+
+{%- block scripts %}
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
+{%- endblock scripts %}
