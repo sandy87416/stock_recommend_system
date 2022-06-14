@@ -112,32 +112,51 @@ def read_stock_intraday_information():
     return stock_intraday_information
 
 
-# UC-05 UC-13
-@app.route('/read_selected_stock', methods=['GET', 'POST'])
+# UC-05
+@app.route('/read_selected_stock_page', methods=['GET'])
+def read_selected_stock_page():
+    return render_template('read_selected_stock.html')
+
+
+# UC-05
+@app.route('/read_selected_stock', methods=['GET'])
 def read_selected_stock():
-    selected_stock_list = list()
-    if flask.request.method == 'GET':
-        selected_stock_list = current_user.read_selected_stock()
-    elif flask.request.method == 'POST':
-        stock_id = int(request.values.get('stock_id'))
-        if stock_system.check_stock_id(stock_id):
-            selected_stock_list = current_user.add_selected_stock(stock_id)
-        else:
-            flash('查無此股票代號', 'warning')
-            selected_stock_list = current_user.read_selected_stock()
-            selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
-            return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
-    selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
-    return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
+    limit = request.values.get('limit', 10)
+    offset = request.values.get('offset', 1)
+
+    selected_stock_list = current_user.read_selected_stock()
+    selected_stock_id_list = list()
+    for selected_stock in selected_stock_list:
+        selected_stock_dict = dict()
+        selected_stock_dict["selected_stock_id"] = str(selected_stock.get_stock_id())
+        selected_stock_id_list.append(selected_stock_dict)
+    json_data = jsonify(
+        {'total': len(selected_stock_id_list), 'rows': selected_stock_id_list[int(offset):(int(offset) + int(limit))]})
+    return json_data
+
+
+# UC-13
+@app.route('/add_selected_stock', methods=['POST'])
+def add_selected_stock():
+    stock_id = int(request.values.get('stock_id'))
+    if stock_system.check_stock_id(stock_id):
+        # selected_stock_list = \
+        current_user.add_selected_stock(stock_id)
+    else:
+        flash('查無此股票代號', 'warning')
+    #     selected_stock_list = current_user.read_selected_stock()
+    # selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
+    # return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
 
 # UC-14
 @app.route('/delete_selected_stock', methods=['POST'])
 def delete_selected_stock():
     stock_id = request.values.get('selected_stock_id')
-    selected_stock_list = current_user.delete_selected_stock(stock_id)
-    selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
-    return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
+    # selected_stock_list =
+    current_user.delete_selected_stock(stock_id)
+    # selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
+    # return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
 
 
 @app.route('/calculate_profit_and_loss_page')

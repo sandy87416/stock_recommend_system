@@ -1,46 +1,130 @@
 {% extends "base.html" %}
+{%- block styles %}
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{%- endblock styles %}
 {% block content %}
-    <div class="container row">
-        <h1>新增自選股票</h1>
-        <div class="col-md-4">
-            <form action="/read_selected_stock" method="post">
-                <label for="stock_id">股票代號</label>
-                <input name="stock_id" type="number" max="9999" required="required"
-                       oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
-                <button type="submit" name="confirm">確認</button>
-            </form>
+    <div class="container px-lg-5">
+    <div class="p-lg-5 bg-light rounded-5 text-center">
+        <h1 class="display-5 fw-bold">新增自選股票</h1>
+        <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+            <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
+            <input id="stock_id" name="stock_id" type="number required" maxlength="4" oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
+            <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
         </div>
     </div>
-    <form action="/delete_selected_stock" method="post" onsubmit="return submitTest();">
-        <table>
-            <thead>
-            <td>股票代號</td>
-            <td></td>
-            </thead>
-            <tbody>
-            {% for selected_stock_id in selected_stock_id_list %}
-                <tr>
-                    <td>{{ selected_stock_id }}</td>
-                    <td>
-                        <input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}"
-                               onclick="clickDeleteButton()">刪除
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </form>
+    <table
+            id="table"
+            data-show-refresh="true"
+            data-show-columns="true"
+            data-click-to-select="true"
+            data-pagination="true"
+            data-id-field="selected_stock_id"
+            data-page-list="[10, 25, 50, 100, all]"
+            data-show-footer="true"
+            data-side-pagination="server"
+            data-url="/read_selected_stock"
+            data-response-handler="responseHandler">
+    </table>
+
+{#    <form action="/delete_selected_stock" method="post" onsubmit="return submitTest();">#}
+{#        <table>#}
+{#            <thead>#}
+{#            <td>股票代號</td>#}
+{#            <td></td>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            {% for selected_stock_id in selected_stock_id_list %}#}
+{#                <tr>#}
+{#                    <td>{{ selected_stock_id }}</td>#}
+{#                    <td>#}
+{#                        <input type="submit" name="selected_stock_id" value="{{ selected_stock_id }}"#}
+{#                               onclick="clickDeleteButton()">刪除#}
+{#                    </td>#}
+{#                </tr>#}
+{#            {% endfor %}#}
+{#            </tbody>#}
+{#        </table>#}
+{#    </form>#}
     {% include "flash.html" %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        let is_delete = true;
+        const $table = $('#table')
+        let selections = []
 
-        function submitTest() {
-            return is_delete;
+        function checkInput(stock_id) {
+            if (stock_id.length === 0) {
+                alert("請輸入股票代號");
+                return false;
+            }
+            if (!(/(^[1-9]\d*$)/.test(stock_id)) || stock_id.length != 4) {
+                alert("請輸入正確的股票代號");
+                return false;
+            }
+            return true;
         }
 
-        async function clickDeleteButton() {
-            is_delete = confirm('確定刪除?')
+        async function clickSubmitButton() {
+            const stock_id = $("#stock_id").val().toString()
+            if(checkInput(stock_id)){
+                // add selected stock
+                console.log("add selected stock:", stock_id)
+            }
+            $table.bootstrapTable('refresh');
         }
+        function responseHandler(res) {
+            $.each(res.rows, function (i, row) {
+                row.state = $.inArray(row.selected_stock_id, selections) !== -1
+            })
+            return res
+        }
+
+        function operateFormatter(value, row, index) {
+            return [
+                '<a class="remove" href="javascript:void(0)" title="Remove">',
+                '<i class="fa fa-trash"></i>',
+                '</a>'
+            ].join('')
+         }
+
+        window.operateEvents = {
+            'click .remove': function (e, value, row, index) {
+                $table.bootstrapTable('remove', {
+                    field: 'selected_stock_id',
+                    values: [row.selected_stock_id]
+                })
+            }
+         }
+        function initTable() {
+            $table.bootstrapTable('destroy').bootstrapTable({
+                columns: [{
+                    title: '股票代號',
+                    field: 'selected_stock_id',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true
+                    }, {
+                    field: 'operate',
+                    title: '刪除',
+                    align: 'center',
+                    clickToSelect: false,
+                    events: window.operateEvents,
+                    formatter: operateFormatter
+                }]
+            })
+            {#$table.on('all.bs.table', function (e, name, args) {#}
+            {#    console.log(name, args)#}
+            {# })#}
+         }
+
+        $(function() {
+            initTable();
+         })
     </script>
 {% endblock content %}
+
+{%- block scripts %}
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
+{%- endblock scripts %}
