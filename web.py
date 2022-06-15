@@ -142,13 +142,13 @@ def add_selected_stock():
 
 
 # UC-14
-@app.route('/delete_selected_stock', methods=['POST'])
+@app.route('/delete_selected_stock', methods=['GET'])
 def delete_selected_stock():
-    stock_id = request.values.get('selected_stock_id')
-    # selected_stock_list =
-    current_user.delete_selected_stock(stock_id)
-    # selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
-    # return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
+    stock_id = request.values.get('stock_id')
+    selected_stock_list1 = current_user.delete_selected_stock(stock_id)
+    selected_stock_list = [{'stock_id': str(selected_stock.get_stock_id())}
+                           for selected_stock in selected_stock_list1]
+    return jsonify(selected_stock_list)
 
 
 @app.route('/calculate_profit_and_loss_page')

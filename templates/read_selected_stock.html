@@ -80,7 +80,7 @@
         }
 
 
-        function getSpecificStockOdds() {
+        function getSelectedStock() {
             //here our function should be implemented
             const stock_id = $("#stock_id").val();
             const input_correct = checkInput(stock_id);
@@ -98,7 +98,7 @@
         }
 
         async function clickSubmitButton() {
-            await getSpecificStockOdds();
+            getSelectedStock();
         }
 
         function operateFormatter(value, row, index) {
@@ -109,14 +109,29 @@
             ].join('')
         }
 
+        async function clickSubmitButton() {
+            getSelectedStock();
+        }
+
+
         window.operateEvents = {
             'click .remove': function (e, value, row, index) {
                 $table.bootstrapTable('remove', {
                     field: 'stock_id',
                     values: [row.stock_id]
                 })
+                console.log(row.stock_id)
+                const opt = {
+                    url: "/delete_selected_stock",
+                    silent: true,
+                    query: {
+                        stock_id: row.stock_id,
+                    }
+                }
+                $("#selected_stock_table").bootstrapTable('refresh', opt);
             }
         }
+
 
         function initTable() {
             $table.bootstrapTable({
