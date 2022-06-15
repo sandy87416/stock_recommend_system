@@ -9,7 +9,8 @@ class AfterHoursInformation:
     __news = ''
     __monthly_revenue = 0
 
-    def __init__(self, date, k_value, ma20_value, rsi_value, foreign_buy, investment_trust_buy, self_buy, news, monthly_revenue):
+    def __init__(self, date, k_value, ma20_value, rsi_value, foreign_buy, investment_trust_buy, self_buy, news,
+                 monthly_revenue):
         self.__date = date
         self.__k_value = k_value
         self.__ma20_value = ma20_value
@@ -73,8 +74,3 @@ class AfterHoursInformation:
 
     def set_monthly_revenue(self, monthly_revenue):
         self.__monthly_revenue = monthly_revenue
-
-
-
-
-

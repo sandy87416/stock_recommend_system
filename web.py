@@ -107,7 +107,8 @@ def read_stock_intraday_information():
     if len(stock_intraday_information_dict) == 0:
         return ''
     stock_intraday_information_list = [stock_intraday_information_dict]
-    stock_intraday_information = jsonify({'total': len(stock_intraday_information_list), 'rows': stock_intraday_information_list})
+    stock_intraday_information = jsonify(
+        {'total': len(stock_intraday_information_list), 'rows': stock_intraday_information_list})
     return stock_intraday_information
 
 
@@ -121,26 +122,23 @@ def read_selected_stock_page():
 @app.route('/read_selected_stock', methods=['GET'])
 def read_selected_stock():
     selected_stock_list = current_user.read_selected_stock()
-    selected_stock_id_list = list()
-    for selected_stock in selected_stock_list:
-        selected_stock_dict = dict()
-        selected_stock_dict["selected_stock_id"] = str(selected_stock.get_stock_id())
-        selected_stock_id_list.append(selected_stock_dict)
-    return jsonify(selected_stock_id_list)
+    selected_stock_list = [{'stock_id': str(selected_stock.get_stock_id())}
+                           for selected_stock in selected_stock_list]
+    return jsonify(selected_stock_list)
 
 
 # UC-13
-@app.route('/add_selected_stock', methods=['POST'])
+@app.route('/add_selected_stock', methods=['GET'])
 def add_selected_stock():
+    selected_stock_list = list()
     stock_id = int(request.values.get('stock_id'))
     if stock_system.check_stock_id(stock_id):
-        # selected_stock_list = \
-        current_user.add_selected_stock(stock_id)
+        selected_stock_list1 = current_user.add_selected_stock(stock_id)
+        selected_stock_list = [{'stock_id': str(selected_stock.get_stock_id())}
+                               for selected_stock in selected_stock_list1]
     else:
         flash('查無此股票代號', 'warning')
-    #     selected_stock_list = current_user.read_selected_stock()
-    # selected_stock_id_list = [selected_stock.get_stock_id() for selected_stock in selected_stock_list]
-    # return render_template('read_selected_stock.html', selected_stock_id_list=selected_stock_id_list)
+    return jsonify(selected_stock_list)
 
 
 # UC-14
@@ -184,7 +182,6 @@ def calculate_profit_and_loss():
     securities_firm = float(request.form.get('securities_firm'))
     profit_and_loss = current_user.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
     return render_template('calculate_profit_and_loss_page.html', profit_and_loss=profit_and_loss)
-
 
 
 @app.route('/query_stock_classification_page')
