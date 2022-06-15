@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+{%- endblock styles %}
+
+{% block content %}
+    {% include "flash.html" %}
+    <div class="container px-lg-5">
+        <div class="p-lg-5 bg-light rounded-5 text-center">
+            <h1 class="display-5 fw-bold">查看盤後訊息</h1>
+            <form action="/read_stock_after_hours_information" method="post">
+                <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+                    <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
+                    <input id="stock_id" name="stock_id" type="number required" maxlength="4" required="required" oninvalid="setCustomValidity('請輸入股票代號');">
+                    <button id="submit_button" class="btn btn-outline-primary" type="submit"">確認</button>
+                </div>
+            </form>
+        </div>
+        <div class="py-5 row gx-lg-5 justify-content-lg-center">
+            <div class="col-lg-6 col-xxl-6 mb-5">
+                <div class="card h-100 rounded-5" style="border: groove;">
+                    <div class="card-body text-center p-4 p-lg-5 pt-0">
+                        <h2 class="fs-4 fw-bold">基本面</h2>
+                        <div>月營收: {{ stock_after_hours_information_dict.get("monthly_revenue", '') }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xxl-6 mb-5">
+                <div class="card h-100 rounded-5" style="border: groove;">
+                    <div class="card-body text-center p-4 p-lg-5 pt-0">
+                        <h2 class="fs-4 fw-bold">技術面</h2>
+                        <div>k_value: {{ stock_after_hours_information_dict.get("k_value", '') }}</div>
+                        <div>ma20_value: {{ stock_after_hours_information_dict.get("ma20_value", '') }}</div>
+                        <div>rsi_value: {{ stock_after_hours_information_dict.get("rsi_value", '') }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xxl-6 mb-5">
+                <div class="card h-100 rounded-5" style="border: groove;">
+                    <div class="card-body text-center p-4 p-lg-5 pt-0">
+                        <h2 class="fs-4 fw-bold">籌碼面</h2>
+                        <div>外資: {{ stock_after_hours_information_dict.get("foreign_buy", '') }}</div>
+                        <div>投信: {{ stock_after_hours_information_dict.get("investment_trust_buy", '') }}</div>
+                        <div>自營商: {{ stock_after_hours_information_dict.get("self_buy", '') }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xxl-6 mb-5">
+                <div class="card h-100 rounded-5" style="border: groove;">
+                    <div class="card-body text-center p-4 p-lg-5 pt-0">
+                        <h2 class="fs-4 fw-bold">消息面</h2>
+                        <p>news: {{ stock_after_hours_information_dict.get("news", '') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+{% endblock content %}

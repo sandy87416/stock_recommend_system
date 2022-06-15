@@ -59,23 +59,31 @@ def stock_information_menu():
     return render_template('stock_information_menu.html')
 
 
-@app.route('/set_stock_id_read_stock_after_hours_information')  # todo: 不要跳轉
-def set_stock_id_read_stock_after_hours_information():
-    return render_template('set_stock_id_read_stock_after_hours_information.html')
+@app.route('/stock_after_hours_information_page')
+def stock_after_hours_information_page():
+    return render_template('stock_after_hours_information_page.html', stock_after_hours_information_dict=dict())
 
 
 # UC-03
 @app.route('/read_stock_after_hours_information', methods=['GET', 'POST'])
 def read_stock_after_hours_information():
-    stock_id = request.values.get('stock_id')
-    stock_id = int(stock_id)
+    stock_id = int(request.form.get('stock_id', 0))
+    stock_after_hours_information_dict = dict()
     if stock_system.check_stock_id(stock_id):
         stock_after_hours_information = current_user.read_stock_after_hours_information(stock_id)
+        stock_after_hours_information_dict["monthly_revenue"] = stock_after_hours_information.get_monthly_revenue()
+        stock_after_hours_information_dict["k_value"] = stock_after_hours_information.get_k_value()
+        stock_after_hours_information_dict["ma20_value"] = stock_after_hours_information.get_ma20_value()
+        stock_after_hours_information_dict["rsi_value"] = stock_after_hours_information.get_rsi_value()
+        stock_after_hours_information_dict["foreign_buy"] = stock_after_hours_information.get_foreign_buy()
+        stock_after_hours_information_dict["investment_trust_buy"] = stock_after_hours_information.get_investment_trust_buy()
+        stock_after_hours_information_dict["self_buy"] = stock_after_hours_information.get_self_buy()
+        stock_after_hours_information_dict["news"] = stock_after_hours_information.get_news()
+        if len(stock_after_hours_information_dict) == 0:
+            flash("查無股票資料", 'danger')
     else:
-        flash("查無股票資料", 'warning')
-        return redirect(url_for('set_stock_id_read_stock_after_hours_information'))
-    return render_template('read_stock_after_hours_information.html',
-                           stock_after_hours_information=stock_after_hours_information)
+        flash('查無此股票代號', 'warning')
+    return render_template('stock_after_hours_information_page.html', stock_after_hours_information_dict=stock_after_hours_information_dict)
 
 
 @app.route('/query_stock_intraday_information_page')
