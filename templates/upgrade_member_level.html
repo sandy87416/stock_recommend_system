@@ -31,8 +31,8 @@
             $.ajax({
                 url: "/upgrade_member_level",
                 type: "POST",
-                data : {'id': id},
-                success: function(response) {
+                data: {'id': id},
+                success: function (response) {
                     alert(response)
                     initTable();
                 },
@@ -43,8 +43,8 @@
             $.ajax({
                 url: "/delete_application_information",
                 type: "POST",
-                data : {'id': id},
-                success: function(response) {
+                data: {'id': id},
+                success: function (response) {
                     alert(response)
                     initTable();
                 },
@@ -82,12 +82,12 @@
                     {
                         title: '帳號',
                         field: 'id',
+                        width: '300',
                         align: 'center',
                         valign: 'middle',
                         sortable: true
                     },
                     {
-                        width: "80%",
                         title: '申請理由',
                         field: 'content',
                         align: 'center',
@@ -95,9 +95,9 @@
                         sortable: true
                     },
                     {
-                        width: "10%",
-                        field: 'operate',
                         title: '操作',
+                        field: 'operate',
+                        width: '100',
                         align: 'center',
                         clickToSelect: false,
                         events: window.operateEvents,
