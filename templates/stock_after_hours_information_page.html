@@ -11,49 +11,58 @@
     {% include "flash.html" %}
     <div class="container px-lg-5">
         <div class="p-lg-5 bg-light rounded-5 text-center">
-            <h1 class="display-5 fw-bold">查看盤後訊息</h1>
+            <h1 class="display-5 fw-bold">盤後訊息</h1>
             <form action="/read_stock_after_hours_information" method="post">
                 <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                     <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
-                    <input id="stock_id" name="stock_id" type="number required" maxlength="4" required="required" oninvalid="setCustomValidity('請輸入股票代號');">
-                    <button id="submit_button" class="btn btn-outline-primary" type="submit"">確認</button>
+                    <input id="stock_id" name="stock_id" type="number required" maxlength="4" required="required"
+                           oninvalid="setCustomValidity('請輸入股票代號');">
+                    <button id="submit_button" class="btn btn-outline-primary" type="submit">確認</button>
                 </div>
             </form>
         </div>
         <div class="py-5 row gx-lg-5 justify-content-lg-center">
             <div class="col-lg-6 col-xxl-6 mb-5">
                 <div class="card h-100 rounded-5" style="border: groove;">
-                    <div class="card-body text-center p-4 p-lg-5 pt-0">
-                        <h2 class="fs-4 fw-bold">基本面</h2>
-                        <div>月營收: {{ stock_after_hours_information_dict.get("monthly_revenue", '') }}</div>
+                    <div class="card-title p-4 text-center">
+                        <h2 class="fw-bold">基本面</h2>
+                    </div>
+                    <div class="card-body p-4 fs-4">
+                        <p>月營收：{{ stock_after_hours_information_dict.get("monthly_revenue", '') }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-xxl-6 mb-5">
                 <div class="card h-100 rounded-5" style="border: groove;">
-                    <div class="card-body text-center p-4 p-lg-5 pt-0">
-                        <h2 class="fs-4 fw-bold">技術面</h2>
-                        <div>k_value: {{ stock_after_hours_information_dict.get("k_value", '') }}</div>
-                        <div>ma20_value: {{ stock_after_hours_information_dict.get("ma20_value", '') }}</div>
-                        <div>rsi_value: {{ stock_after_hours_information_dict.get("rsi_value", '') }}</div>
+                    <div class="card-title p-4 text-center">
+                        <h2 class="fw-bold">技術面</h2>
+                    </div>
+                    <div class="card-body p-4 fs-4">
+                        <p>k_value：{{ stock_after_hours_information_dict.get("k_value", '') }}</p>
+                        <p>ma20_value：{{ stock_after_hours_information_dict.get("ma20_value", '') }}</p>
+                        <p>rsi_value：{{ stock_after_hours_information_dict.get("rsi_value", '') }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-xxl-6 mb-5">
                 <div class="card h-100 rounded-5" style="border: groove;">
-                    <div class="card-body text-center p-4 p-lg-5 pt-0">
-                        <h2 class="fs-4 fw-bold">籌碼面</h2>
-                        <div>外資: {{ stock_after_hours_information_dict.get("foreign_buy", '') }}</div>
-                        <div>投信: {{ stock_after_hours_information_dict.get("investment_trust_buy", '') }}</div>
-                        <div>自營商: {{ stock_after_hours_information_dict.get("self_buy", '') }}</div>
+                    <div class="card-title p-4 text-center">
+                        <h2 class="fw-bold">籌碼面</h2>
+                    </div>
+                    <div class="card-body p-4 fs-4">
+                        <p>外資：{{ stock_after_hours_information_dict.get("foreign_buy", '') }}</p>
+                        <p>投信：{{ stock_after_hours_information_dict.get("investment_trust_buy", '') }}</p>
+                        <p>自營商：{{ stock_after_hours_information_dict.get("self_buy", '') }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-xxl-6 mb-5">
                 <div class="card h-100 rounded-5" style="border: groove;">
-                    <div class="card-body text-center p-4 p-lg-5 pt-0">
-                        <h2 class="fs-4 fw-bold">消息面</h2>
-                        <p>news: {{ stock_after_hours_information_dict.get("news", '') }}</p>
+                    <div class="card-title p-4 text-center">
+                        <h2 class="fw-bold">消息面</h2>
+                    </div>
+                    <div class="card-body p-4 fs-4">
+                        <p>{{ stock_after_hours_information_dict.get("news", '') }}</p>
                     </div>
                 </div>
             </div>
