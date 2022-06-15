@@ -28,15 +28,8 @@
                            data-sort-class="table-active"
                            data-pagination="true"
                            data-side-pagination="client"
-                           data-query-params="queryParams"
                            data-url="/read_selected_stock"
                     >
-                        <thead>
-                        <tr>
-                            <th data-field="stock_id">股票代號</th>
-                            <th data-field="operate">刪除</th>
-                        </tr>
-                        </thead>
                     </table>
                 </div>
             </div>
@@ -67,10 +60,6 @@
             return true;
         }
 
-        function queryParams(params) {
-            params.stock_id = $("#stock_id").val();
-            return params;
-        }
 
         function getSelectedStock() {
             //here our function should be implemented
