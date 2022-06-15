@@ -20,8 +20,8 @@
         <div class="my-lg-5 text-center">
             <div class="panel">
                 <div class="panel-body table-responsive">
-                    <table id="stock_odds_table" class="table table-striped table-hover table-bordered"
-                           data-toggle="stock_odds_table"
+                    <table id="selected_stock_table" class="table table-striped table-hover table-bordered"
+                           data-toggle="selected_stock_table"
                            data-search="true"
                            data-show-refresh="true"
                            data-visible-search="true"
@@ -33,7 +33,7 @@
                         <thead>
                         <tr>
                             <th data-field="stock_id">股票代號</th>
-                            <th data-field="odds">刪除</th>
+                            <th data-field="operate">刪除</th>
                         </tr>
                         </thead>
                     </table>
@@ -48,7 +48,7 @@
             crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
     <script>
-        const $table = $('#stock_odds_table')
+        const $table = $('#selected_stock_table')
         let selections = []
         window.onload = function () {
             initTable();
@@ -59,7 +59,7 @@
                     stock_id: stock_id,
                 }
             }
-            $("#stock_odds_table").bootstrapTable('refresh', opt);
+            $("#selected_stock_table").bootstrapTable('refresh', opt);
         }
 
         function checkInput(stock_id) {
@@ -87,7 +87,6 @@
             if (input_correct === false) {
                 return 0;
             }
-            {#$("#stock_odds_table").bootstrapTable('showLoading');#}
             const opt = {
                 url: "/add_selected_stock",
                 silent: true,
@@ -95,12 +94,11 @@
                     stock_id: stock_id,
                 }
             }
-            $("#stock_odds_table").bootstrapTable('refresh', opt);
+            $("#selected_stock_table").bootstrapTable('refresh', opt);
         }
 
         async function clickSubmitButton() {
             await getSpecificStockOdds();
-            $("#stock_odds_table").bootstrapTable('hideLoading');
         }
 
         function operateFormatter(value, row, index) {
