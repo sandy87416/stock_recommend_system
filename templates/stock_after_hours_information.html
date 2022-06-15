@@ -12,7 +12,7 @@
     <div class="container px-lg-5">
         <div class="p-lg-5 bg-light rounded-5 text-center">
             <h1 class="display-5 fw-bold">盤後訊息</h1>
-            <form action="/read_stock_after_hours_information" method="post">
+            <form action="/read_stock_after_hours_information" method="post" onsubmit="return checkInput()">
                 <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                     <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
                     <input id="stock_id" name="stock_id" type="number required" maxlength="4" required="required"
@@ -74,4 +74,18 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             crossorigin="anonymous"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+    <script>
+        function checkInput() {
+            const stock_id = $("#stock_id").val()
+            if (stock_id.length === 0) {
+                alert("請輸入股票代號");
+                return false;
+            }
+            if (!(/(^[1-9]\d*$)/.test(stock_id))) {
+                alert("請輸入正確的股票代號");
+                return false;
+            }
+            return true;
+        }
+    </script>
 {% endblock content %}

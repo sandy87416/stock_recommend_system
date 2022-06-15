@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+    {% include "flash.html" %}
     <div class="container text-center">
         <div class="rounded-5" style="border: outset;">
             <div class="bg-light p-lg-5 rounded-5">
@@ -45,11 +46,11 @@
         <div class="rounded-5" style="border: outset;">
             <div class="bg-light p-lg-5 rounded-5">
                 <h1 class="display-5 fw-bold">計算當下損益</h1>
-                <form action="/calculate_current_profit_and_loss#current" method="post">
+                <form action="/calculate_current_profit_and_loss#current" method="post" onsubmit="return checkInput()">
                     <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                         <div class="col-12">
                             <label for="stock_id" class="form-label fs-4">股票代號</label>
-                            <input name="stock_id" type="number required" max="9999" required="required"
+                            <input id="stock_id" name="stock_id" type="number required" max="9999" required="required"
                                    oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
                         </div>
                         <div class="col-12">
@@ -85,5 +86,18 @@
             </div>
         </div>
     </div>
-    {% include "flash.html" %}
+    <script>
+        function checkInput() {
+            const stock_id = $("#stock_id").val();
+            if (stock_id.length === 0) {
+                alert("請輸入股票代號");
+                return false;
+            }
+            if (!(/(^[1-9]\d*$)/.test(stock_id))) {
+                alert("請輸入正確的股票代號");
+                return false;
+            }
+            return true;
+        }
+    </script>
 {% endblock content %}
