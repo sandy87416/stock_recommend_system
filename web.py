@@ -26,9 +26,9 @@ def stock_odds_menu():
     return render_template('stock_odds_menu.html')
 
 
-@app.route('/query_recommended_stock_page')
-def query_recommended_stock_page():
-    return render_template('query_recommended_stock_page.html')
+@app.route('/recommended_stock_page')
+def recommended_stock_page():
+    return render_template('recommended_stock.html')
 
 
 # UC-01
@@ -41,9 +41,9 @@ def read_recommended_stock():
     return jsonify(recommended_stock_list)
 
 
-@app.route('/query_specific_stock_page')
-def query_specific_stock_page():
-    return render_template('query_specific_stock_page.html')
+@app.route('/specific_stock_page')
+def specific_stock_page():
+    return render_template('specific_stock.html')
 
 
 # UC-02
@@ -61,7 +61,7 @@ def stock_information_menu():
 
 @app.route('/stock_after_hours_information_page')
 def stock_after_hours_information_page():
-    return render_template('stock_after_hours_information_page.html', stock_after_hours_information_dict=dict())
+    return render_template('stock_after_hours_information.html', stock_after_hours_information_dict=dict())
 
 
 # UC-03
@@ -83,12 +83,12 @@ def read_stock_after_hours_information():
             flash("查無股票資料", 'danger')
     else:
         flash('查無此股票代號', 'warning')
-    return render_template('stock_after_hours_information_page.html', stock_after_hours_information_dict=stock_after_hours_information_dict)
+    return render_template('stock_after_hours_information.html', stock_after_hours_information_dict=stock_after_hours_information_dict)
 
 
-@app.route('/query_stock_intraday_information_page')
-def query_stock_intraday_information_page():
-    return render_template('query_stock_intraday_information_page.html')
+@app.route('/stock_intraday_information_page')
+def stock_intraday_information_page():
+    return render_template('stock_intraday_information.html')
 
 
 # UC-04
@@ -113,9 +113,9 @@ def read_stock_intraday_information():
 
 
 # UC-05
-@app.route('/read_selected_stock_page', methods=['GET'])
-def read_selected_stock_page():
-    return render_template('read_selected_stock.html')
+@app.route('/selected_stock_page', methods=['GET'])
+def selected_stock_page():
+    return render_template('selected_stock.html')
 
 
 # UC-05
@@ -153,7 +153,7 @@ def delete_selected_stock():
 
 @app.route('/calculate_profit_and_loss_page')
 def calculate_profit_and_loss_page():
-    return render_template('calculate_profit_and_loss_page.html')
+    return render_template('calculate_profit_and_loss.html')
 
 
 # UC-10
@@ -169,8 +169,8 @@ def calculate_current_profit_and_loss():
                                                                                  securities_firm)
     else:
         flash('查無此股票代號', 'warning')
-        return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
-    return render_template('calculate_profit_and_loss_page.html', current_profit_and_loss=current_profit_and_loss)
+        return render_template('calculate_profit_and_loss.html', current_profit_and_loss=current_profit_and_loss)
+    return render_template('calculate_profit_and_loss.html', current_profit_and_loss=current_profit_and_loss)
 
 
 # UC-11
@@ -181,12 +181,12 @@ def calculate_profit_and_loss():
     trading_volume = int(request.form.get('trading_volume'))
     securities_firm = float(request.form.get('securities_firm'))
     profit_and_loss = current_user.calculate_profit_and_loss(buy_price, sell_price, trading_volume, securities_firm)
-    return render_template('calculate_profit_and_loss_page.html', profit_and_loss=profit_and_loss)
+    return render_template('calculate_profit_and_loss.html', profit_and_loss=profit_and_loss)
 
 
-@app.route('/query_stock_classification_page')
-def query_stock_classification_page():
-    return render_template('read_stock_classification.html')
+@app.route('/stock_classification_page')
+def stock_classification_page():
+    return render_template('stock_classification.html')
 
 
 # UC-12
@@ -223,15 +223,17 @@ def register():
 
 
 # UC-08
-@app.route('/apply_premium_member', methods=['GET', 'POST'])
+@app.route('/apply_premium_member_page', methods=['GET'])
+def apply_premium_member_page():
+    content = current_user.get_apply_content()
+    return render_template('apply_premium_member.html', content=content)
+
+
+@app.route('/apply_premium_member', methods=['POST'])
 def apply_premium_member():
-    content = ''
-    if flask.request.method == 'GET':
-        content = current_user.get_apply_content()
-    elif flask.request.method == 'POST':
-        content = request.form.get('content')
-        current_user.apply_premium_member(content)
-        flash("申請成功", 'success')
+    content = request.form.get('content')
+    current_user.apply_premium_member(content)
+    flash("申請成功", 'success')
     return render_template('apply_premium_member.html', content=content)
 
 
