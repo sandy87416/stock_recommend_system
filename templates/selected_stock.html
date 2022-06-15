@@ -81,20 +81,26 @@
             ].join('')
         }
 
+        async function clickRemoveButton(row) {
+            $table.bootstrapTable('remove', {
+                field: 'stock_id',
+                values: [row.stock_id]
+            })
+            const opt = {
+                url: "/delete_selected_stock",
+                silent: true,
+                query: {
+                    delete_stock_id: row.stock_id,
+                }
+            }
+            $("#selected_stock_table").bootstrapTable('refresh', opt);
+        }
+
         window.operateEvents = {
             'click .remove': function (e, value, row, index) {
-                $table.bootstrapTable('remove', {
-                    field: 'stock_id',
-                    values: [row.stock_id]
-                })
-                const opt = {
-                    url: "/delete_selected_stock",
-                    silent: true,
-                    query: {
-                        delete_stock_id: row.stock_id,
-                    }
+                if (confirm("確認是否將 " + row.stock_id + "刪除?")) {
+                    clickRemoveButton(row)
                 }
-                $("#selected_stock_table").bootstrapTable('refresh', opt);
             }
         }
 
