@@ -231,7 +231,7 @@ def apply_premium_member():
     elif flask.request.method == 'POST':
         content = request.form.get('content')
         current_user.apply_premium_member(content)
-        flash("sent", 'success')
+        flash("申請成功", 'success')
     return render_template('apply_premium_member.html', content=content)
 
 
