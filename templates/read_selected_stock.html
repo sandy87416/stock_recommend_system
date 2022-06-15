@@ -29,6 +29,7 @@
                            data-pagination="true"
                            data-side-pagination="client"
                            data-query-params="queryParams"
+                           data-url="/read_selected_stock"
                     >
                         <thead>
                         <tr>
@@ -52,14 +53,6 @@
         let selections = []
         window.onload = function () {
             initTable();
-            const opt = {
-                url: "/read_selected_stock",
-                silent: true,
-                query: {
-                    stock_id: stock_id,
-                }
-            }
-            $("#selected_stock_table").bootstrapTable('refresh', opt);
         }
 
         function checkInput(stock_id) {
@@ -78,7 +71,6 @@
             params.stock_id = $("#stock_id").val();
             return params;
         }
-
 
         function getSelectedStock() {
             //here our function should be implemented
@@ -107,10 +99,6 @@
                 '<i class="fa fa-trash"></i>',
                 '</a>'
             ].join('')
-        }
-
-        async function clickSubmitButton() {
-            getSelectedStock();
         }
 
         window.operateEvents = {
@@ -150,3 +138,9 @@
         }
     </script>
 {% endblock content %}
+
+{%- block scripts %}
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
+{%- endblock scripts %}
