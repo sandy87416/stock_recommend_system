@@ -14,7 +14,7 @@
             <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                 <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
                 <input id="stock_id" name="stock_id" type="number required" maxlength="4">
-                <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
+                <button id="submit_button" class="btn btn-outline-primary" onclick="addSelectedStock()">確認</button>
             </div>
         </div>
         <div class="my-lg-5 text-center">
@@ -29,21 +29,17 @@
                            data-pagination="true"
                            data-side-pagination="client"
                            data-url="/read_selected_stock"
+                           data-click-to-select="true"
                     >
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    {% include "flash.html" %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
     <script>
         const $table = $('#selected_stock_table')
-        let selections = []
         window.onload = function () {
             initTable();
         }
@@ -60,8 +56,7 @@
             return true;
         }
 
-
-        function getSelectedStock() {
+        async function addSelectedStock() {
             //here our function should be implemented
             const stock_id = $("#stock_id").val();
             const input_correct = checkInput(stock_id);
@@ -76,10 +71,6 @@
                 }
             }
             $("#selected_stock_table").bootstrapTable('refresh', opt);
-        }
-
-        async function clickSubmitButton() {
-            getSelectedStock();
         }
 
         function operateFormatter(value, row, index) {
