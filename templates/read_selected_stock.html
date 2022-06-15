@@ -113,25 +113,22 @@
             getSelectedStock();
         }
 
-
         window.operateEvents = {
             'click .remove': function (e, value, row, index) {
                 $table.bootstrapTable('remove', {
                     field: 'stock_id',
                     values: [row.stock_id]
                 })
-                console.log(row.stock_id)
                 const opt = {
                     url: "/delete_selected_stock",
                     silent: true,
                     query: {
-                        stock_id: row.stock_id,
+                        delete_stock_id: row.stock_id,
                     }
                 }
                 $("#selected_stock_table").bootstrapTable('refresh', opt);
             }
         }
-
 
         function initTable() {
             $table.bootstrapTable({
@@ -150,11 +147,6 @@
                     formatter: operateFormatter
                 }]
             })
-            {#$table.on('all.bs.table', function (e, name, args) {#}
-            {#    console.log(name, args)#}
-            {# })#}
         }
-
-
     </script>
 {% endblock content %}
