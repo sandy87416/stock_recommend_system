@@ -16,7 +16,7 @@
                 <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
                     <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
                     <input id="stock_id" name="stock_id" type="number required" maxlength="4" required="required"
-                           oninvalid="setCustomValidity('請輸入股票代號');">
+                           oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
                     <button id="submit_button" class="btn btn-outline-primary" type="submit">確認</button>
                 </div>
             </form>
