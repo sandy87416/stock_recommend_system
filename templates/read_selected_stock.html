@@ -1,65 +1,106 @@
 {% extends "base.html" %}
-{%- block styles %}
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% block styles %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
 {%- endblock styles %}
+
 {% block content %}
     <div class="container px-lg-5">
         <div class="p-lg-5 bg-light rounded-5 text-center">
-        <h1 class="display-5 fw-bold">新增自選股票</h1>
-        <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
-            <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
-            <input id="stock_id" name="stock_id" type="number required" maxlength="4" oninvalid="setCustomValidity('請輸入股票代號');" onchange="setCustomValidity('');">
-            <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
+            <h1 class="display-5 fw-bold">自選股票</h1>
+            <div class="row row-cols-lg-auto g-3 justify-content-center" style="margin: initial;">
+                <label for="stock_id" class="form-label fs-4">請輸入股票代號：</label>
+                <input id="stock_id" name="stock_id" type="number required" maxlength="4">
+                <button id="submit_button" class="btn btn-outline-primary" onclick="clickSubmitButton()">確認</button>
+            </div>
+        </div>
+        <div class="my-lg-5 text-center">
+            <div class="panel">
+                <div class="panel-body table-responsive">
+                    <table id="stock_odds_table" class="table table-striped table-hover table-bordered"
+                           data-toggle="stock_odds_table"
+                           data-search="true"
+                           data-show-refresh="true"
+                           data-visible-search="true"
+                           data-sort-class="table-active"
+                           data-pagination="true"
+                           data-side-pagination="client"
+                           data-query-params="queryParams"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="stock_id">股票代號</th>
+                            <th data-field="odds">刪除</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-        <table
-            id="table"
-            data-toggle="table"
-            data-search="true"
-            data-show-refresh="true"
-            data-visible-search="true"
-            data-sort-class="table-active"
-            data-pagination="true"
-            data-side-pagination="client"
-            data-url="/read_selected_stock"
-            data-show-footer="true"
-            data-click-to-select="true"
-            data-id-field="selected_stock_id"
-            data-response-handler="responseHandler">
-    </table>
-    </div>
-    {% include "flash.html" %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        const $table = $('#table')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+    <script>
+        const $table = $('#stock_odds_table')
         let selections = []
+        window.onload = function () {
+            initTable();
+            const opt = {
+                url: "/read_selected_stock",
+                silent: true,
+                query: {
+                    stock_id: stock_id,
+                }
+            }
+            $("#stock_odds_table").bootstrapTable('refresh', opt);
+        }
 
         function checkInput(stock_id) {
             if (stock_id.length === 0) {
                 alert("請輸入股票代號");
                 return false;
             }
-            if (!(/(^[1-9]\d*$)/.test(stock_id)) || stock_id.length != 4) {
+            if (!(/(^[1-9]\d*$)/.test(stock_id))) {
                 alert("請輸入正確的股票代號");
                 return false;
             }
             return true;
         }
 
-        async function clickSubmitButton() {
-            const stock_id = $("#stock_id").val().toString()
-            if(checkInput(stock_id)){
-                // add selected stock
-                console.log("add selected stock:", stock_id)
-            }
-            $table.bootstrapTable('refresh');
+        function queryParams(params) {
+            params.stock_id = $("#stock_id").val();
+            return params;
         }
-        function responseHandler(res) {
-            $.each(res.rows, function (i, row) {
-                row.state = $.inArray(row.selected_stock_id, selections) !== -1
-            })
-            return res
+
+
+        function getSpecificStockOdds() {
+            //here our function should be implemented
+            const stock_id = $("#stock_id").val();
+            const input_correct = checkInput(stock_id);
+            if (input_correct === false) {
+                return 0;
+            }
+            {#$("#stock_odds_table").bootstrapTable('showLoading');#}
+            const opt = {
+                url: "/add_selected_stock",
+                silent: true,
+                query: {
+                    stock_id: stock_id,
+                }
+            }
+            $("#stock_odds_table").bootstrapTable('refresh', opt);
+        }
+
+        async function clickSubmitButton() {
+            await getSpecificStockOdds();
+            $("#stock_odds_table").bootstrapTable('hideLoading');
         }
 
         function operateFormatter(value, row, index) {
@@ -68,25 +109,26 @@
                 '<i class="fa fa-trash"></i>',
                 '</a>'
             ].join('')
-         }
+        }
 
         window.operateEvents = {
             'click .remove': function (e, value, row, index) {
                 $table.bootstrapTable('remove', {
-                    field: 'selected_stock_id',
-                    values: [row.selected_stock_id]
+                    field: 'stock_id',
+                    values: [row.stock_id]
                 })
             }
-         }
+        }
+
         function initTable() {
-            $table.bootstrapTable('destroy').bootstrapTable({
+            $table.bootstrapTable({
                 columns: [{
                     title: '股票代號',
-                    field: 'selected_stock_id',
+                    field: 'stock_id',
                     align: 'center',
                     valign: 'middle',
                     sortable: true
-                    }, {
+                }, {
                     field: 'operate',
                     title: '刪除',
                     align: 'center',
@@ -98,16 +140,8 @@
             {#$table.on('all.bs.table', function (e, name, args) {#}
             {#    console.log(name, args)#}
             {# })#}
-         }
+        }
 
-        $(function() {
-            initTable();
-         })
+
     </script>
 {% endblock content %}
-
-{%- block scripts %}
-    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.20.2/dist/extensions/export/bootstrap-table-export.min.js"></script>
-{%- endblock scripts %}
